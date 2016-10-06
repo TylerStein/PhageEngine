@@ -1,0 +1,2 @@
+﻿  PhageEngine.cpp
+e:\github\phageengine\phage\phageengine.h(2): fatal error C1083: Cannot open include file: 'GL\glew.h': No such file or directory
