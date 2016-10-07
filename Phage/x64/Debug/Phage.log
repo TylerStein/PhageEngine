@@ -1,13 +1,27 @@
-﻿glew32s.lib(glew.obj) : warning LNK4006: glewGetErrorString already defined in glew32.lib(glew32.dll); second definition ignored
-glew32s.lib(glew.obj) : warning LNK4006: glewGetExtension already defined in glew32.lib(glew32.dll); second definition ignored
-glew32s.lib(glew.obj) : warning LNK4006: glewGetString already defined in glew32.lib(glew32.dll); second definition ignored
-glew32s.lib(glew.obj) : warning LNK4006: glewInit already defined in glew32.lib(glew32.dll); second definition ignored
-glew32s.lib(glew.obj) : warning LNK4006: glewIsSupported already defined in glew32.lib(glew32.dll); second definition ignored
-glew32s.lib(glew.obj) : warning LNK4006: wglewGetExtension already defined in glew32.lib(glew32.dll); second definition ignored
-glew32s.lib(glew.obj) : warning LNK4006: wglewInit already defined in glew32.lib(glew32.dll); second definition ignored
-glew32s.lib(glew.obj) : warning LNK4006: wglewIsSupported already defined in glew32.lib(glew32.dll); second definition ignored
-FreeImage.lib(FreeImage.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in glew32.lib(glew32.dll); second definition ignored
-FreeImage.lib(FreeImage.dll) : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
-opengl32.lib(OPENGL32.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in glew32.lib(glew32.dll); second definition ignored
-opengl32.lib(OPENGL32.dll) : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
-  Phage.vcxproj -> E:\GitHub\PhageEngine\x64\Debug\Phage.lib
+﻿Build started 07/10/2016 3:15:10 PM.
+     1>Project "C:\Users\Kojah\Documents\PhageEngine\Phage\Phage.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\CL.exe /c /IC:\Users\Kojah\Documents\PhageEngine\\ThirdParty\include /ZI /nologo /W3 /WX- /sdl /Od /D _DEBUG /D _LIB /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"x64\Debug\\" /Fd"x64\Debug\Phage.pdb" /Gd /TP /errorReport:prompt pAsset.cpp pMaterial.cpp
+         pMaterial.cpp
+     1>c:\users\kojah\documents\phageengine\phage\pmodel.h(8): error C2504: 'pAsset': base class undefined
+     1>c:\users\kojah\documents\phageengine\phage\pmodel.h(10): error C2061: syntax error: identifier 'pType'
+     1>c:\users\kojah\documents\phageengine\phage\pmodel.h(13): error C3646: 'type': unknown override specifier
+     1>c:\users\kojah\documents\phageengine\phage\pmodel.h(13): error C2059: syntax error: '='
+     1>c:\users\kojah\documents\phageengine\phage\pmodel.h(13): error C2653: 'pType': is not a class or namespace name
+     1>c:\users\kojah\documents\phageengine\phage\pmodel.h(13): error C2238: unexpected token(s) preceding ';'
+     1>c:\users\kojah\documents\phageengine\phage\pmodel.h(14): error C3646: 'material': unknown override specifier
+     1>c:\users\kojah\documents\phageengine\phage\pmodel.h(14): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+         pAsset.cpp
+     1>c:\users\kojah\documents\phageengine\phage\pmaterial.h(5): error C2504: 'pAsset': base class undefined
+     1>c:\users\kojah\documents\phageengine\phage\pmodel.h(8): error C2504: 'pAsset': base class undefined
+     1>c:\users\kojah\documents\phageengine\phage\pmodel.h(10): error C2061: syntax error: identifier 'pType'
+     1>c:\users\kojah\documents\phageengine\phage\pmodel.h(13): error C3646: 'type': unknown override specifier
+     1>c:\users\kojah\documents\phageengine\phage\pmodel.h(13): error C2059: syntax error: '='
+     1>c:\users\kojah\documents\phageengine\phage\pmodel.h(13): error C2653: 'pType': is not a class or namespace name
+     1>c:\users\kojah\documents\phageengine\phage\pmodel.h(13): error C2238: unexpected token(s) preceding ';'
+         Generating Code...
+     1>Done Building Project "C:\Users\Kojah\Documents\PhageEngine\Phage\Phage.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:00.78
