@@ -12,6 +12,9 @@ PhageEngine::PhageEngine()
 
 PhageEngine::~PhageEngine()
 {
+	//Destruct the renderer
+	renderer->~pRenderer();
+	
 	//Destroy the window
 	glfwDestroyWindow(window);
 
@@ -40,12 +43,14 @@ void PhageEngine::CreateWindow(GLint width, GLint height, char* title)
 	glewExperimental = GL_TRUE;
 	glewInit();
 
-	//Get version info, do with these what you will (probably print to log)
-	const GLubyte* renderer = glGetString(GL_RENDERER); //Renderer version
-	const GLubyte* version = glGetString(GL_VERSION); //OpenGL Version
+	//Set up input mode
+	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
-	glEnable(GL_DEPTH_TEST); //Enable depth-testing
-	glDepthFunc(GL_LESS); //Interpret smaller values as closer
+	//Get version info, do with these what you will (probably print to log)
+	const GLubyte* renderVersion = glGetString(GL_RENDERER); //Renderer version
+	const GLubyte* glVersion = glGetString(GL_VERSION); //OpenGL Version
+
+	renderer = new pRenderer(window);
 }
 
 void PhageEngine::Start()
@@ -54,9 +59,8 @@ void PhageEngine::Start()
 }
 
 void PhageEngine::doLoop() {
-	//While the window isn't being closed
-	while (!glfwWindowShouldClose(window)) {
-		//Run the application
+	//While the window isn't being closed, loop here
+	do {
 
-	}
+	} while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
 }

@@ -1,19 +1,26 @@
 #include "pModel.h"
 
-pModel::pModel(char* name, pType type, pMaterial material, GLfloat* vertices, GLuint numVertices)
-	:pAsset(type)
+pModel::pModel(char* name, pMaterial* material, GLfloat* vertices, GLuint numVertices)
+	:pAsset(pType::MODEL)
 {
 	this->name = name;
-	this->type = type;
+	this->type = pType::MODEL;
 	this->material = material;
 	
-	this->vertices = new GLfloat[numVertices];
-	for (int i(0); i < numVertices; ++i) {
-		this->vertices[i] = vertices[i];
-	}
+	this->vertices = vertices;
 }
 
 pModel::~pModel()
 {
 	delete vertices;
+}
+
+std::string pModel::getName()
+{
+	return name;
+}
+
+GLuint pModel::getID()
+{
+	return ID;
 }

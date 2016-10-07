@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿Build started 07/10/2016 3:15:11 PM.
      1>Project "C:\Users\Kojah\Documents\PhageEngine\Tester\Tester.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
@@ -9,3 +10,9 @@
 Build FAILED.
 
 Time Elapsed 00:00:00.16
+=======
+﻿  main.cpp
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+  Tester.vcxproj -> D:\GitHub\PhageEngine\x64\Debug\Tester.exe
+  Tester.vcxproj -> D:\GitHub\PhageEngine\x64\Debug\Tester.pdb (Full PDB)
+>>>>>>> refs/remotes/origin/Development
