@@ -1,17 +1,21 @@
 #pragma once
-#include "pAsset.h"
-#include "pMaterial.h"
 #include "GL\glew.h"
 #include <string>
+#include "pAsset.h"
+#include "pMaterial.h"
 
-class pModel:public pAsset
+class pModel : public pAsset
 {
 public:
-	pModel(char* name, pType type, pMaterial material, GLfloat* vertices, GLuint numVertices);
+	pModel(char* name, pMaterial* material, GLfloat* vertices, GLuint numVertices);
 	~pModel();
+
+	std::string getName() override;
+	GLuint getID() override;
+
 	std::string name;
-	pType type = pType::MODEL;
-	pMaterial material;
+	pType type;
+	pMaterial* material;
 	GLuint vertCount;
 	GLfloat* vertices;
 	

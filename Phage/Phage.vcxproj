@@ -150,15 +150,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pAsset.h" />
+    <ClInclude Include="pEnums.h" />
     <ClInclude Include="PhageEngine.h" />
     <ClInclude Include="pMaterial.h" />
     <ClInclude Include="pModel.h" />
+    <ClInclude Include="pRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pAsset.cpp" />
     <ClCompile Include="PhageEngine.cpp" />
     <ClCompile Include="pMaterial.cpp" />
     <ClCompile Include="pModel.cpp" />
+    <ClCompile Include="pRenderer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
