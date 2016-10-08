@@ -149,6 +149,8 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Clock.h" />
+    <ClInclude Include="LogManager.h" />
     <ClInclude Include="pAsset.h" />
     <ClInclude Include="pEnums.h" />
     <ClInclude Include="PhageEngine.h" />
@@ -157,6 +159,8 @@
     <ClInclude Include="pRenderer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Clock.cpp" />
+    <ClCompile Include="LogManager.cpp" />
     <ClCompile Include="pAsset.cpp" />
     <ClCompile Include="PhageEngine.cpp" />
     <ClCompile Include="pMaterial.cpp" />

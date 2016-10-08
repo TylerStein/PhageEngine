@@ -1,5 +1,6 @@
 #include "pAsset.h"
 
+
 pAsset::pAsset(pType type) {
 	this->type = type;
 }
