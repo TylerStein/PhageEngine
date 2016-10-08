@@ -153,6 +153,7 @@
     <ClInclude Include="LogManager.h" />
     <ClInclude Include="pAsset.h" />
     <ClInclude Include="pEnums.h" />
+    <ClInclude Include="pFileReader.h" />
     <ClInclude Include="PhageEngine.h" />
     <ClInclude Include="pMaterial.h" />
     <ClInclude Include="pModel.h" />
@@ -162,10 +163,15 @@
     <ClCompile Include="Clock.cpp" />
     <ClCompile Include="LogManager.cpp" />
     <ClCompile Include="pAsset.cpp" />
+    <ClCompile Include="pFileReader.cpp" />
     <ClCompile Include="PhageEngine.cpp" />
     <ClCompile Include="pMaterial.cpp" />
     <ClCompile Include="pModel.cpp" />
     <ClCompile Include="pRenderer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Resources\Shaders\SimpleFragmentShader.frag" />
+    <None Include="..\Resources\Shaders\SimpleVertexShader.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

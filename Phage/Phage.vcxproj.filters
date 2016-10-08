@@ -43,6 +43,9 @@
 >>>>>>> refs/remotes/origin/Development
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="pFileReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PhageEngine.cpp">
@@ -67,5 +70,16 @@
 >>>>>>> refs/remotes/origin/Development
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="pFileReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Resources\Shaders\SimpleFragmentShader.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\SimpleVertexShader.vert">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

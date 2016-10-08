@@ -1,4 +1,5 @@
 #include "PhageEngine.h"
+#include <iostream>
 
 PhageEngine::PhageEngine()
 {
@@ -7,6 +8,8 @@ PhageEngine::PhageEngine()
 		//GLFW failed to initialize
 		
 	}
+
+	modelList = std::vector<pModel*>();
 }
 
 
@@ -43,6 +46,10 @@ void PhageEngine::CreateWindow(GLint width, GLint height, char* title)
 	glewExperimental = GL_TRUE;
 	glewInit();
 
+	//Enable gl debug messages
+	glEnable(GL_DEBUG_OUTPUT);
+
+
 	//Set up input mode
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
@@ -50,17 +57,79 @@ void PhageEngine::CreateWindow(GLint width, GLint height, char* title)
 	const GLubyte* renderVersion = glGetString(GL_RENDERER); //Renderer version
 	const GLubyte* glVersion = glGetString(GL_VERSION); //OpenGL Version
 
+	printf("Renderer: %s\n", renderVersion);
+	printf("Supported OGL Version: %s\n", glVersion);
+
 	renderer = new pRenderer(window);
 }
 
 void PhageEngine::Start()
 {
+
+
+	
+
+	//Start the loop!
 	doLoop();
 }
 
+//Update for pre-rendering events called every frame
+void PhageEngine::onPreRender()
+{
+	//Clear the drawing surface
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+//Update for rendering events called every frame
+void PhageEngine::onRender()
+{
+	//Render each model in the list if any exist
+	if (!modelList.empty()) {
+		for (int i(0); i < modelList.size(); ++i) {
+			//Link the vertex array ID
+			glBindVertexArray(modelList.at(i)->vertexArrayID);
+			//Link the shader program ID
+			glLinkProgram(modelList.at(i)->shaderProgramID);
+			//Use the shader program!
+			glUseProgram(modelList.at(i)->shaderProgramID);
+			//Draw the model's points from the currently bound VAO with currently used shader
+			glDrawArrays(GL_TRIANGLES, 0, modelList.at(i)->vertCount);
+		}
+	}
+
+
+}
+
+//Update for events called after render every frame
+void PhageEngine::onPostRender()
+{
+	glfwSwapBuffers(window);
+}
+
+//Function for update events called every frame
+void PhageEngine::onUpdate()
+{
+	glfwPollEvents();
+
+
+}
+
+//Function for post-update events every frame
+void PhageEngine::onPostUpdate()
+{
+}
+
 void PhageEngine::doLoop() {
-	//While the window isn't being closed, loop here
+	//While the window isn't being closed, call the looped functions
 	do {
+<<<<<<< HEAD
+		onUpdate();
+		onPostUpdate();
+		onPreRender();
+		onRender();
+		onPostRender();
+=======
 		
+>>>>>>> Development
 	} while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
 }
