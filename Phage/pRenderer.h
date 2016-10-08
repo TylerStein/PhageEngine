@@ -13,6 +13,8 @@ public:
 	void setWindowRef(GLFWwindow* window);
 	void renderModel(pModel* model);
 
+
+
 private:
 	GLFWwindow* windowRef;
 	

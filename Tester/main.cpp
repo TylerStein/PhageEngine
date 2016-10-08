@@ -1,5 +1,4 @@
 #pragma once
-#include "pModel.h"
 #include "PhageEngine.h"
 
 /*
@@ -29,6 +28,22 @@ int main() {
 
 	//Create the window
 	phage->CreateWindow(800, 600, "PhageTest");
+	GLfloat vertices[8] = {
+		-0.10f, -0.10f, // Square
+		 0.1f, -0.1f,
+		 0.10f, 0.1f,
+		 -0.1f, 0.1f
+	};
+
+	char name = 'd';
+
+	char* n = &name;
+
+	pMaterial* material = new pMaterial();
+
+	pModel* model = new pModel(n, material, vertices, 2);
+
+	
 
 	//Make a triangle for the top-left
 	GLuint testVertCount = 3;
@@ -60,6 +75,8 @@ int main() {
 
 	//Start the engine loop
 	phage->Start();
+
+	phage->renderer->renderModel(model);
 
 	return 0;
 }

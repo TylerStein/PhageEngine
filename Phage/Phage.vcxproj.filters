@@ -30,10 +30,17 @@
     <ClInclude Include="pMaterial.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+<<<<<<< HEAD
+    <ClInclude Include="LogManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Clock.h">
+=======
     <ClInclude Include="pEnums.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="pRenderer.h">
+>>>>>>> refs/remotes/origin/Development
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="pFileReader.h">
@@ -53,7 +60,14 @@
     <ClCompile Include="pMaterial.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="LogManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Clock.cpp">
+=======
     <ClCompile Include="pRenderer.cpp">
+>>>>>>> refs/remotes/origin/Development
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pFileReader.cpp">

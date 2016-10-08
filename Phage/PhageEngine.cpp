@@ -122,10 +122,14 @@ void PhageEngine::onPostUpdate()
 void PhageEngine::doLoop() {
 	//While the window isn't being closed, call the looped functions
 	do {
+<<<<<<< HEAD
 		onUpdate();
 		onPostUpdate();
 		onPreRender();
 		onRender();
 		onPostRender();
+=======
+		
+>>>>>>> Development
 	} while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
 }
