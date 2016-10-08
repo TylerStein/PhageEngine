@@ -1,6 +1,7 @@
 #include "pModel.h"
 #include "pFileReader.h"
 #include <iostream>
+#include <vector>
 
 pModel::pModel(char* name, pMaterial* material, GLfloat* verts, GLuint numVertices)
 	:pAsset(pType::MODEL)
@@ -41,8 +42,14 @@ void pModel::setupModel()
 {
 
 	pFileReader reader;
-	const char* vertex_shader = reader.readFile("../Resources/Shaders/simpleVertexShader.vert");
-	const char* fragment_shader = reader.readFile("../Resources/Shaders/simpleFragmentShader.frag");
+
+	//Read the shader files
+	std::string vs = reader.readFile("../Resources/Shaders/simpleVertexShader.vert");
+	std::string fs = reader.readFile("../Resources/Shaders/simpleFragmentShader.frag");
+
+	//Create char* of the shaders
+	const char* vertex_shader = vs.c_str();
+	const char* fragment_shader = fs.c_str();
 
 	//Create the vertex buffer object
 	vertexBufferID = 0;

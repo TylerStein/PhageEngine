@@ -6,8 +6,7 @@ public:
 	pFileReader();
 	~pFileReader();
 
-	char* readFile(char* directory);
-	char* convertToChar(std::string in);
+	std::string readFile(char* directory);
 private:
 	std::ifstream fileStream;
 };

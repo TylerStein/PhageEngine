@@ -46,6 +46,9 @@ void PhageEngine::CreateWindow(GLint width, GLint height, char* title)
 	glewExperimental = GL_TRUE;
 	glewInit();
 
+	//Enable gl debug messages
+	glEnable(GL_DEBUG_OUTPUT);
+
 
 	//Set up input mode
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
@@ -87,6 +90,8 @@ void PhageEngine::onRender()
 			glBindVertexArray(modelList.at(i)->vertexArrayID);
 			//Link the shader program ID
 			glLinkProgram(modelList.at(i)->shaderProgramID);
+			//Use the shader program!
+			glUseProgram(modelList.at(i)->shaderProgramID);
 			//Draw the model's points from the currently bound VAO with currently used shader
 			glDrawArrays(GL_TRIANGLES, 0, modelList.at(i)->vertCount);
 		}
