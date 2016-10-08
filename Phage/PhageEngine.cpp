@@ -61,6 +61,6 @@ void PhageEngine::Start()
 void PhageEngine::doLoop() {
 	//While the window isn't being closed, loop here
 	do {
-
+		
 	} while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
 }
