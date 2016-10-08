@@ -9,7 +9,6 @@ public:
 	pRenderer(GLFWwindow* window);
 	~pRenderer();
 
-	void initRender();
 	void setupGLOptions();
 	void setWindowRef(GLFWwindow* window);
 	void renderModel(pModel* model);

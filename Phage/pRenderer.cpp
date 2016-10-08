@@ -4,16 +4,11 @@ pRenderer::pRenderer(GLFWwindow* window)
 {
 	setWindowRef(window);
 	setupGLOptions();
-	initRender();
 }
 
 
 pRenderer::~pRenderer()
 {
-
-}
-
-void pRenderer::initRender() {
 
 }
 

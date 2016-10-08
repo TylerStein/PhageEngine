@@ -151,6 +151,7 @@
   <ItemGroup>
     <ClInclude Include="pAsset.h" />
     <ClInclude Include="pEnums.h" />
+    <ClInclude Include="pFileReader.h" />
     <ClInclude Include="PhageEngine.h" />
     <ClInclude Include="pMaterial.h" />
     <ClInclude Include="pModel.h" />
@@ -158,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pAsset.cpp" />
+    <ClCompile Include="pFileReader.cpp" />
     <ClCompile Include="PhageEngine.cpp" />
     <ClCompile Include="pMaterial.cpp" />
     <ClCompile Include="pModel.cpp" />
