@@ -1,18 +1,15 @@
-﻿Build started 07/10/2016 6:16:52 PM.
+﻿Build started 14/10/2016 12:53:31 PM.
      1>Project "C:\Users\Kojah\Documents\PhageEngine\Phage\Phage.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\CL.exe /c /IC:\Users\Kojah\Documents\PhageEngine\\ThirdParty\include /ZI /nologo /W3 /WX- /sdl /Od /D _DEBUG /D _LIB /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"x64\Debug\\" /Fd"x64\Debug\Phage.pdb" /Gd /TP /errorReport:prompt Clock.cpp LogManager.cpp pAsset.cpp PhageEngine.cpp pMaterial.cpp pModel.cpp pRenderer.cpp
-         pRenderer.cpp
-         pModel.cpp
-         pMaterial.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\CL.exe /c /IC:\Users\Kojah\Documents\PhageEngine\\ThirdParty\include /ZI /nologo /W3 /WX- /sdl /Od /D _DEBUG /D _LIB /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"x64\Debug\\" /Fd"x64\Debug\Phage.pdb" /Gd /TP /errorReport:prompt Clock.cpp MatrixStack.cpp PhageEngine.cpp
          PhageEngine.cpp
-         pAsset.cpp
-         LogManager.cpp
+         MatrixStack.cpp
          Clock.cpp
          Generating Code...
        Lib:
          C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\Lib.exe /OUT:"C:\Users\Kojah\Documents\PhageEngine\x64\Debug\Phage.lib" glew32.lib glew32s.lib FreeImage.lib opengl32.lib glfw3.lib /LIBPATH:C:\Users\Kojah\Documents\PhageEngine\\ThirdParty\lib /NOLOGO /MACHINE:X64 x64\Debug\Clock.obj
          x64\Debug\LogManager.obj
+         x64\Debug\MatrixStack.obj
          x64\Debug\pAsset.obj
          x64\Debug\PhageEngine.obj
          x64\Debug\pMaterial.obj
@@ -35,4 +32,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:03.31
+Time Elapsed 00:00:03.30

@@ -151,6 +151,7 @@
   <ItemGroup>
     <ClInclude Include="Clock.h" />
     <ClInclude Include="LogManager.h" />
+    <ClInclude Include="MatrixStack.h" />
     <ClInclude Include="pAsset.h" />
     <ClInclude Include="pEnums.h" />
     <ClInclude Include="PhageEngine.h" />
@@ -161,6 +162,7 @@
   <ItemGroup>
     <ClCompile Include="Clock.cpp" />
     <ClCompile Include="LogManager.cpp" />
+    <ClCompile Include="MatrixStack.cpp" />
     <ClCompile Include="pAsset.cpp" />
     <ClCompile Include="PhageEngine.cpp" />
     <ClCompile Include="pMaterial.cpp" />
