@@ -158,6 +158,9 @@
     <ClInclude Include="pMaterial.h" />
     <ClInclude Include="pModel.h" />
     <ClInclude Include="pRenderer.h" />
+    <ClInclude Include="pSceneGraph.h" />
+    <ClInclude Include="pSceneNode.h" />
+    <ClInclude Include="pSceneObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Clock.cpp" />
@@ -168,6 +171,9 @@
     <ClCompile Include="pMaterial.cpp" />
     <ClCompile Include="pModel.cpp" />
     <ClCompile Include="pRenderer.cpp" />
+    <ClCompile Include="pSceneGraph.cpp" />
+    <ClCompile Include="pSceneNode.cpp" />
+    <ClCompile Include="pSceneObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resources\Shaders\SimpleFragmentShader.frag" />
