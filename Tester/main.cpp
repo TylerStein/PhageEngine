@@ -8,23 +8,7 @@ int main() {
 	PhageEngine* phage = new PhageEngine();
 
 	//Create the window
-	phage->CreateWindow(800, 600, "PhageTest");
-	GLfloat vertices[8] = {
-		-0.10f, -0.10f, // Square
-		 0.1f, -0.1f,
-		 0.10f, 0.1f,
-		 -0.1f, 0.1f
-	};
-
-	char name = 'd';
-
-	char* n = &name;
-
-	pMaterial* material = new pMaterial();
-
-	pModel* model = new pModel(n, material, vertices, 2);
-
-	
+	phage->CreateWindow(800, 600, "PhageTest");	
 
 	//Make a triangle for the top-left
 	GLuint testVertCount = 3;
@@ -32,6 +16,12 @@ int main() {
 		-0.75f, 0.75f,  0.0f,
 		-0.75f, 0.0f,  0.0f,
 		0.0f, 0.0f,  0.0f
+	};
+
+	GLfloat testColors[] = {
+		1.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 1.0f,
+		1.0f, 0.0f, 1.0f
 	};
 
 	//Make a second triangle for the top-right
@@ -47,8 +37,8 @@ int main() {
 	pMaterial* testMat = new pMaterial();
 
 	//Make the models on the heap
-	pModel* testModel = new pModel("TestModel", testMat, testVerts, testVertCount);
-	pModel* otherModel = new pModel("SecondModel", testMat, otherVerts, otherVertCount);
+	pModel* testModel = new pModel("TestModel", testMat, testVerts, testColors, testVertCount);
+	pModel* otherModel = new pModel("SecondModel", testMat, otherVerts, testColors, otherVertCount);
 
 	//Add the models to the model list
 	phage->modelList.push_back(testModel);
@@ -57,7 +47,10 @@ int main() {
 	//Start the engine loop
 	phage->Start();
 
-	phage->renderer->renderModel(model);
+	delete phage;
+	delete testMat;
+	delete testModel;
+	delete otherModel;
 
 	return 0;
 }
