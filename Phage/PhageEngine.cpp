@@ -16,7 +16,7 @@ PhageEngine::PhageEngine()
 PhageEngine::~PhageEngine()
 {
 	//Destruct the renderer
-	renderer->~pRenderer();
+	delete renderer;
 	
 	//Destroy the window
 	glfwDestroyWindow(window);
@@ -86,14 +86,7 @@ void PhageEngine::onRender()
 	//Render each model in the list if any exist
 	if (!modelList.empty()) {
 		for (int i(0); i < modelList.size(); ++i) {
-			//Link the vertex array ID
-			glBindVertexArray(modelList.at(i)->vertexArrayID);
-			//Link the shader program ID
-			glLinkProgram(modelList.at(i)->shaderProgramID);
-			//Use the shader program!
-			glUseProgram(modelList.at(i)->shaderProgramID);
-			//Draw the model's points from the currently bound VAO with currently used shader
-			glDrawArrays(GL_TRIANGLES, 0, modelList.at(i)->vertCount);
+			renderer->renderModel(modelList.at(i));
 		}
 	}
 

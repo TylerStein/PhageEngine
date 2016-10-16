@@ -3,8 +3,7 @@
 #include <iostream>
 #include <vector>
 
-pModel::pModel(char* name, pMaterial* material, GLfloat* verts, GLuint numVertices)
-	:pAsset(pType::MODEL)
+pModel::pModel(char * name, pMaterial * material, GLfloat * verts, GLfloat * vertColors, GLuint numVertices) : pAsset(pType::MODEL)
 {
 	this->name = name;
 	this->type = pType::MODEL;
@@ -18,6 +17,12 @@ pModel::pModel(char* name, pMaterial* material, GLfloat* verts, GLuint numVertic
 	//Copy over the verticies array (numVertices * 3 because there are 3x locations per vertex, again would be better with a vertex struct)
 	for (GLuint x(0); x < (numVertices * 3); ++x) {
 		vertices[x] = verts[x];
+	}
+
+	vertexColors = (GLfloat*)malloc(numVertices * 3 * sizeof(GLfloat));
+
+	for (GLuint x(0); x < (numVertices * 3); ++x) {
+		vertexColors[x] = vertColors[x];
 	}
 
 	setupModel();
@@ -38,19 +43,28 @@ GLuint pModel::getID()
 	return ID;
 }
 
+GLuint pModel::getShaderProgramID()
+{
+	return material->getShaderProgramID();
+}
+
+GLuint pModel::getVertCount()
+{
+	return vertCount;
+}
+
+GLuint pModel::getVertexArrayID()
+{
+	return vertexArrayID;
+}
+
+GLuint pModel::getVertexBufferID()
+{
+	return vertexBufferID;
+}
+
 void pModel::setupModel()
 {
-
-	pFileReader reader;
-
-	//Read the shader files
-	std::string vs = reader.readFile("../Resources/Shaders/simpleVertexShader.vert");
-	std::string fs = reader.readFile("../Resources/Shaders/simpleFragmentShader.frag");
-
-	//Create char* of the shaders
-	const char* vertex_shader = vs.c_str();
-	const char* fragment_shader = fs.c_str();
-
 	//Create the vertex buffer object
 	vertexBufferID = 0;
 	//Generate the vbo
@@ -74,18 +88,5 @@ void pModel::setupModel()
 	//3 means the variables are vec3 made from 3 floats in the buffer
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
-	//Load the shaders
-	GLuint vertShaderID = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertShaderID, 1, &vertex_shader, NULL);
-	glCompileShader(vertShaderID);
-
-	GLuint fragShaderID = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragShaderID, 1, &fragment_shader, NULL);
-	glCompileShader(fragShaderID);
-
-	//Create the shader program
-	shaderProgramID = glCreateProgram();
-	glAttachShader(shaderProgramID, fragShaderID);
-	glAttachShader(shaderProgramID, vertShaderID);
-	glLinkProgram(shaderProgramID);
+	material->loadShader("../Resources/Shaders/simpleVertexShader.vert", "../Resources/Shaders/simpleFragmentShader.frag");
 }
