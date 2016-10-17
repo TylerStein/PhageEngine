@@ -13,6 +13,11 @@
     <ClCompile Include="pSceneGraph.cpp" />
     <ClCompile Include="pSceneNode.cpp" />
     <ClCompile Include="pSceneObject.cpp" />
+    <ClCompile Include="pResourceManager.cpp" />
+    <ClCompile Include="pMaterialManager.cpp" />
+    <ClCompile Include="pHashtable.cpp" />
+    <ClCompile Include="pImageManager.cpp" />
+    <ClCompile Include="pModelManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Clock.h" />
@@ -28,6 +33,11 @@
     <ClInclude Include="pSceneGraph.h" />
     <ClInclude Include="pSceneNode.h" />
     <ClInclude Include="pSceneObject.h" />
+    <ClInclude Include="pResourceManager.h" />
+    <ClInclude Include="pMaterialManager.h" />
+    <ClInclude Include="pHashtable.h" />
+    <ClInclude Include="pImageManager.h" />
+    <ClInclude Include="pModelManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resources\Shaders\SimpleFragmentShader.frag" />
