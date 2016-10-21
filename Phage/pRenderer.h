@@ -1,7 +1,8 @@
 #pragma once
 #include "pModel.h"
 #include "GLFW\glfw3.h"
-
+#include "glm\vec3.hpp"
+#include "glm\gtc\matrix_transform.hpp"
 
 class pRenderer
 {
@@ -13,11 +14,16 @@ public:
 	void setWindowRef(GLFWwindow* window);
 	void renderModel(pModel* model);
 
-
+	void setViewMatix(glm::vec3 cameraLocation, glm::vec3 cameraTarget, glm::vec3 cameraUp);
+	void setProjectionMatrix(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat nearPlane, GLfloat farPlane);
 
 private:
 	GLFWwindow* windowRef;
 	
 	GLuint vertexBuffer;
+
+	glm::vec3 camLoc, camTar, camUp;
+	glm::mat4 projMatrix;
+	glm::mat4 cameraView;
 };
 
