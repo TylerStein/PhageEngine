@@ -1,13 +1,14 @@
 #include "pImage.h"
 #include "pImageLoader.h"
 
-pImage::pImage(char* imageDir) : pAsset(pType::IMAGE)
+pImage::pImage(char* name, char* imageDir)
 {
-	pImage(imageDir, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE);
+	pImage(name, imageDir, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE);
 }
 
-pImage::pImage(char * imageDir, GLuint minFilterType, GLuint magFilterType, GLuint wrapMode) : pAsset(pType::IMAGE)
+pImage::pImage(char* name, char * imageDir, GLuint minFilterType, GLuint magFilterType, GLuint wrapMode)
 {
+	this->name = name;
 	imageDirectory = imageDir;
 	this->minFilterType = minFilterType;
 	this->magFilterType = magFilterType;
@@ -30,6 +31,16 @@ void pImage::bindTexture()
 GLuint pImage::getTextureID()
 {
 	return textureID;
+}
+
+std::string pImage::getName()
+{
+	return name;
+}
+
+GLuint pImage::getID()
+{
+	return ID;
 }
 
 void pImage::loadImage()
@@ -59,5 +70,5 @@ void pImage::loadImage()
 	//Generate image mipmaps
 	glGenerateMipmap(GL_TEXTURE_2D);
 
-	glBindTexture(GL_TEXTURE_2D, 0);
+	//glBindTexture(GL_TEXTURE_2D, 0);
 }

@@ -10,6 +10,14 @@ class pMaterial : public pAsset
 public:
 	pType type;
 
+	pMaterial(std::string name, pImage *image);
+	pMaterial(std::string name, std::vector<pImage*> images, GLuint blendMode);
+	pMaterial(std::string name, glm::vec3 diffuseRGB);
+	pMaterial(std::string name, glm::vec3 diffuseRGB, glm::vec3 ambientRGB, float shininess, float alpha);
+	pMaterial(std::string name);
+	pMaterial();
+	~pMaterial();
+
 	std::string getName() override;
 	GLuint getID() override;
 
@@ -18,13 +26,7 @@ public:
 	GLboolean hasTexture();
 	void bindTextures();
 
-	pMaterial(std::string name, pImage* image);
-	pMaterial(std::string name, std::vector<pImage*> images, GLuint blendMode);
-	pMaterial(std::string name, glm::vec3 diffuseRGB);
-	pMaterial(std::string name, glm::vec3 diffuseRGB, glm::vec3 ambientRGB, float shininess, float alpha);
-	pMaterial(std::string name);
-	pMaterial();
-	~pMaterial();
+
 
 private:
 	std::string name;

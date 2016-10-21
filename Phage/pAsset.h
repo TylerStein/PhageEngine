@@ -6,14 +6,12 @@
 class pAsset
 {
 public:
+	/*
 	pType type;
 	GLuint ID;
-	std::string name;
+	std::string name;*/
 
-	pAsset(pType type);
-	~pAsset();
-
-	virtual std::string getName();
-	virtual GLuint getID();
+	virtual std::string getName() = 0;
+	virtual GLuint getID() = 0;
 };
 

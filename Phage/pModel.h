@@ -61,5 +61,6 @@ private:
 	glm::mat4 modelMatrix;
 
 	std::string name;
+	GLuint ID;
 };
 

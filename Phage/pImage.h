@@ -7,15 +7,18 @@ class pImage :
 {
 public:
 	//Constructor requires a directory to work with
-	pImage(char* imageDir);
+	pImage(char* name, char* imageDir);
 	//Constructor takes a directory, filter type, and wrap mode
-	pImage(char* imageDir, GLuint minFilterType, GLuint magFilterType, GLuint wrapMode);
+	pImage(char* name, char* imageDir, GLuint minFilterType, GLuint magFilterType, GLuint wrapMode);
 	~pImage();
 
 	void bindTexture();
 
 	//Returns the textureID
 	GLuint getTextureID();
+
+	std::string getName() override;
+	GLuint getID() override;
 
 private:
 	//Uses pImageLoader to get the image data
@@ -36,5 +39,7 @@ private:
 	//Image width and height
 	GLuint width, height;
 
+	std::string name;
+	GLuint ID;
 };
 

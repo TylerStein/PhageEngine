@@ -39,10 +39,11 @@ int main() {
 	};
 
 	//Make an image
-	pImage* testImage = new pImage("../Resources/Images/bricks.png");
+	pImage* testImage = new pImage("Bricks", "../Resources/Images/bricks.png");
 
-	//Make a blank placeholder material (currently does nothing)
-	pMaterial* testMat = new pMaterial("TestMat", testImage);
+	//Make a material
+	//pMaterial* testMat = new pMaterial("TestMat", testImage);
+	pMaterial* testMat = new pMaterial("TestMat", glm::vec3(1.0f, 1.0f, 1.0f));
 
 	//Make the models on the heap
 	pModel* testModel = new pModel("TestModel", testMat, testVerts, testColors, testUVs, testVertCount);

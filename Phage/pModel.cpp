@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-pModel::pModel(char * name, pMaterial * material, GLfloat * verts,  GLfloat * vertColors, GLfloat* vertUVs, GLuint numVertices) : pAsset(pType::MODEL)
+pModel::pModel(char * name, pMaterial * material, GLfloat * verts,  GLfloat * vertColors, GLfloat* vertUVs, GLuint numVertices)
 {
 	this->name = name;
 	this->type = pType::MODEL;
@@ -176,7 +176,7 @@ void pModel::setupModel()
 	//Bind the vColor shader attribute to the 1st VBO (color)
 	glBindAttribLocation(getShaderProgramID(), 1, "vTexCoord");
 	//Attirbute pointer to the 1st index, 2 of type, type is float, not normalized, 0 stride, no pointer
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, NULL);
 
 	//Enable the vertex attribute arrays
 	glEnableVertexAttribArray(0);

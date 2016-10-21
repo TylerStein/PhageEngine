@@ -7,5 +7,6 @@ in vec4 fColor;
 out vec4 finalColor;
 
 void main(){
-	finalColor = texture(fTexture, fTexCoord) * fColor;
+	//finalColor = texture(fTexture, fTexCoord) * fColor;
+	finalColor = fColor;
 }
