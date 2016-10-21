@@ -9,10 +9,12 @@
     <ClCompile Include="pMaterial.cpp" />
     <ClCompile Include="pModel.cpp" />
     <ClCompile Include="pRenderer.cpp" />
-    <ClCompile Include="MatrixStack.cpp" />
     <ClCompile Include="pSceneGraph.cpp" />
     <ClCompile Include="pSceneNode.cpp" />
     <ClCompile Include="pSceneObject.cpp" />
+    <ClCompile Include="pMatrixStack.cpp" />
+    <ClCompile Include="pImage.cpp" />
+    <ClCompile Include="pImageLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Clock.h" />
@@ -24,10 +26,12 @@
     <ClInclude Include="pMaterial.h" />
     <ClInclude Include="pModel.h" />
     <ClInclude Include="pRenderer.h" />
-    <ClInclude Include="MatrixStack.h" />
     <ClInclude Include="pSceneGraph.h" />
     <ClInclude Include="pSceneNode.h" />
     <ClInclude Include="pSceneObject.h" />
+    <ClInclude Include="pMatrixStack.h" />
+    <ClInclude Include="pImage.h" />
+    <ClInclude Include="pImageLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resources\Shaders\SimpleFragmentShader.frag" />

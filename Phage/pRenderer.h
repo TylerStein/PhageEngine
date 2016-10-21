@@ -14,10 +14,12 @@ public:
 	void setWindowRef(GLFWwindow* window);
 	void renderModel(pModel* model);
 
-	void setViewMatix(glm::vec3 cameraLocation, glm::vec3 cameraTarget, glm::vec3 cameraUp);
+	void setViewMatrix(glm::vec3 cameraLocation, glm::vec3 cameraTarget, glm::vec3 cameraUp);
 	void setProjectionMatrix(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat nearPlane, GLfloat farPlane);
 
 private:
+	void initDefaultView();
+
 	GLFWwindow* windowRef;
 	
 	GLuint vertexBuffer;
