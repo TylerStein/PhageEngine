@@ -20,8 +20,14 @@ int main() {
 
 	GLfloat testColors[] = {
 		1.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 1.0f
+		0.0f, 1.0f, 1.0f,
+		1.0f, 1.0f, 0.0f
+	};
+
+	GLfloat testUVs[] = {
+		-0.75f, 0.75f,
+		-0.75f, 0.0f,
+		0.0f, 0.0f
 	};
 
 	//Make a second triangle for the top-right
@@ -32,13 +38,22 @@ int main() {
 		0.75f, 0.0f,  0.0f
 	};
 
+	//Make an image
+	pImage* testImage = new pImage("Bricks", "../Resources/Images/bricks.png");
 
-	//Make a blank placeholder material (currently does nothing)
-	pMaterial* testMat = new pMaterial();
+	//Make a material
+	//pMaterial* testMat = new pMaterial("TestMat", testImage);
+	pMaterial* testMat = new pMaterial("TestMat", glm::vec3(1.0f, 1.0f, 1.0f));
 
 	//Make the models on the heap
-	pModel* testModel = new pModel("TestModel", testMat, testVerts, testColors, testVertCount);
-	pModel* otherModel = new pModel("SecondModel", testMat, otherVerts, testColors, otherVertCount);
+	pModel* testModel = new pModel("TestModel", testMat, testVerts, testColors, testUVs, testVertCount);
+	pModel* otherModel = new pModel("SecondModel", testMat, otherVerts, testColors, testUVs, otherVertCount);
+
+	//testModel->rotateAround(glm::vec3(0.0f, 0.0f, 1.0f), 0.0f);
+	testModel->setScale(glm::vec3(2.0f, 2.0f, 1.0f));
+	testModel->translate(glm::vec3(0.0f, 0.0f, 0.0f));
+
+	phage->renderer->setViewMatrix(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 	//Add the models to the model list
 	phage->modelList.push_back(testModel);
@@ -47,10 +62,12 @@ int main() {
 	//Start the engine loop
 	phage->Start();
 
-	delete phage;
+	delete testImage;
 	delete testMat;
 	delete testModel;
 	delete otherModel;
+	delete phage;
+
 
 	return 0;
 }

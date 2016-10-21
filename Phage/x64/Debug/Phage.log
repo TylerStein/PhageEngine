@@ -1,15 +1,17 @@
 ﻿  pSceneObject.cpp
   pSceneNode.cpp
-e:\github\phageengine\phage\pscenenode.cpp(40): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+d:\github\phageengine\phage\pscenenode.cpp(40): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
   pSceneGraph.cpp
-e:\github\phageengine\phage\pscenegraph.h(28): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
+d:\github\phageengine\phage\pscenegraph.h(28): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
   pRenderer.cpp
   pModel.cpp
   pMaterial.cpp
   PhageEngine.cpp
   pFileReader.cpp
   pAsset.cpp
-  MatrixStack.cpp
+  pMatrixStack.cpp
+  pImageLoader.cpp
+  pImage.cpp
   LogManager.cpp
   Clock.cpp
   Generating Code...
@@ -25,4 +27,5 @@ FreeImage.lib(FreeImage.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already
 FreeImage.lib(FreeImage.dll) : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
 opengl32.lib(OPENGL32.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in glew32.lib(glew32.dll); second definition ignored
 opengl32.lib(OPENGL32.dll) : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
-  Phage.vcxproj -> E:\GitHub\PhageEngine\x64\Debug\Phage.lib
+pAsset.obj : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
+  Phage.vcxproj -> D:\GitHub\PhageEngine\x64\Debug\Phage.lib
