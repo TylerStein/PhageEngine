@@ -13,6 +13,7 @@
     <ClCompile Include="pSceneGraph.cpp" />
     <ClCompile Include="pSceneNode.cpp" />
     <ClCompile Include="pSceneObject.cpp" />
+    <ClCompile Include="pModelLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Clock.h" />
@@ -28,6 +29,7 @@
     <ClInclude Include="pSceneGraph.h" />
     <ClInclude Include="pSceneNode.h" />
     <ClInclude Include="pSceneObject.h" />
+    <ClInclude Include="pModelLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resources\Shaders\SimpleFragmentShader.frag" />
