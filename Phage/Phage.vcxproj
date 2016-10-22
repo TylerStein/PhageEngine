@@ -151,6 +151,7 @@
   <ItemGroup>
     <ClInclude Include="Clock.h" />
     <ClInclude Include="LogManager.h" />
+    <ClInclude Include="pHashtable.h" />
     <ClInclude Include="pImage.h" />
     <ClInclude Include="pImageLoader.h" />
     <ClInclude Include="pMatrixStack.h" />
@@ -162,6 +163,7 @@
     <ClInclude Include="pModel.h" />
     <ClInclude Include="pModelLoader.h" />
     <ClInclude Include="pRenderer.h" />
+    <ClInclude Include="pResourceManager.h" />
     <ClInclude Include="pSceneGraph.h" />
     <ClInclude Include="pSceneNode.h" />
     <ClInclude Include="pSceneObject.h" />
@@ -169,6 +171,7 @@
   <ItemGroup>
     <ClCompile Include="Clock.cpp" />
     <ClCompile Include="LogManager.cpp" />
+    <ClCompile Include="pHashtable.cpp" />
     <ClCompile Include="pImage.cpp" />
     <ClCompile Include="pImageLoader.cpp" />
     <ClCompile Include="pMatrixStack.cpp" />
@@ -179,6 +182,7 @@
     <ClCompile Include="pModel.cpp" />
     <ClCompile Include="pModelLoader.cpp" />
     <ClCompile Include="pRenderer.cpp" />
+    <ClCompile Include="pResourceManager.cpp" />
     <ClCompile Include="pSceneGraph.cpp" />
     <ClCompile Include="pSceneNode.cpp" />
     <ClCompile Include="pSceneObject.cpp" />
