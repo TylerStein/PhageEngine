@@ -10,37 +10,38 @@
 class pModelLoader
 {
 public:
-	/*Constructor
-	  Takes in the path to the model, uses it to
-	  call @func loadModel*/
-	pModelLoader(GLchar* path);
+	/*Function returns an instance of the
+	  pModelLoader object. Creates an instance if
+	  one does not exist.*/
+	static pModelLoader* instance();
 
-	/*Getters:
-	  @func getPositions returns the vector containing position vertices
-	  @func getUVs returns the vector containing UV data
-	  @func getNormals returns the vector containing normal data*/
-	std::vector<glm::vec3> getPositions();
-	std::vector<glm::vec3> getUVs();
-	std::vector<glm::vec3> getNormals();
+	/*ModelInfo struct contains all info
+	relevant to the model*/
+	struct ModelInfo {
+		std::vector<glm::vec3> positions;
+		std::vector<glm::vec3> uvs;
+		std::vector<glm::vec3> normals;
+	};
 
-private:
 	/*Function uses provided path to load a model.
-	  first it creates an Assimp Importer object,
-	  uses it to create a scene containing the model to
-	  be imported. Then a tri-layer loop begins.
-	  In this loop, the data of every face on every mesh
-	  belonging to the model is retrieved, converted
-	  from aiVector3D types to glm::vec3s and 
-	  stored in their respective vectors.*/
-	void loadModel(std::string path);
+	first it creates an Assimp Importer object,
+	uses it to create a scene containing the model to
+	be imported. Then a tri-layer loop begins.
+	In this loop, the data of every face on every mesh
+	belonging to the model is retrieved, converted
+	from aiVector3D types to glm::vec3s and
+	stored in their respective vectors which are
+	contained within the ModelInfo struct.
+	The struct is then returned.*/
+	ModelInfo loadModel(std::string path);
+private:
+	pModelLoader();
+	~pModelLoader();
 
-	/*Storage Vectors
-	  @var positions stores model position vertices
-	  @var uvs stores the model uv vectors
-	  @var normals stores the model normal vectors*/
-	std::vector<glm::vec3> *positions;
-	std::vector<glm::vec3> *uvs;
-	std::vector<glm::vec3> *normals;
+	/*contains instance of the pModelLoader object*/
+	static pModelLoader* _instance;
+
+	
 
 };
 

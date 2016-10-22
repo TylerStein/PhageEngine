@@ -1,12 +1,24 @@
 #include "pModelLoader.h"
 
-pModelLoader::pModelLoader(GLchar * path)
+
+pModelLoader * pModelLoader::instance()
 {
-	this->loadModel(path);
+	if (_instance == 0)
+	{
+		_instance = new pModelLoader();
+	}
+
+	return _instance;
 }
 
-void pModelLoader::loadModel(std::string path)
+pModelLoader::pModelLoader(){}
+
+pModelLoader::~pModelLoader(){}
+
+pModelLoader::ModelInfo pModelLoader::loadModel(std::string path)
 {
+	ModelInfo mI;
+
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(path,
 		aiProcess_CalcTangentSpace |
@@ -42,28 +54,15 @@ void pModelLoader::loadModel(std::string path)
 				normConversion.z = normal.z;
 
 
-				positions->push_back(posConversion);
-				uvs->push_back(uvConversion);
-				normals->push_back(normConversion);
+				mI.positions.push_back(posConversion);
+				mI.uvs.push_back(uvConversion);
+				mI.normals.push_back(normConversion);
 			}
 		}
 	}
+	return mI;
 }
 
-std::vector<glm::vec3> pModelLoader::getPositions()
-{
-	return *positions;
-}
-
-std::vector<glm::vec3> pModelLoader::getUVs()
-{
-	return *uvs;
-}
-
-std::vector<glm::vec3> pModelLoader::getNormals()
-{
-	return *normals;
-}
 
 
 
