@@ -11,18 +11,18 @@
 * the correct type of ResourceManager.
 */
 template <class ResouceType>
-class ResourceHandle
+class pResourceHandle
 {
 private:
 	int index;
 
 public:
 	//constructor that creates a NULL handle
-	ResourceHandle() :
+	pResourceHandle() :
 		index(-1) {}
 
 	//Constructor that creates a handle to refrence at the indicated location of index
-	ResourceHandle(int idx) :
+	pResourceHandle(int idx) :
 		index(idx) {}
 
 	//tests if this handle refrences NULL
@@ -44,37 +44,37 @@ public:
 	}
 
 	//Assigment operator
-	ResourceHandle& operator=(ResourceHandle& other)
+	pResourceHandle& operator=(pResourceHandle& other)
 	{
 		index = other.index;
 		return *this;
 	}
 
 	//Equality operator
-	bool operator==(ResourceHandle& other) const
+	bool operator==(pResourceHandle& other) const
 	{
 		return index == other.index;
 	}
 
 	//Inequality operator
-	bool operator!=(ResourceHandle& other) const
+	bool operator!=(pResourceHandle& other) const
 	{
 		return index != other.index;
 	}
 
 	//Less than operator
-	bool operator<(ResourceHandle& other) const
+	bool operator<(pResourceHandle& other) const
 	{
 		return index < other.index;
 	}
 
 	//Greater than operator
-	bool operator>(ResourceHandle& other) const
+	bool operator>(pResourceHandle& other) const
 	{
 		return index < other.index;
 	}
 
-	friend std::ostream& operator<<(std::ostream& os, ResourceHandle &hndl);
+	friend std::ostream& operator<<(std::ostream& os, pResourceHandle &hndl);
 };
 
 /**
@@ -86,27 +86,27 @@ public:
 * still based off of robs code from humdinger
 */
 template<class ResourceType>
-class ResourceManager
+class pResourceManager
 {
 private:
 	std::vector<ResourceType*> resourceList;
 	//implement hashtable *nametable
-	Hashtable<std::string, ResourceHandle<ResourceType>> *nameTable;
+	Hashtable<std::string, pResourceHandle<ResourceType>> *nameTable;
 public:
 	//Create an empty ResourceManager with a default pHashtable size
-	ResourceManager(void)
+	pResourceManager(void)
 	{
-		nameTable = new Hashtable<std::string, ResourceHandle<ResourceType>>(111);
+		nameTable = new Hashtable<std::string, pResourceHandle<ResourceType>>(111);
 	}
 
 	//Create a empty ResourceManager with a hashtable with size sz
-	ResourceManager(int sz)
+	pResourceManager(int sz)
 	{
-		nameTable = new Hashtable<std::string, ResourceHandle<ResourceType>>(sz);
+		nameTable = new Hashtable<std::string, pResourceHandle<ResourceType>>(sz);
 	}
 
 	//Destructor.This will not delete any of the resources stored in the ResourceManager.
-	~ResourceManager(void)
+	~pResourceManager(void)
 	{
 		if (nameTable != NULL)
 		{
@@ -116,18 +116,18 @@ public:
 	}
 
 	//Trys to add a new resource to ResourceManager, if its not new then it does nothing
-	ResourceHandle<ResourceType> put(std::string &name, ResourceType *res)
+	pResourceHandle<ResourceType> put(std::string &name, ResourceType *res)
 	{
-		Hashtable<std::string, ResourceHandle<ResourceType>>::iterator	iter;
-		int key = Hashtable<std::string, ResourceHandle<ResourceType>>::stringhash(name);
+		Hashtable<std::string, pResourceHandle<ResourceType>>::iterator	iter;
+		int key = Hashtable<std::string, pResourceHandle<ResourceType>>::stringhash(name);
 
 		iter = nameTable->get(key);
 		if (iter == nameTable->end())
 		{
 			int idx = resourceList.size();
 			resourceList.push_back(res);
-			ResourceHandle<ResourceType> handle(idx);
-			HashItem<std::string, ResourceHandle<ResourceType>> item(key, name, handle);
+			pResourceHandle<ResourceType> handle(idx);
+			HashItem<std::string, pResourceHandle<ResourceType>> item(key, name, handle);
 			nameTable->put(item);
 			return handle;
 		}
@@ -135,7 +135,7 @@ public:
 	}
 
 	//Returns a pointer to the resource, if invalid a NULL will be returned
-	ResourceType* get(ResourceHandle<ResourceType> &handle) const
+	ResourceType* get(pResourceHandle<ResourceType> &handle) const
 	{
 		int idx = handle.getIndex();
 		ResourceType *result = NULL;
@@ -148,15 +148,15 @@ public:
 	}
 
 	//Searches for a resource name and returns a handle for it. If this fails a NULL will be returned to handle
-	ResourceHandle<ResourceType> get(const std::string &name) const
+	pResourceHandle<ResourceType> get(const std::string &name) const
 	{
-		Hashtable<std::string, ResourceHandle<ResourceType>>::iterator	iter;
-		int key = Hashtable<std::string, ResourceHandle<ResourceType>>::stringhash((std::string)name);
+		Hashtable<std::string, pResourceHandle<ResourceType>>::iterator	iter;
+		int key = Hashtable<std::string, pResourceHandle<ResourceType>>::stringhash((std::string)name);
 
 		iter = nameTable->get(key);
 		if (iter == nameTable->end())
 		{
-			return ResourceHandle<ResourceType>();
+			return pResourceHandle<ResourceType>();
 		}
 		return (*iter).getValue();
 	}
@@ -164,8 +164,8 @@ public:
 	//Remove a resource by name from the manager
 	void remove(std::string &name)
 	{
-		Hashtable<std::string, ResourceHandle<ResourceType>>::iterator	iter;
-		int key = Hashtable<std::string, ResourceHandle<ResourceType>>::stringhash(name);
+		Hashtable<std::string, pResourceHandle<ResourceType>>::iterator	iter;
+		int key = Hashtable<std::string, pResourceHandle<ResourceType>>::stringhash(name);
 
 		iter = nameTable->get(key);
 		if (iter != nameTable->end())
@@ -180,15 +180,15 @@ public:
 	void clearKeysAndValues()
 	{
 		std::vector<int>	deleteKeyList;
-		Hashtable<std::string, ResourceHandle<ResourceType> >::iterator iter = nameTable->begin();
+		Hashtable<std::string, pResourceHandle<ResourceType> >::iterator iter = nameTable->begin();
 
 		// First, we traverse the hashtable and delete the models.
 		
 		// We save the string keys to be deleted and delete these on a second pass so we do not mess with the iterator.
 		while (iter != nameTable->end())
 		{
-			HashItem<std::string, ResourceHandle<ResourceType> > item = *iter;
-			ResourceHandle<ResourceType> handle = item.getValue();
+			HashItem<std::string, pResourceHandle<ResourceType> > item = *iter;
+			pResourceHandle<ResourceType> handle = item.getValue();
 			if (!handle.isNull())
 			{
 				ResourceType *res = resourceList[handle.getIndex()];
@@ -222,7 +222,7 @@ public:
 };
 
 template<class ResourceType>
-std::ostream& operator<<(std::ostream& os, ResourceHandle<ResourceType> &hndl)
+std::ostream& operator<<(std::ostream& os, pResourceHandle<ResourceType> &hndl)
 {
 	os << hndl.index;
 	return os;
