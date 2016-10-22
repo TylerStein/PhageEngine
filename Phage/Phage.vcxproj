@@ -161,6 +161,7 @@
     <ClInclude Include="PhageEngine.h" />
     <ClInclude Include="pMaterial.h" />
     <ClInclude Include="pModel.h" />
+    <ClInclude Include="pModelLoader.h" />
     <ClInclude Include="pRenderer.h" />
     <ClInclude Include="pResourceManager.h" />
     <ClInclude Include="pSceneGraph.h" />
@@ -179,6 +180,7 @@
     <ClCompile Include="PhageEngine.cpp" />
     <ClCompile Include="pMaterial.cpp" />
     <ClCompile Include="pModel.cpp" />
+    <ClCompile Include="pModelLoader.cpp" />
     <ClCompile Include="pRenderer.cpp" />
     <ClCompile Include="pResourceManager.cpp" />
     <ClCompile Include="pSceneGraph.cpp" />
