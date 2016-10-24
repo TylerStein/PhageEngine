@@ -1,15 +1,6 @@
 #include "pModelLoader.h"
 
-
-pModelLoader * pModelLoader::instance()
-{
-	if (_instance == 0)
-	{
-		_instance = new pModelLoader();
-	}
-
-	return _instance;
-}
+pModelLoader* pModelLoader::_instance = 0;
 
 pModelLoader::pModelLoader(){}
 
@@ -26,14 +17,15 @@ pModelLoader::ModelInfo pModelLoader::loadModel(std::string path)
 		aiProcess_JoinIdenticalVertices |
 		aiProcess_SortByPType);
 
-	for (int i; i < scene->mNumMeshes; i++)
+	for (int i = 0; i < scene->mNumMeshes; i++)
 	{
 		aiMesh* mesh = scene->mMeshes[i];
 		int iMeshFaces = mesh->mNumFaces;
-		for (int j; j < iMeshFaces; j++)
+
+		for (int j = 0; j < iMeshFaces; j++)
 		{
 			const aiFace& face = mesh->mFaces[j];
-			for (int k; k < 3; k++)
+			for (int k = 0; k < 3; k++)
 			{
 				aiVector3D pos = mesh->mVertices[face.mIndices[k]];
 				aiVector3D uv = mesh->mTextureCoords[0][face.mIndices[k]];

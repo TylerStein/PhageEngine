@@ -1,6 +1,7 @@
 #pragma once
 #include "GL\glew.h"
 #include <string>
+#include <vector>
 #include "pAsset.h"
 #include "pMaterial.h"
 #include "glm\mat4x4.hpp"
@@ -8,7 +9,7 @@
 class pModel : public pAsset
 {
 public:
-	pModel(char* name, pMaterial* material, GLfloat* verts, GLfloat* vertColors, GLfloat* vertUVs, GLuint numVertices);
+	pModel(char* name, pMaterial* material, GLfloat* vertPositions, GLfloat* vertNormals, GLfloat* vertColors, GLfloat* vertUVs, GLuint numVertices);
 	~pModel();
 
 	std::string getName() override;
@@ -43,11 +44,15 @@ private:
 	void setupModel();
 	void initDefaultMatrix();
 
+	//Vertex* vertices;
+
+	GLfloat* vertexPositions;
+	GLfloat* vertexNormals;
+	GLfloat* vertexUVs;
+	GLfloat* vertexColors;
+
 	pMaterial* material;
 	GLuint vertCount;
-	GLfloat* vertices;
-	GLfloat* vertexColors;
-	GLfloat* vertexUVs;
 	GLuint VBOID[3]; //3 vertex buffer objects, for points, colors, and UVs
 	GLuint VAOID; //One vertex array object to hold the vertex buffer objects
 	GLuint modelMatrixLocation;

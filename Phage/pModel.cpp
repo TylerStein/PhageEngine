@@ -5,35 +5,36 @@
 #include <iostream>
 #include <vector>
 
-pModel::pModel(char * name, pMaterial * material, GLfloat * verts,  GLfloat * vertColors, GLfloat* vertUVs, GLuint numVertices)
+pModel::pModel(char * name, pMaterial * material, GLfloat * vertPositions,  GLfloat* vertNormals, GLfloat * vertColors, GLfloat* vertUVs, GLuint numVertices)
 {
 	this->name = name;
 	this->type = pType::MODEL;
 	this->material = material;
 	vertCount = numVertices;
 
-	//Allocate the required memory for the model's vertices (each vertex is 3 floats, so #verts * 3 * size of a float)
-	//Could be made more convenient with a vertex struct
-	vertices = (GLfloat*)malloc(numVertices * 3 * sizeof(GLfloat));
+	//Allocate the required memory for the model's vertex information (number of vertices * 3(x,y,z) * size of one GLfloat)
+	vertexPositions = (GLfloat*)malloc(vertCount * 3 * sizeof(GLfloat));
+	vertexNormals = (GLfloat*)malloc(vertCount * 3 * sizeof(GLfloat));
+	vertexUVs = (GLfloat*)malloc(vertCount * 3 * sizeof(GLfloat));
+	vertexColors = (GLfloat*)malloc(vertCount * 3 * sizeof(GLfloat));
 
-	//Copy over the verticies array (numVertices * 3 because there are 3x locations per vertex, again would be better with a vertex struct)
-	for (GLuint x(0); x < (numVertices * 3); ++x) {
-		vertices[x] = verts[x];
+	//Copy over vertex positions
+	for (GLuint x(0); x < (vertCount); ++x) {
+		vertexPositions[x] = vertPositions[x];
 	}
 
-	//Allocate memory for the colors
-	vertexColors = (GLfloat*)malloc(numVertices * 3 * sizeof(GLfloat));
-
-	//Copy the incoming color info to the vertexColors member
-	for (GLuint x(0); x < (numVertices * 3); ++x) {
+	//Copy over vertex colors
+	for (GLuint x(0); x < (vertCount); ++x) {
 		vertexColors[x] = vertColors[x];
 	}
 
-	//Allocate memory for the UVs
-	vertexUVs = (GLfloat*)malloc(numVertices * 2 * sizeof(GLfloat));
+	//Copy over vertex normals
+	for (GLuint x(0); x < (vertCount); ++x) {
+		vertexNormals[x] = vertNormals[x];
+	}
 
-	//Copy the incoming color info to the vertexColors member
-	for (GLuint x(0); x < (numVertices * 3); ++x) {
+	//Copy over vertex UVs
+	for (GLuint x(0); x < (vertCount); ++x) {
 		vertexUVs[x] = vertUVs[x];
 	}
 
@@ -45,9 +46,10 @@ pModel::pModel(char * name, pMaterial * material, GLfloat * verts,  GLfloat * ve
 
 pModel::~pModel()
 {
-	delete vertices;
-	delete vertexColors;
+	delete vertexPositions;
+	delete vertexNormals;
 	delete vertexUVs;
+	delete vertexColors;
 }
 
 std::string pModel::getName()
@@ -140,7 +142,7 @@ void pModel::setupModel()
 	VBOID[0] = 0;
 	glGenBuffers(1, &VBOID[0]);
 	glBindBuffer(GL_ARRAY_BUFFER, VBOID[0]);
-	glBufferData(GL_ARRAY_BUFFER, vertCount * 3 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertCount * 3 * sizeof(GLfloat), vertexPositions, GL_STATIC_DRAW);
 
 	//Generate the colors VBO, bind it and copy the points onto the buffer
 	VBOID[1] = 0;

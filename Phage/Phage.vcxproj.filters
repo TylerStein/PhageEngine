@@ -3,43 +3,49 @@
   <ItemGroup>
     <ClCompile Include="Clock.cpp" />
     <ClCompile Include="LogManager.cpp" />
+    <ClCompile Include="pHashtable.cpp" />
+    <ClCompile Include="pImage.cpp" />
+    <ClCompile Include="pImageLoader.cpp" />
+    <ClCompile Include="pMatrixStack.cpp" />
     <ClCompile Include="pAsset.cpp" />
     <ClCompile Include="pFileReader.cpp" />
     <ClCompile Include="PhageEngine.cpp" />
     <ClCompile Include="pMaterial.cpp" />
     <ClCompile Include="pModel.cpp" />
+    <ClCompile Include="pModelLoader.cpp" />
     <ClCompile Include="pRenderer.cpp" />
+    <ClCompile Include="pResourceManager.cpp" />
     <ClCompile Include="pSceneGraph.cpp" />
     <ClCompile Include="pSceneNode.cpp" />
     <ClCompile Include="pSceneObject.cpp" />
-<<<<<<< HEAD
-    <ClCompile Include="pModelLoader.cpp" />
-=======
-    <ClCompile Include="pMatrixStack.cpp" />
-    <ClCompile Include="pImage.cpp" />
-    <ClCompile Include="pImageLoader.cpp" />
->>>>>>> refs/remotes/origin/Development
+    <ClCompile Include="pModelManager.cpp" />
+    <ClCompile Include="pResourceFactory.cpp" />
+    <ClCompile Include="pMaterialManager.cpp" />
+    <ClCompile Include="pImageManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Clock.h" />
     <ClInclude Include="LogManager.h" />
+    <ClInclude Include="pHashtable.h" />
+    <ClInclude Include="pImage.h" />
+    <ClInclude Include="pImageLoader.h" />
+    <ClInclude Include="pMatrixStack.h" />
     <ClInclude Include="pAsset.h" />
     <ClInclude Include="pEnums.h" />
     <ClInclude Include="pFileReader.h" />
     <ClInclude Include="PhageEngine.h" />
     <ClInclude Include="pMaterial.h" />
     <ClInclude Include="pModel.h" />
+    <ClInclude Include="pModelLoader.h" />
     <ClInclude Include="pRenderer.h" />
+    <ClInclude Include="pResourceManager.h" />
     <ClInclude Include="pSceneGraph.h" />
     <ClInclude Include="pSceneNode.h" />
     <ClInclude Include="pSceneObject.h" />
-<<<<<<< HEAD
-    <ClInclude Include="pModelLoader.h" />
-=======
-    <ClInclude Include="pMatrixStack.h" />
-    <ClInclude Include="pImage.h" />
-    <ClInclude Include="pImageLoader.h" />
->>>>>>> refs/remotes/origin/Development
+    <ClInclude Include="pModelManager.h" />
+    <ClInclude Include="pResourceFactory.h" />
+    <ClInclude Include="pMaterialManager.h" />
+    <ClInclude Include="pImageManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resources\Shaders\SimpleFragmentShader.frag" />

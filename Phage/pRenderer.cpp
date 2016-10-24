@@ -46,11 +46,15 @@ void pRenderer::renderModel(pModel* model)
 
 void pRenderer::setViewMatrix(glm::vec3 cameraLocation, glm::vec3 cameraTarget, glm::vec3 cameraUp)
 {
+
+	camTar = cameraLocation + glm::normalize(cameraTarget);
+
 	camLoc = cameraLocation;
 	camTar = cameraTarget;
 	camUp = cameraUp;
 	cameraView = glm::lookAt(camLoc, camTar, camUp);
 }
+
 
 void pRenderer::setProjectionMatrix(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat nearPlane, GLfloat farPlane)
 {

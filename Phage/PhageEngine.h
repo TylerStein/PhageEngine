@@ -3,6 +3,7 @@
 #include "GL\glew.h"
 #include "GLFW\glfw3.h"
 #include "pRenderer.h"
+#include "pResourceFactory.h"
 
 /*Class within the library to act as a palceholder in early development*/
 
@@ -26,8 +27,14 @@ public:
 
 	std::vector<pModel*> modelList;
 
+	pResourceFactory* resourceFactory;
+
 private:
 	void doLoop();
 	GLFWwindow* window;
+
+	pModelManager* modelManager;
+	pMaterialManager* materialManager;
+	pImageManager* imageManager;
 };
 

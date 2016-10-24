@@ -1,3 +1,4 @@
 ﻿  main.cpp
-  Tester.vcxproj -> D:\GitHub\PhageEngine\x64\Debug\Tester.exe
-  Tester.vcxproj -> D:\GitHub\PhageEngine\x64\Debug\Tester.pdb (Full PDB)
+e:\github\phageengine\tester\main.cpp(54): warning C4477: 'printf' : format string '%c' requires an argument of type 'int', but variadic argument 1 has type 'std::string'
+e:\github\phageengine\tester\main.cpp(55): warning C4477: 'printf' : format string '%c' requires an argument of type 'int', but variadic argument 1 has type 'std::string'
+  Tester.vcxproj -> E:\GitHub\PhageEngine\x64\Debug\Tester.exe

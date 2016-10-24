@@ -9,7 +9,20 @@ PhageEngine::PhageEngine()
 		
 	}
 
-	modelList = std::vector<pModel*>();
+	//Create an instance of the managers
+	modelManager = new pModelManager();
+	materialManager = new pMaterialManager();
+	imageManager = new pImageManager();
+
+	//Give the modelmanager the other managers
+	modelManager->setMaterialManager(materialManager);
+	modelManager->setImageManager(imageManager);
+
+	//Create an instance of the factory and give it the managers
+	resourceFactory = new pResourceFactory();
+	resourceFactory->setModelManager(modelManager);
+	resourceFactory->setMaterialManager(materialManager);
+	resourceFactory->setImageManager(imageManager);
 }
 
 
@@ -18,6 +31,12 @@ PhageEngine::~PhageEngine()
 	//Destruct the renderer
 	delete renderer;
 	
+	//Delete managers and factory
+	delete modelManager;
+	delete materialManager;
+	delete imageManager;
+	delete resourceFactory;
+
 	//Destroy the window
 	glfwDestroyWindow(window);
 
@@ -65,7 +84,7 @@ void PhageEngine::CreateWindow(GLint width, GLint height, char* title)
 
 void PhageEngine::Start()
 {
-
+	
 
 	
 
@@ -83,12 +102,6 @@ void PhageEngine::onPreRender()
 //Update for rendering events called every frame
 void PhageEngine::onRender()
 {
-	//Render each model in the list if any exist
-	if (!modelList.empty()) {
-		for (int i(0); i < modelList.size(); ++i) {
-			renderer->renderModel(modelList.at(i));
-		}
-	}
 
 
 }

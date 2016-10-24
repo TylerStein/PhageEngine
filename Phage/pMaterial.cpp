@@ -79,7 +79,7 @@ pMaterial::~pMaterial()
 
 std::string pMaterial::getName()
 {
-	return name;
+	return name.c_str();
 }
 
 GLuint pMaterial::getID()

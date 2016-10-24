@@ -13,10 +13,20 @@ public:
 	/*Function returns an instance of the
 	  pModelLoader object. Creates an instance if
 	  one does not exist.*/
-	static pModelLoader* instance();
+	static pModelLoader* instance() {
+		if (_instance == 0)
+		{
+			_instance = new pModelLoader();
+		}
+
+		return _instance;
+	}
 
 	/*ModelInfo struct contains all info
 	relevant to the model*/
+	pModelLoader();
+	~pModelLoader();
+
 	struct ModelInfo {
 		std::vector<glm::vec3> positions;
 		std::vector<glm::vec3> uvs;
@@ -35,8 +45,6 @@ public:
 	The struct is then returned.*/
 	ModelInfo loadModel(std::string path);
 private:
-	pModelLoader();
-	~pModelLoader();
 
 	/*contains instance of the pModelLoader object*/
 	static pModelLoader* _instance;
