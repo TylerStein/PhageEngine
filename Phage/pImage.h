@@ -7,9 +7,9 @@ class pImage :
 {
 public:
 	//Constructor requires a directory to work with
-	pImage(char* name, char* imageDir);
+	pImage(std::string name, std::string imageDir);
 	//Constructor takes a directory, filter type, and wrap mode
-	pImage(char* name, char* imageDir, GLuint minFilterType, GLuint magFilterType, GLuint wrapMode);
+	pImage(std::string name, std::string imageDir, GLuint minFilterType, GLuint magFilterType, GLuint wrapMode);
 	~pImage();
 
 	void bindTexture();
@@ -29,7 +29,7 @@ private:
 	//Data containing the image
 	char* imageData;
 	//Directory of the image file
-	char* imageDirectory;
+	std::string imageDirectory;
 	//Mini filter type
 	GLuint minFilterType;
 	//Magnified filter type

@@ -18,17 +18,17 @@ public:
 	~pModelManager();
 
 	//Gets a model from file on disk
-	HandleType createModel(char* modelName, char* filePath);
+	HandleType createModel(std::string modelName, std::string filePath);
 
 	//Adds a model to the manager
-	HandleType addModel(char* modelName, pModel* mdl);
+	HandleType addModel(std::string modelName, pModel* mdl);
 
 	//Retreives a model from the manager
 	pModel* getModel(HandleType &handle);
-	pModel* getModel(char* modelName);
+	pModel* getModel(std::string modelName);
 
 	//Delete a model from the manager
-	void deleteModel(char* modelName);
+	void deleteModel(std::string modelName);
 
 	//Clear all models from the manager
 	void clear();

@@ -84,10 +84,6 @@ void PhageEngine::CreateWindow(GLint width, GLint height, char* title)
 
 void PhageEngine::Start()
 {
-	
-
-	
-
 	//Start the loop!
 	doLoop();
 }
@@ -102,8 +98,11 @@ void PhageEngine::onPreRender()
 //Update for rendering events called every frame
 void PhageEngine::onRender()
 {
-
-
+	if (!modelList.empty()) {
+		for (int i(0); i < modelList.size(); ++i) {
+			renderer->renderModel(modelList.at(i));
+		}
+	}
 }
 
 //Update for events called after render every frame
@@ -116,7 +115,6 @@ void PhageEngine::onPostRender()
 void PhageEngine::onUpdate()
 {
 	glfwPollEvents();
-
 
 }
 

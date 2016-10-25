@@ -13,17 +13,17 @@ public:
 	void setImageManager(pResourceManager<pImage> imgManager);
 
 	//Gets a material from file on disk
-	HandleType createMaterial(char* materialName, char* filePath);
+	HandleType createMaterial(std::string materialName, std::string filePath);
 
 	//Adds a material to the manager
-	HandleType addMaterial(char* materialName, pMaterial* material);
+	HandleType addMaterial(std::string materialName, pMaterial* material);
 
 	//Retreives a material from the manager
 	pMaterial* getMaterial(HandleType &handle);
-	pMaterial* getMaterial(char* materialName);
+	pMaterial* getMaterial(std::string materialName);
 
 	//Delete a material from the manager
-	void deleteMaterial(char* materialName);
+	void deleteMaterial(std::string materialName);
 
 	//Clear all materials from the manager
 	void clear();

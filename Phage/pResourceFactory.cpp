@@ -32,9 +32,9 @@ void pResourceFactory::setImageManager(pImageManager* imageManager)
 pModel * pResourceFactory::createModel(std::string name, pMaterial * mat, GLfloat * vertPositions,  GLfloat * vertNormals, GLfloat * vertColors, GLfloat * vertUVs, GLuint numVerts)
 {
 	//Create the model in memory
-	pModel* mdl = new pModel((char*)name.c_str(), mat, vertPositions, vertNormals, vertColors, vertUVs, numVerts);
+	pModel* mdl = new pModel(name, mat, vertPositions, vertNormals, vertColors, vertUVs, numVerts);
 	//Add the model to the manager table
-	pResourceHandle<pModel> mdlH = modelManager->addModel((char*)name.c_str(), mdl);
+	pResourceHandle<pModel> mdlH = modelManager->addModel(name, mdl);
 	//Return the model from the table
 	return modelManager->getModel(mdlH);
 }
@@ -44,7 +44,7 @@ pMaterial * pResourceFactory::createMaterial(std::string name, pMaterial::materi
 	//Create the material in memory
 	pMaterial* mtl = new pMaterial(name, info.diffuse, info.ambient, info.shininess, info.alpha);
 	//Add the material to the manager table
-	pResourceHandle<pMaterial> mtlH = materialManager->addMaterial((char*)name.c_str(), mtl);
+	pResourceHandle<pMaterial> mtlH = materialManager->addMaterial(name, mtl);
 	//Return the material from the table
 	return materialManager->getMaterial(mtlH);
 }
@@ -52,9 +52,9 @@ pMaterial * pResourceFactory::createMaterial(std::string name, pMaterial::materi
 pMaterial * pResourceFactory::createMaterial(std::string name, pImage * img)
 {
 	//Create the material in memory
-	pMaterial* mtl = new pMaterial(name.c_str(), img);
+	pMaterial* mtl = new pMaterial(name, img);
 	//Add the material to the manager table
-	pResourceHandle<pMaterial> mtlH = materialManager->addMaterial((char*)name.c_str(), mtl);
+	pResourceHandle<pMaterial> mtlH = materialManager->addMaterial(name, mtl);
 	//Return the material from the table
 	return materialManager->getMaterial(mtlH);
 }
@@ -62,9 +62,9 @@ pMaterial * pResourceFactory::createMaterial(std::string name, pImage * img)
 pMaterial * pResourceFactory::createMaterial(std::string name, std::vector<pImage*> images, GLenum blendMode)
 {
 	//Create the material in memory
-	pMaterial* mtl = new pMaterial(name.c_str(), images, blendMode);
+	pMaterial* mtl = new pMaterial(name, images, blendMode);
 	//Add the material to the manager table
-	pResourceHandle<pMaterial> mtlH = materialManager->addMaterial((char*)name.c_str(), mtl);
+	pResourceHandle<pMaterial> mtlH = materialManager->addMaterial(name, mtl);
 	//Return the material from the table
 	return materialManager->getMaterial(mtlH);
 }
@@ -72,14 +72,14 @@ pMaterial * pResourceFactory::createMaterial(std::string name, std::vector<pImag
 pImage * pResourceFactory::createImage(std::string name, std::string filePath)
 {
 	//Create the image in memory
-	pImage* img = new pImage((char*)name.c_str(), (char*)filePath.c_str());
+	pImage* img = new pImage(name, filePath);
 	//Add the image to the manager table
-	pResourceHandle<pImage> imgH = imageManager->addImage((char*)name.c_str(), img);
+	pResourceHandle<pImage> imgH = imageManager->addImage(name, img);
 	//Return the image from the table
 	return imageManager->getImage(imgH);
 }
 
-pModel * pResourceFactory::getModel(char* name, char* path)
+pModel * pResourceFactory::getModel(std::string name, std::string path)
 {
 	//Generate a model and get it's handle
 	pResourceHandle<pModel> mdlHandle = modelManager->createModel(name, path);
@@ -87,31 +87,31 @@ pModel * pResourceFactory::getModel(char* name, char* path)
 	return modelManager->getModel(mdlHandle);
 }
 
-pModel * pResourceFactory::getModel(char * name)
+pModel * pResourceFactory::getModel(std::string name)
 {
 	//Get the model from the manager's hashtable
 	return modelManager->getModel(name);
 
 }
 
-pMaterial * pResourceFactory::getMaterial(char * name, char * path)
+pMaterial * pResourceFactory::getMaterial(std::string name, std::string path)
 {
 	pResourceHandle<pMaterial> mtlH = materialManager->createMaterial(name, path);
 	return materialManager->getMaterial(mtlH);
 }
 
-pMaterial * pResourceFactory::getMaterial(char * name)
+pMaterial * pResourceFactory::getMaterial(std::string name)
 {
 	return materialManager->getMaterial(name);
 }
 
-pImage * pResourceFactory::getImage(char * name, char * path)
+pImage * pResourceFactory::getImage(std::string name, std::string path)
 {
 	pResourceHandle<pImage> imgH = imageManager->createImage(name, path);
 	return imageManager->getImage(imgH);
 }
 
-pImage * pResourceFactory::getImage(char * name)
+pImage * pResourceFactory::getImage(std::string name)
 {
 	return imageManager->getImage(name);
 }

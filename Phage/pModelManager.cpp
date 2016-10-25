@@ -19,7 +19,7 @@ pModelManager::~pModelManager()
 	clear();
 }
 
-pModelManager::HandleType pModelManager::createModel(char * modelName, char * filePath)
+pModelManager::HandleType pModelManager::createModel(std::string modelName, std::string filePath)
 {
 	pModelManager::HandleType result(-1);
 
@@ -71,7 +71,7 @@ pModelManager::HandleType pModelManager::createModel(char * modelName, char * fi
 	//Create a model based on that info
 	pModel* mdl = new pModel(modelName, mat, vertPositions, vertNormals, vertColors, vertUVs, (GLuint)info.positions.size());
 	
-	result = modelResources.put((std::string)modelName, mdl);
+	result = modelResources.put(modelName, mdl);
 
 	//Delete vert information, the model constructor copies this info
 	delete[] vertPositions;
@@ -82,9 +82,9 @@ pModelManager::HandleType pModelManager::createModel(char * modelName, char * fi
 	return result;
 }
 
-pModelManager::HandleType pModelManager::addModel(char * modelName, pModel* mdl)
+pModelManager::HandleType pModelManager::addModel(std::string modelName, pModel* mdl)
 {
-	return modelResources.put((std::string)modelName, mdl);
+	return modelResources.put(modelName, mdl);
 }
 
 pModel * pModelManager::getModel(HandleType & handle)
@@ -92,15 +92,15 @@ pModel * pModelManager::getModel(HandleType & handle)
 	return modelResources.get(handle);
 }
 
-pModel * pModelManager::getModel(char * modelName)
+pModel * pModelManager::getModel(std::string modelName)
 {
 	pResourceHandle<pModel> mdl =  modelResources.get(modelName);
 	return modelResources.get(mdl);
 }
 
-void pModelManager::deleteModel(char * modelName)
+void pModelManager::deleteModel(std::string modelName)
 {
-	modelResources.remove((std::string)modelName);
+	modelResources.remove(modelName);
 }
 
 void pModelManager::clear()

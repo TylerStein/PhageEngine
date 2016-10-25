@@ -28,17 +28,17 @@ public:
 
 	//Functions to receive assets from cache or file
 	//Retreive a model from file
-	pModel* getModel(char* name, char* path);
+	pModel* getModel(std::string name, std::string path);
 	//Retreive an existing model
-	pModel* getModel(char* name);
+	pModel* getModel(std::string name);
 	//Retreive a material from file
-	pMaterial* getMaterial(char* name, char* path);
+	pMaterial* getMaterial(std::string name, std::string path);
 	//Retreive an existing material
-	pMaterial* getMaterial(char* name);
+	pMaterial* getMaterial(std::string name);
 	//Retreive an image from file
-	pImage* getImage(char* name, char* path);
+	pImage* getImage(std::string name, std::string path);
 	//Retreive an existing image
-	pImage* getImage(char* name);
+	pImage* getImage(std::string name);
 
 private:
 	//Manager references

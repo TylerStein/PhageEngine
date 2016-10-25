@@ -1,6 +1,6 @@
 #pragma once
 #include "PhageEngine.h"
-
+#include <iostream>
 
 int main() {
 	//Create the phage engine on the heap 
@@ -31,12 +31,12 @@ int main() {
 	};
 
 	GLfloat testNormals[] = {
-		0.0f, 0.0f,  1.0f,
-		0.0f, 0.0f,  1.0f,
-		0.0f, 0.0f,  1.0f
+		1.0f, 1.0f,  1.0f,
+		1.0f, 1.0f,  1.0f,
+		1.0f, 1.0f,  1.0f
 	};
 
-	//Manually material info
+	//Manually create some material info
 	pMaterial::materialInfo mtl;
 	mtl.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
 	mtl.ambient = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -50,39 +50,27 @@ int main() {
 
 	//Generate a model called TestModel
 	pModel* testModel = phage->resourceFactory->createModel("TestModel", testMat, testVerts, testNormals, testColors, testUVs, testVertCount);
+	pModel* otherModel = phage->resourceFactory->createModel("OtherModel", testMat, testVerts, testNormals, testColors, testUVs, testVertCount);
 
-	printf("Material name is: %s\n", phage->resourceFactory->getMaterial("TestMat")->getName());
-	printf("Model name is: %s\n", phage->resourceFactory->getModel("TestModel")->getName());
+	//Test grabbing resources from managers via the factory
+	std::cout << "Material name is: " << phage->resourceFactory->getMaterial("TestMat")->getName() << std::endl;
+	std::cout << "First model name is: " << phage->resourceFactory->getModel("TestModel")->getName() << std::endl;
+	std::cout << "Other model name is: " << phage->resourceFactory->getModel("OtherModel")->getName() << std::endl;
+	
+	//Set the renderer view matrix
+	phage->renderer->setViewMatrix(glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	phage->renderer->setProjectionMatrix(-1.0f, 1.0f, -1.0f, 1.0f, 0.2f, 5.0f);
 
-	printf("Material shader id %i\n", phage->resourceFactory->getMaterial("TestMat")->getShaderProgramID());
-	printf("Model vert count %i\n", phage->resourceFactory->getModel("TestModel")->getVertCount());
+	//Add the models to the model list - eventually will be replaced by scene graph
+	phage->modelList.push_back(testModel);
+	phage->modelList.push_back(otherModel);
 
-	//Make an image
-	//pImage* testImage = new pImage("Bricks", "../Resources/Images/bricks.png");
+	//Mess with the model matrices
+	testModel->setPosition(glm::vec3(0.0f, 1.0f, 0.0f));
+	otherModel->setPosition(glm::vec3(1.0f, 0.0f, 0.0f));
 
-	//Make a material
-	//pMaterial* testMat = new pMaterial("TestMat", testImage);
-	//pMaterial* testMat = new pMaterial("TestMat", glm::vec3(1.0f, 1.0f, 1.0f));
-
-	//Make the models on the heap
-	//pModel* testModel = new pModel("TestModel", testMat, testVerts, testNormals, testColors, testUVs, testVertCount);
-
-	//Clear the vert info and material from memory (they've been copied over to the models)
-	//delete testMat;
-	//delete[] testVerts;
-	//delete[] testNormals;
-	//delete[] testColors;
-	//delete[] testUVs;
-
-	//testModel->rotateAround(glm::vec3(0.0f, 0.0f, 1.0f), 0.0f);
-	//testModel->setScale(glm::vec3(2.0f, 2.0f, 1.0f));
-	//testModel->translate(glm::vec3(0.0f, 0.0f, 0.0f));
-
-	phage->renderer->setViewMatrix(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-
-	//Add the models to the model list
-	//phage->modelList.push_back(testModel);
-	//phage->modelList.push_back(otherModel);
+	otherModel->setScale(glm::vec3(1.0f, 2.0f, 1.0f));
+	otherModel->rotateAround(glm::vec3(0.0f, 0.0f, 1.0f), 3.0f);
 
 	//Start the engine loop
 	phage->Start();
@@ -90,6 +78,7 @@ int main() {
 	//delete testImage;
 	delete testMat;
 	delete testModel;
+	delete otherModel;
 	delete phage;
 
 

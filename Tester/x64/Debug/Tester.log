@@ -1,4 +1,6 @@
 ﻿  main.cpp
-e:\github\phageengine\tester\main.cpp(54): warning C4477: 'printf' : format string '%c' requires an argument of type 'int', but variadic argument 1 has type 'std::string'
-e:\github\phageengine\tester\main.cpp(55): warning C4477: 'printf' : format string '%c' requires an argument of type 'int', but variadic argument 1 has type 'std::string'
+e:\github\phageengine\tester\main.cpp(56): warning C4154: deletion of an array expression; conversion to pointer supplied
+e:\github\phageengine\tester\main.cpp(57): warning C4154: deletion of an array expression; conversion to pointer supplied
+e:\github\phageengine\tester\main.cpp(58): warning C4154: deletion of an array expression; conversion to pointer supplied
+e:\github\phageengine\tester\main.cpp(59): warning C4154: deletion of an array expression; conversion to pointer supplied
   Tester.vcxproj -> E:\GitHub\PhageEngine\x64\Debug\Tester.exe

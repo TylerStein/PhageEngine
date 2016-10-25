@@ -17,7 +17,7 @@ void pMaterialManager::setImageManager(pResourceManager<pImage> imgManager)
 	//imageManager = imgManager
 }
 
-pMaterialManager::HandleType pMaterialManager::createMaterial(char * materialName, char * filePath)
+pMaterialManager::HandleType pMaterialManager::createMaterial(std::string materialName, std::string filePath)
 {
 	pMaterialManager::HandleType result(-1);
 
@@ -26,9 +26,9 @@ pMaterialManager::HandleType pMaterialManager::createMaterial(char * materialNam
 	return result;
 }
 
-pMaterialManager::HandleType pMaterialManager::addMaterial(char * materialName, pMaterial * material)
+pMaterialManager::HandleType pMaterialManager::addMaterial(std::string materialName, pMaterial * material)
 {
-	return materialResources.put((std::string)materialName, material);
+	return materialResources.put(materialName, material);
 }
 
 pMaterial * pMaterialManager::getMaterial(HandleType & handle)
@@ -36,15 +36,15 @@ pMaterial * pMaterialManager::getMaterial(HandleType & handle)
 	return materialResources.get(handle);
 }
 
-pMaterial * pMaterialManager::getMaterial(char * materialName)
+pMaterial * pMaterialManager::getMaterial(std::string materialName)
 {
-	pResourceHandle<pMaterial> mtl = materialResources.get((std::string)materialName);
+	pResourceHandle<pMaterial> mtl = materialResources.get(materialName);
 	return materialResources.get(mtl);
 }
 
-void pMaterialManager::deleteMaterial(char * materialName)
+void pMaterialManager::deleteMaterial(std::string materialName)
 {
-	materialResources.remove((std::string)materialName);
+	materialResources.remove(materialName);
 }
 
 void pMaterialManager::clear()

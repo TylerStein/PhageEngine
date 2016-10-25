@@ -12,17 +12,17 @@ public:
 	~pImageManager();
 
 	//Gets a material from file on disk
-	HandleType createImage(char* imageName, char* filePath);
+	HandleType createImage(std::string imageName, std::string filePath);
 
 	//Adds a material to the manager
-	HandleType addImage(char* imageName, pImage* image);
+	HandleType addImage(std::string imageName, pImage* image);
 
 	//Retreives a material from the manager
 	pImage* getImage(HandleType &handle);
-	pImage* getImage(char* imageName);
+	pImage* getImage(std::string imageName);
 
 	//Delete a material from the manager
-	void deleteImage(char* imageName);
+	void deleteImage(std::string imageName);
 
 	//Clear all materials from the manager
 	void clear();

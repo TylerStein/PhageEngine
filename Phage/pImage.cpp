@@ -1,12 +1,12 @@
 #include "pImage.h"
 #include "pImageLoader.h"
 
-pImage::pImage(char* name, char* imageDir)
+pImage::pImage(std::string name, std::string imageDir)
 {
 	pImage(name, imageDir, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE);
 }
 
-pImage::pImage(char* name, char * imageDir, GLuint minFilterType, GLuint magFilterType, GLuint wrapMode)
+pImage::pImage(std::string name, std::string imageDir, GLuint minFilterType, GLuint magFilterType, GLuint wrapMode)
 {
 	this->name = name;
 	imageDirectory = imageDir;
@@ -48,7 +48,7 @@ void pImage::loadImage()
 	pImageLoader loader = pImageLoader();
 
 	//Load the image and store its width and height
-	imageData = loader.loadImage(imageDirectory);
+	imageData = loader.loadImage((char*)imageDirectory.c_str());
 	width = loader.getWidth();
 	height = loader.getHeight();
 

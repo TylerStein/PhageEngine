@@ -24,10 +24,11 @@ public:
 	void onPostUpdate();
 
 	pRenderer* renderer;
+	pResourceFactory* resourceFactory;
 
 	std::vector<pModel*> modelList;
 
-	pResourceFactory* resourceFactory;
+
 
 private:
 	void doLoop();
