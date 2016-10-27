@@ -79,7 +79,7 @@ pMaterial::~pMaterial()
 
 std::string pMaterial::getName()
 {
-	return name;
+	return name.c_str();
 }
 
 GLuint pMaterial::getID()
@@ -113,22 +113,25 @@ void pMaterial::loadShader(char * vertexShaderPath, char * fragmentShaderPath)
 	glShaderSource(fragShaderID, 1, &fragment_shader, NULL);
 	glCompileShader(fragShaderID);
 
-	
-
 	//Create the shader program
 	shaderProgramID = glCreateProgram();
 	glAttachShader(shaderProgramID, fragShaderID);
 	glAttachShader(shaderProgramID, vertShaderID);
-	glLinkProgram(shaderProgramID);
-	
-	//Check for linking errors
-	GLint isLinked = 0;
-	glGetProgramiv(shaderProgramID, GL_LINK_STATUS, &isLinked);
-	if (isLinked == GL_FALSE) {
-		printf("Shader linking error!\n");
-		LogManager::instance()->error("Error linking shader!\n");
-	}
 
+	glLinkProgram(shaderProgramID);
+
+	//Check for linking errors
+	GLint linked;
+	glGetProgramiv(shaderProgramID, GL_LINK_STATUS, &linked);
+	if (!linked) {
+		GLsizei len;
+		glGetProgramiv(shaderProgramID, GL_INFO_LOG_LENGTH, &len);
+
+		GLchar* log = new GLchar[len + 1];
+		glGetProgramInfoLog(shaderProgramID, len, &len, log);
+		std::cerr << "Shader linking failed: " << log << std::endl;
+		delete[] log;
+	}
 }
 
 GLboolean pMaterial::hasTexture()

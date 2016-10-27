@@ -17,6 +17,7 @@ public:
 	void setViewMatrix(glm::vec3 cameraLocation, glm::vec3 cameraTarget, glm::vec3 cameraUp);
 	void setProjectionMatrix(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat nearPlane, GLfloat farPlane);
 
+	GLenum glCheckError_(const char *file, int line);
 private:
 	void initDefaultView();
 

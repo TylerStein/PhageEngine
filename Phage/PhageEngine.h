@@ -3,15 +3,22 @@
 #include "GL\glew.h"
 #include "GLFW\glfw3.h"
 #include "pRenderer.h"
-
-/*Class within the library to act as a palceholder in early development*/
+#include "pResourceFactory.h"
+#include "GameImplement.h"
 
 class PhageEngine
 {
 public:
-	PhageEngine();
-	~PhageEngine();
+	static PhageEngine* setupEngine(GameImplement* game) {
+		if (instance == nullptr) {
+			instance = new PhageEngine(game);
+		}
 
+		return instance;
+	}
+
+	PhageEngine(GameImplement* game);
+	~PhageEngine();
 	//Placeholder window creation method
 	void CreateWindow(GLint width, GLint height, char* title);
 	void Start();
@@ -23,11 +30,20 @@ public:
 	void onPostUpdate();
 
 	pRenderer* renderer;
+	pResourceFactory* resourceFactory;
 
 	std::vector<pModel*> modelList;
 
-private:
-	void doLoop();
+
 	GLFWwindow* window;
+private:
+	static PhageEngine* instance;
+
+	void doLoop();
+
+	GameImplement* game;
+	pModelManager* modelManager;
+	pMaterialManager* materialManager;
+	pImageManager* imageManager;
 };
 

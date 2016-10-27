@@ -35,9 +35,9 @@ char * pImageLoader::loadImage(char * filePath)
 		LogManager::instance()->warning("Image loaded has a 0 width or height!");
 	}
 
-	//Make a char array and get the image data
+	//Return the image data bits
+	imageData = (char*)malloc(width * height * 3 * sizeof(GLfloat));
 	imageData = (char*)FreeImage_GetBits(image);
-
 	return imageData;
 }
 
