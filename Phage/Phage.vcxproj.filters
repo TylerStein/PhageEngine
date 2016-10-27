@@ -46,6 +46,7 @@
     <ClInclude Include="pResourceFactory.h" />
     <ClInclude Include="pMaterialManager.h" />
     <ClInclude Include="pImageManager.h" />
+    <ClInclude Include="GameImplement.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resources\Shaders\SimpleFragmentShader.frag" />

@@ -150,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Clock.h" />
+    <ClInclude Include="GameImplement.h" />
     <ClInclude Include="LogManager.h" />
     <ClInclude Include="pHashtable.h" />
     <ClInclude Include="pImage.h" />

@@ -1,13 +1,19 @@
 #include "PhageEngine.h"
 #include <iostream>
 
-PhageEngine::PhageEngine()
+PhageEngine* PhageEngine::instance = NULL;
+
+PhageEngine::PhageEngine(GameImplement* game)
 {
 	//Attempt to initialize GLFW
 	if (!glfwInit()) {
 		//GLFW failed to initialize
 		
+		printf("GLFW INIT ERROR");
 	}
+
+
+	this->game = game;
 
 	//Create an instance of the managers
 	modelManager = new pModelManager();
@@ -27,21 +33,28 @@ PhageEngine::PhageEngine()
 
 
 PhageEngine::~PhageEngine()
-{
-	//Destruct the renderer
-	delete renderer;
-	
-	//Delete managers and factory
-	delete modelManager;
-	delete materialManager;
-	delete imageManager;
-	delete resourceFactory;
-
+{	
 	//Destroy the window
 	glfwDestroyWindow(window);
 
 	//End glfw processes
 	glfwTerminate();
+
+	//Destruct the renderer
+	renderer->~pRenderer();
+	delete renderer;
+	
+	//CLEARING KEYS AND VALUES CAUSES AN ERROR!!!
+	delete modelManager;
+	delete materialManager;
+	delete imageManager;
+	delete resourceFactory;
+
+	//Delete managers and factory
+	//modelManager->~pModelManager();
+	//materialManager->~pMaterialManager();
+	//imageManager->~pImageManager();
+	//resourceFactory->~pResourceFactory();
 }
 
 void PhageEngine::CreateWindow(GLint width, GLint height, char* title)
@@ -63,7 +76,12 @@ void PhageEngine::CreateWindow(GLint width, GLint height, char* title)
 
 	//Start GLEW
 	glewExperimental = GL_TRUE;
-	glewInit();
+
+	if (glewInit() != GLEW_OK) {
+		//glew failed to initialize
+		printf("GLEW INIT ERROR");
+
+	}
 
 	//Enable gl debug messages
 	glEnable(GL_DEBUG_OUTPUT);
@@ -125,11 +143,19 @@ void PhageEngine::onPostUpdate()
 
 void PhageEngine::doLoop() {
 	//While the window isn't being closed, call the looped functions
+	game->onStart();
 	do {
-		onUpdate();
-		onPostUpdate();
-		onPreRender();
-		onRender();
-		onPostRender();
+		game->onUpdate();
+		game->onPostUpdate();
+		game->onPreRender();
+		game->onRender();
+		game->onPostRender();
+		//onUpdate();
+		//onPostUpdate();
+		//onPreRender();
+		//onRender();
+		//onPostRender();
 	} while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
+	this->~PhageEngine();
+	game->onEnd();
 }
