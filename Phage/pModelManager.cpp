@@ -69,8 +69,9 @@ pModelManager::HandleType pModelManager::createModel(std::string modelName, std:
 	pMaterial* mat = new pMaterial("DefaultMat");
 
 	//Create a model based on that info
-	pModel* mdl = new pModel(modelName, mat, vertPositions, vertNormals, vertColors, vertUVs, (GLuint)info.positions.size());
-	
+	//pModel* mdl = new pModel(modelName, mat, vertPositions, vertNormals, vertColors, vertUVs, (GLuint)info.positions.size());
+	pModel* mdl = new pModel(modelName, mat, vertPositions, vertColors, vertUVs, info.positions.size());
+
 	result = modelResources.put(modelName, mdl);
 
 	//Delete vert information, the model constructor copies this info

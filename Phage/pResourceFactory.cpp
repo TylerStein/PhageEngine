@@ -32,7 +32,8 @@ void pResourceFactory::setImageManager(pImageManager* imageManager)
 pModel * pResourceFactory::createModel(std::string name, pMaterial * mat, GLfloat * vertPositions,  GLfloat * vertNormals, GLfloat * vertColors, GLfloat * vertUVs, GLuint numVerts)
 {
 	//Create the model in memory
-	pModel* mdl = new pModel(name, mat, vertPositions, vertNormals, vertColors, vertUVs, numVerts);
+	//pModel* mdl = new pModel(name, mat, vertPositions, vertNormals, vertColors, vertUVs, numVerts);
+	pModel* mdl = new pModel(name, mat, vertPositions, vertColors, vertUVs, numVerts);
 	//Add the model to the manager table
 	pResourceHandle<pModel> mdlH = modelManager->addModel(name, mdl);
 	//Return the model from the table
@@ -73,6 +74,16 @@ pImage * pResourceFactory::createImage(std::string name, std::string filePath)
 {
 	//Create the image in memory
 	pImage* img = new pImage(name, filePath);
+	//Add the image to the manager table
+	pResourceHandle<pImage> imgH = imageManager->addImage(name, img);
+	//Return the image from the table
+	return imageManager->getImage(imgH);
+}
+
+pImage * pResourceFactory::createDebugImage(std::string name)
+{
+	//Create the image in memory
+	pImage* img = new pImage(name);
 	//Add the image to the manager table
 	pResourceHandle<pImage> imgH = imageManager->addImage(name, img);
 	//Return the image from the table

@@ -52,7 +52,6 @@ void pRenderer::setViewMatrix(glm::vec3 cameraLocation, glm::vec3 cameraTarget, 
 	cameraView = glm::lookAt(camLoc, camTar, camUp);
 }
 
-
 void pRenderer::setProjectionMatrix(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat nearPlane, GLfloat farPlane)
 {
 	projMatrix = glm::frustum(left, right, bottom, top, nearPlane, farPlane);

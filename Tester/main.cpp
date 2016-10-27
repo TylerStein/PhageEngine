@@ -13,8 +13,8 @@ int main() {
 	//Make a triangle for the top-left
 	GLuint testVertCount = 3;
 	GLfloat testVerts[] = {
-		-0.75f, 0.75f,  0.0f,
-		-0.75f, 0.0f,  0.0f,
+		-1.0f, 1.0f,  0.0f,
+		-1.0f, 0.0f,  0.0f,
 		0.0f, 0.0f,  0.0f
 	};
 
@@ -25,9 +25,9 @@ int main() {
 	};
 
 	GLfloat testUVs[] = {
-		-0.75f, 0.75f,
-		-0.75f, 0.0f,
-		0.0f, 0.0f
+		0.0f, 1.0f,
+		0.0f, 0.0f,
+		1.0f, 0.0f
 	};
 
 	GLfloat testNormals[] = {
@@ -45,8 +45,11 @@ int main() {
 	mtl.bHasTexture = false;
 	mtl.blendMode = GL_ADD;
 
+	//Generate an image called TestImage
+	pImage* testImg = phage->resourceFactory->createImage("TestImage", "../Resources/Images/bricks.png");
+
 	//Generate a material called TestMat
-	pMaterial* testMat = phage->resourceFactory->createMaterial("TestMat", mtl);
+	pMaterial* testMat = phage->resourceFactory->createMaterial("TestMat", testImg);
 
 	//Generate a model called TestModel
 	pModel* testModel = phage->resourceFactory->createModel("TestModel", testMat, testVerts, testNormals, testColors, testUVs, testVertCount);
@@ -58,19 +61,18 @@ int main() {
 	std::cout << "Other model name is: " << phage->resourceFactory->getModel("OtherModel")->getName() << std::endl;
 	
 	//Set the renderer view matrix
-	phage->renderer->setViewMatrix(glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	phage->renderer->setProjectionMatrix(-1.0f, 1.0f, -1.0f, 1.0f, 0.2f, 5.0f);
+	phage->renderer->setViewMatrix(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	phage->renderer->setProjectionMatrix(-0.5f, 0.5f, -0.5f, 0.5f, 0.2f, 5.0f);
 
 	//Add the models to the model list - eventually will be replaced by scene graph
 	phage->modelList.push_back(testModel);
 	phage->modelList.push_back(otherModel);
 
 	//Mess with the model matrices
-	testModel->setPosition(glm::vec3(0.0f, 1.0f, 0.0f));
+	testModel->setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 	otherModel->setPosition(glm::vec3(1.0f, 0.0f, 0.0f));
 
-	otherModel->setScale(glm::vec3(1.0f, 2.0f, 1.0f));
-	otherModel->rotateAround(glm::vec3(0.0f, 0.0f, 1.0f), 3.0f);
+	testModel->rotateAround(glm::vec3(0.0f, 0.0f, 1.0f), glm::radians(45.0f));
 
 	//Start the engine loop
 	phage->Start();

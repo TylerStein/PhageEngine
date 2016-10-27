@@ -5,38 +5,35 @@
 #include <iostream>
 #include <vector>
 
-pModel::pModel(std::string name, pMaterial * material, GLfloat * vertPositions,  GLfloat* vertNormals, GLfloat * vertColors, GLfloat* vertUVs, GLuint numVertices)
+pModel::pModel(std::string name, pMaterial * material, GLfloat * verts, GLfloat * vertColors, GLfloat* vertUVs, GLuint numVertices)
 {
 	this->name = name;
 	this->type = pType::MODEL;
 	this->material = material;
 	vertCount = numVertices;
 
-	//Allocate the required memory for the model's vertex information (number of vertices * 3(x,y,z) * size of one GLfloat)
-	vertexPositions = (GLfloat*)malloc(vertCount * 3 * sizeof(GLfloat));
-	vertexNormals = (GLfloat*)malloc(vertCount * 3 * sizeof(GLfloat));
-	vertexColors = (GLfloat*)malloc(vertCount * 3 * sizeof(GLfloat));
+	//Allocate the required memory for the model's vertices (each vertex is 3 floats, so #verts * 3 * size of a float)
+	//Could be made more convenient with a vertex struct
+	vertices = (GLfloat*)malloc(numVertices * 3 * sizeof(GLfloat));
 
-	//UV information is 2 units (x, y)
-	vertexUVs = (GLfloat*)malloc(vertCount * 2 * sizeof(GLfloat));
-
-	//Copy over vertex positions
-	for (GLuint x(0); x < (vertCount); ++x) {
-		vertexPositions[x] = vertPositions[x];
+	//Copy over the verticies array (numVertices * 3 because there are 3x locations per vertex, again would be better with a vertex struct)
+	for (GLuint x(0); x < (numVertices * 3); ++x) {
+		vertices[x] = verts[x];
 	}
 
-	//Copy over vertex colors
-	for (GLuint x(0); x < (vertCount); ++x) {
+	//Allocate memory for the colors
+	vertexColors = (GLfloat*)malloc(numVertices * 3 * sizeof(GLfloat));
+
+	//Copy the incoming color info to the vertexColors member
+	for (GLuint x(0); x < (numVertices * 3); ++x) {
 		vertexColors[x] = vertColors[x];
 	}
 
-	//Copy over vertex normals
-	for (GLuint x(0); x < (vertCount); ++x) {
-		vertexNormals[x] = vertNormals[x];
-	}
+	//Allocate memory for the UVs
+	vertexUVs = (GLfloat*)malloc(numVertices * 2 * sizeof(GLfloat));
 
-	//Copy over vertex UVs
-	for (GLuint x(0); x < (vertCount); ++x) {
+	//Copy the incoming color info to the vertexColors member
+	for (GLuint x(0); x < (numVertices * 3); ++x) {
 		vertexUVs[x] = vertUVs[x];
 	}
 
@@ -48,10 +45,9 @@ pModel::pModel(std::string name, pMaterial * material, GLfloat * vertPositions, 
 
 pModel::~pModel()
 {
-	delete vertexPositions;
-	delete vertexNormals;
-	delete vertexUVs;
+	delete vertices;
 	delete vertexColors;
+	delete vertexUVs;
 }
 
 std::string pModel::getName()
@@ -112,7 +108,7 @@ pMaterial * pModel::getMaterial()
 
 void pModel::rotateAround(glm::vec3 rot, GLfloat amount)
 {
-	rotationMatrix = glm::rotate(amount, rot);
+	rotationMatrix = glm::rotate(glm::radians(amount), rot);
 }
 
 void pModel::scale(glm::vec3 scl)
@@ -144,7 +140,7 @@ void pModel::setupModel()
 	VBOID[0] = 0;
 	glGenBuffers(1, &VBOID[0]);
 	glBindBuffer(GL_ARRAY_BUFFER, VBOID[0]);
-	glBufferData(GL_ARRAY_BUFFER, vertCount * 3 * sizeof(GLfloat), vertexPositions, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertCount * 3 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
 
 	//Generate the colors VBO, bind it and copy the points onto the buffer
 	VBOID[1] = 0;
@@ -177,9 +173,9 @@ void pModel::setupModel()
 
 	//Bind our third (UV) buffer to the VAO
 	glBindBuffer(GL_ARRAY_BUFFER, VBOID[2]);
-	//Bind the vColor shader attribute to the 1st VBO (color)
-	glBindAttribLocation(getShaderProgramID(), 2, "vTexCoord");
-	//Attirbute pointer to the 2nd index, 2 of type, type is float, not normalized, 0 stride, no pointer
+	//Bind the vColor shader attribute to the 3rd VBO (UV)
+	glBindAttribLocation(getShaderProgramID(), 1, "vTexCoord");
+	//Attirbute pointer to the 1st index, 2 of type, type is float, not normalized, 0 stride, no pointer
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, NULL);
 
 	//Enable the vertex attribute arrays

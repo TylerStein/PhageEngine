@@ -45,7 +45,7 @@ pModelLoader::ModelInfo pModelLoader::loadModel(std::string path)
 				normConversion.y = normal.y;
 				normConversion.z = normal.z;
 
-
+				mI.colors.push_back(glm::vec3(1.0f, 1.0f, 1.0f));
 				mI.positions.push_back(posConversion);
 				mI.uvs.push_back(uvConversion);
 				mI.normals.push_back(normConversion);

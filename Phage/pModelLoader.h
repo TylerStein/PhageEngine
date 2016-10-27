@@ -29,6 +29,7 @@ public:
 
 	struct ModelInfo {
 		std::vector<glm::vec3> positions;
+		std::vector<glm::vec3> colors;
 		std::vector<glm::vec3> uvs;
 		std::vector<glm::vec3> normals;
 	};

@@ -10,9 +10,15 @@ public:
 	pImage(std::string name, std::string imageDir);
 	//Constructor takes a directory, filter type, and wrap mode
 	pImage(std::string name, std::string imageDir, GLuint minFilterType, GLuint magFilterType, GLuint wrapMode);
+	//Basic constructor creates a fill-in checkerboard material
+	pImage(std::string name);
+
 	~pImage();
 
 	void bindTexture();
+
+	//Creates a 4 pixel (12 float) checkerboard texture and assigns it to imageData
+	void generateCheckerboard();
 
 	//Returns the textureID
 	GLuint getTextureID();
