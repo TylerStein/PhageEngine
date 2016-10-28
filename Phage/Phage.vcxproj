@@ -167,6 +167,7 @@
     <ClInclude Include="pModel.h" />
     <ClInclude Include="pModelLoader.h" />
     <ClInclude Include="pModelManager.h" />
+    <ClInclude Include="pPlane.h" />
     <ClInclude Include="pRenderer.h" />
     <ClInclude Include="pResourceFactory.h" />
     <ClInclude Include="pResourceManager.h" />
@@ -191,6 +192,7 @@
     <ClCompile Include="pModel.cpp" />
     <ClCompile Include="pModelLoader.cpp" />
     <ClCompile Include="pModelManager.cpp" />
+    <ClCompile Include="pPlane.cpp" />
     <ClCompile Include="pRenderer.cpp" />
     <ClCompile Include="pResourceFactory.cpp" />
     <ClCompile Include="pResourceManager.cpp" />

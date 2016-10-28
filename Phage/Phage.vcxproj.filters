@@ -22,6 +22,8 @@
     <ClCompile Include="pResourceFactory.cpp" />
     <ClCompile Include="pMaterialManager.cpp" />
     <ClCompile Include="pImageManager.cpp" />
+    <ClCompile Include="pFrustum.cpp" />
+    <ClCompile Include="pPlane.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Clock.h" />
@@ -47,6 +49,8 @@
     <ClInclude Include="pMaterialManager.h" />
     <ClInclude Include="pImageManager.h" />
     <ClInclude Include="GameImplement.h" />
+    <ClInclude Include="pFrustum.h" />
+    <ClInclude Include="pPlane.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resources\Shaders\SimpleFragmentShader.frag" />
