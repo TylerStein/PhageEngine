@@ -1,3 +1,0 @@
-﻿  main.cpp
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
-  Tester.vcxproj -> C:\Users\shane\Documents\GitHub\PhageEngine\x64\Debug\Tester.exe

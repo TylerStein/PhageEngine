@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-pModel::pModel(char * name, pMaterial * material, GLfloat * verts,  GLfloat * vertColors, GLfloat* vertUVs, GLuint numVertices)
+pModel::pModel(std::string name, pMaterial * material, GLfloat * verts, GLfloat * vertColors, GLfloat* vertUVs, GLuint numVertices)
 {
 	this->name = name;
 	this->type = pType::MODEL;
@@ -108,7 +108,7 @@ pMaterial * pModel::getMaterial()
 
 void pModel::rotateAround(glm::vec3 rot, GLfloat amount)
 {
-	rotationMatrix = glm::rotate(amount, rot);
+	rotationMatrix = glm::rotate(glm::radians(amount), rot);
 }
 
 void pModel::scale(glm::vec3 scl)
@@ -173,7 +173,7 @@ void pModel::setupModel()
 
 	//Bind our third (UV) buffer to the VAO
 	glBindBuffer(GL_ARRAY_BUFFER, VBOID[2]);
-	//Bind the vColor shader attribute to the 1st VBO (color)
+	//Bind the vColor shader attribute to the 3rd VBO (UV)
 	glBindAttribLocation(getShaderProgramID(), 1, "vTexCoord");
 	//Attirbute pointer to the 1st index, 2 of type, type is float, not normalized, 0 stride, no pointer
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, NULL);

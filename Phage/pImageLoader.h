@@ -13,8 +13,8 @@ public:
 	GLuint getHeight();
 
 private:
-	char* filePath;
 	char* imageData;
+	char* filePath;
 	GLuint width;
 	GLuint height;
 };
