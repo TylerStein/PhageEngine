@@ -151,6 +151,8 @@
   <ItemGroup>
     <ClInclude Include="Clock.h" />
     <ClInclude Include="LogManager.h" />
+    <ClInclude Include="pBoundingBox.h" />
+    <ClInclude Include="pBoundingSphere.h" />
     <ClInclude Include="pHashtable.h" />
     <ClInclude Include="pImage.h" />
     <ClInclude Include="pImageLoader.h" />
@@ -171,6 +173,8 @@
   <ItemGroup>
     <ClCompile Include="Clock.cpp" />
     <ClCompile Include="LogManager.cpp" />
+    <ClCompile Include="pBoundingBox.cpp" />
+    <ClCompile Include="pBoundingSphere.cpp" />
     <ClCompile Include="pHashtable.cpp" />
     <ClCompile Include="pImage.cpp" />
     <ClCompile Include="pImageLoader.cpp" />

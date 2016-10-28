@@ -7,6 +7,9 @@
 
 class pModel : public pAsset
 {
+
+	friend class pBoundingBox;
+
 public:
 	pModel(char* name, pMaterial* material, GLfloat* verts, GLfloat* vertColors, GLfloat* vertUVs, GLuint numVertices);
 	~pModel();
