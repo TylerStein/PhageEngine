@@ -154,6 +154,7 @@
     <ClInclude Include="LogManager.h" />
     <ClInclude Include="pBoundingBox.h" />
     <ClInclude Include="pBoundingSphere.h" />
+    <ClInclude Include="pFrustum.h" />
     <ClInclude Include="pHashtable.h" />
     <ClInclude Include="pImage.h" />
     <ClInclude Include="pImageLoader.h" />
@@ -168,6 +169,7 @@
     <ClInclude Include="pModel.h" />
     <ClInclude Include="pModelLoader.h" />
     <ClInclude Include="pModelManager.h" />
+    <ClInclude Include="pPlane.h" />
     <ClInclude Include="pRenderer.h" />
     <ClInclude Include="pResourceFactory.h" />
     <ClInclude Include="pResourceManager.h" />
@@ -180,6 +182,7 @@
     <ClCompile Include="LogManager.cpp" />
     <ClCompile Include="pBoundingBox.cpp" />
     <ClCompile Include="pBoundingSphere.cpp" />
+    <ClCompile Include="pFrustum.cpp" />
     <ClCompile Include="pHashtable.cpp" />
     <ClCompile Include="pImage.cpp" />
     <ClCompile Include="pImageLoader.cpp" />
@@ -193,6 +196,7 @@
     <ClCompile Include="pModel.cpp" />
     <ClCompile Include="pModelLoader.cpp" />
     <ClCompile Include="pModelManager.cpp" />
+    <ClCompile Include="pPlane.cpp" />
     <ClCompile Include="pRenderer.cpp" />
     <ClCompile Include="pResourceFactory.cpp" />
     <ClCompile Include="pResourceManager.cpp" />
