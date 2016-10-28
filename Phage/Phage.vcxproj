@@ -103,7 +103,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)\ThirdParty\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32.lib;glew32s.lib;FreeImage.lib;opengl32.lib;glfw3.lib</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;glew32s.lib;FreeImage.lib;assimp.lib;opengl32.lib;glfw3.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -142,7 +142,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)\ThirdParty\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32.lib;glew32s.lib;FreeImage.lib;opengl32.lib;glfw3.lib</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;glew32s.lib;FreeImage.lib;assimp.lib;opengl32.lib;glfw3.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -150,11 +150,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Clock.h" />
+    <ClInclude Include="GameImplement.h" />
     <ClInclude Include="LogManager.h" />
     <ClInclude Include="pFrustum.h" />
     <ClInclude Include="pHashtable.h" />
     <ClInclude Include="pImage.h" />
     <ClInclude Include="pImageLoader.h" />
+    <ClInclude Include="pImageManager.h" />
+    <ClInclude Include="pMaterialManager.h" />
     <ClInclude Include="pMatrixStack.h" />
     <ClInclude Include="pAsset.h" />
     <ClInclude Include="pEnums.h" />
@@ -162,7 +165,10 @@
     <ClInclude Include="PhageEngine.h" />
     <ClInclude Include="pMaterial.h" />
     <ClInclude Include="pModel.h" />
+    <ClInclude Include="pModelLoader.h" />
+    <ClInclude Include="pModelManager.h" />
     <ClInclude Include="pRenderer.h" />
+    <ClInclude Include="pResourceFactory.h" />
     <ClInclude Include="pResourceManager.h" />
     <ClInclude Include="pSceneGraph.h" />
     <ClInclude Include="pSceneNode.h" />
@@ -175,13 +181,18 @@
     <ClCompile Include="pHashtable.cpp" />
     <ClCompile Include="pImage.cpp" />
     <ClCompile Include="pImageLoader.cpp" />
+    <ClCompile Include="pImageManager.cpp" />
+    <ClCompile Include="pMaterialManager.cpp" />
     <ClCompile Include="pMatrixStack.cpp" />
     <ClCompile Include="pAsset.cpp" />
     <ClCompile Include="pFileReader.cpp" />
     <ClCompile Include="PhageEngine.cpp" />
     <ClCompile Include="pMaterial.cpp" />
     <ClCompile Include="pModel.cpp" />
+    <ClCompile Include="pModelLoader.cpp" />
+    <ClCompile Include="pModelManager.cpp" />
     <ClCompile Include="pRenderer.cpp" />
+    <ClCompile Include="pResourceFactory.cpp" />
     <ClCompile Include="pResourceManager.cpp" />
     <ClCompile Include="pSceneGraph.cpp" />
     <ClCompile Include="pSceneNode.cpp" />

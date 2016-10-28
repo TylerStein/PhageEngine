@@ -26,7 +26,14 @@ public:
 	GLboolean hasTexture();
 	void bindTextures();
 
-
+	struct materialInfo {
+		glm::vec3 diffuse;
+		glm::vec3 ambient;
+		float shininess;
+		float alpha;
+		GLuint blendMode;
+		GLboolean bHasTexture;
+	};
 
 private:
 	std::string name;
