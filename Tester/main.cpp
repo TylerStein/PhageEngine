@@ -1,8 +1,9 @@
 #pragma once
 #include "PhageEngine.h"
+#include "TestScene.h"
 #include <iostream>
 
-GameImplement* game;
+TestScene* game;
 PhageEngine* engine;
 int windowWidth = 800;
 int windowHeight = 600;
@@ -10,25 +11,40 @@ char* windowTitle = "PhageGame";
 
 
 int main() {
-	//Create the phage engine on the heap 
-	game = new Game();
+
+	//Create a test scene to use the engine
+	game = new TestScene();
+
 	//Set up the engine and get the reference
 	engine = PhageEngine::setupEngine(game);
+
+	//Feed the engine pointer to the game
+	game->giveEngineReference(engine);
+
 	//Set the engine window
 	engine->CreateWindow(windowWidth, windowHeight, windowTitle);
-	//Start the engine
+	
+	//Start the engine loop
 	engine->Start();
 
 	return 0;
 }
 
-
-/*User-end engine use is through implementing the abstract GameImplement class and setting this up in main*/
+/*
+//User-end engine use is through implementing the abstract GameImplement class and setting this up in main
 class Game : public GameImplement {
 public:
 	pImage* testImg;
 	pMaterial* testMat;
 	pModel* testModel;
+
+	Game() {
+
+	}
+
+	~Game() {
+	
+	}
 
 	//Called on engine ready
 	void onStart() {
@@ -125,3 +141,4 @@ public:
 		glfwSwapBuffers(engine->window);
 	}
 };
+*/
