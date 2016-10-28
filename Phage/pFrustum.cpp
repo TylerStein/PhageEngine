@@ -1,5 +1,4 @@
 #include "pFrustum.h"
-//#include "pBoundingBox"
 
 #define ANGLETORAD 3.14159265358979323846/180.0
 
@@ -69,7 +68,7 @@ bool pFrustum::inside(glm::vec3 & center, float radius)
 	return true;
 }
 
-/*
+
 bool pFrustum::inside(pBoundingBox & bBox)
 {
 	for (int i = 0; i < 6; i++)
@@ -81,5 +80,5 @@ bool pFrustum::inside(pBoundingBox & bBox)
 	}
 	return true;
 }
-*/
+
 

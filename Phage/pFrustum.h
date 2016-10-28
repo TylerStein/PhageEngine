@@ -3,7 +3,7 @@
 
 #include "pPlane.h"
 #include <glm/glm.hpp>
-//#include "pBoundingBox.h"
+#include "pBoundingBox.h"
 
 class pFrustum
 {
@@ -37,7 +37,7 @@ public:
 
 	bool inside(glm::vec3 &center, float radius);
 
-	//bool inside(pBoundingBox &bBox);
+	bool inside(pBoundingBox &bBox);
 };
 
 
