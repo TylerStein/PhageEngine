@@ -1,10 +1,1 @@
-﻿  pModelLoader.cpp
-c:\users\shane\documents\github\phageengine\phage\pmodelloader.cpp(29): warning C4018: '<': signed/unsigned mismatch
-  pBoundingSphere.cpp
-  pBoundingBox.cpp
-c:\users\shane\documents\github\phageengine\phage\pboundingbox.cpp(28): warning C4018: '<': signed/unsigned mismatch
-  Generating Code...
-c:\users\shane\documents\github\phageengine\phage\pboundingbox.cpp(123): warning C4172: returning address of local variable or temporary: newBox
-c:\users\shane\documents\github\phageengine\phage\pmodelloader.cpp(29): error C4700: uninitialized local variable 'i' used
-c:\users\shane\documents\github\phageengine\phage\pmodelloader.cpp(33): error C4700: uninitialized local variable 'j' used
-c:\users\shane\documents\github\phageengine\phage\pmodelloader.cpp(36): error C4700: uninitialized local variable 'k' used
+﻿
