@@ -151,6 +151,7 @@
   <ItemGroup>
     <ClInclude Include="Clock.h" />
     <ClInclude Include="LogManager.h" />
+    <ClInclude Include="pFrustum.h" />
     <ClInclude Include="pHashtable.h" />
     <ClInclude Include="pImage.h" />
     <ClInclude Include="pImageLoader.h" />
@@ -170,6 +171,7 @@
   <ItemGroup>
     <ClCompile Include="Clock.cpp" />
     <ClCompile Include="LogManager.cpp" />
+    <ClCompile Include="pFrustum.cpp" />
     <ClCompile Include="pHashtable.cpp" />
     <ClCompile Include="pImage.cpp" />
     <ClCompile Include="pImageLoader.cpp" />
