@@ -74,6 +74,9 @@ void TestScene::onStart()
 
 	//Set the rotation of the model Z to 0
 	testModel->rotateAround(glm::vec3(0.0f, 0.0f, 1.0f), 0.0f);
+
+	engine->inputSupport->hideCursor(engine->window);
+	engine->inputSupport->setKeyCallbacks(engine->window, pInputSupport::key_callback);
 }
 
 void TestScene::onPreRender()

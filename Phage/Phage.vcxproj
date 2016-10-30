@@ -159,6 +159,7 @@
     <ClInclude Include="pImage.h" />
     <ClInclude Include="pImageLoader.h" />
     <ClInclude Include="pImageManager.h" />
+    <ClInclude Include="pInputSupport.h" />
     <ClInclude Include="pMaterialManager.h" />
     <ClInclude Include="pMatrixStack.h" />
     <ClInclude Include="pAsset.h" />
@@ -187,6 +188,7 @@
     <ClCompile Include="pImage.cpp" />
     <ClCompile Include="pImageLoader.cpp" />
     <ClCompile Include="pImageManager.cpp" />
+    <ClCompile Include="pInputSupport.cpp" />
     <ClCompile Include="pMaterialManager.cpp" />
     <ClCompile Include="pMatrixStack.cpp" />
     <ClCompile Include="pAsset.cpp" />

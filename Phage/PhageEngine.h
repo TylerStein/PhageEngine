@@ -5,6 +5,7 @@
 #include "pRenderer.h"
 #include "pResourceFactory.h"
 #include "GameImplement.h"
+#include "pInputSupport.h"
 
 class PhageEngine
 {
@@ -31,7 +32,7 @@ public:
 
 	pRenderer* renderer;
 	pResourceFactory* resourceFactory;
-
+	pInputSupport* inputSupport;
 	std::vector<pModel*> modelList;
 
 
@@ -45,5 +46,6 @@ private:
 	pModelManager* modelManager;
 	pMaterialManager* materialManager;
 	pImageManager* imageManager;
+
 };
 
