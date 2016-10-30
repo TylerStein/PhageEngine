@@ -17,8 +17,8 @@ public:
 	pModelManager();
 	~pModelManager();
 
-	//Gets a model from file on disk
-	HandleType createModel(std::string modelName, std::string filePath);
+	//TODO: Gets a model from file on disk and generates a material based on this
+	//HandleType createModel(std::string modelName, pMaterial* material, std::string filePath);
 
 	//Adds a model to the manager
 	HandleType addModel(std::string modelName, pModel* mdl);

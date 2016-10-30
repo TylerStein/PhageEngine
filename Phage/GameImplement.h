@@ -7,7 +7,7 @@ public:
 
 	virtual void onStart() = 0;
 
-	virtual void onUpdate() = 0;
+	virtual void onUpdate(GLdouble deltaTime) = 0;
 	virtual void onPostUpdate() = 0;
 
 	virtual void onPreRender() = 0;
