@@ -19,7 +19,8 @@ pImageManager::HandleType pImageManager::createImage(std::string imageName, std:
 	//Create an image based on the name and path
 	pImage* img = new pImage(imageName, filePath);
 	//Put the new image in the hashtable and return the handle
-	return imageResources.put(imageName, img);
+	result =  imageResources.put(imageName, img);
+	return result;
 }
 
 pImageManager::HandleType pImageManager::addImage(std::string imageName, pImage * image)

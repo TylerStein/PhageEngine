@@ -46,6 +46,10 @@ private:
 	pModelManager* modelManager;
 	pMaterialManager* materialManager;
 	pImageManager* imageManager;
+<<<<<<< HEAD
 
+=======
+	pShaderManager* shaderManager;
+>>>>>>> refs/remotes/origin/Development
 };
 

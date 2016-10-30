@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿  PhageEngine.cpp
   Generating Code...
   Skipping... (no relevant changes detected)
@@ -20,3 +21,14 @@ pModelLoader.obj : warning LNK4006: "public: struct aiScene const * __cdecl Assi
 pAsset.obj : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
 pHashtable.obj : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
   Phage.vcxproj -> C:\Users\Moziki\Documents\GitHub\PhageEngine\x64\Debug\Phage.lib
+=======
+<<<<<<< HEAD
+﻿
+=======
+﻿Build started 10/28/2016 3:39:49 PM.
+
+Build succeeded.
+
+Time Elapsed 00:00:00.00
+>>>>>>> refs/remotes/origin/Development
+>>>>>>> refs/remotes/origin/Development
