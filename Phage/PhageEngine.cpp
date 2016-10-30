@@ -19,6 +19,7 @@ PhageEngine::PhageEngine(GameImplement* game)
 	modelManager = new pModelManager();
 	materialManager = new pMaterialManager();
 	imageManager = new pImageManager();
+	shaderManager = new pShaderManager();
 
 	//Give the modelmanager the other managers
 	modelManager->setMaterialManager(materialManager);
@@ -29,6 +30,7 @@ PhageEngine::PhageEngine(GameImplement* game)
 	resourceFactory->setModelManager(modelManager);
 	resourceFactory->setMaterialManager(materialManager);
 	resourceFactory->setImageManager(imageManager);
+	resourceFactory->setShaderManager(shaderManager);
 }
 
 
@@ -44,11 +46,12 @@ PhageEngine::~PhageEngine()
 	renderer->~pRenderer();
 	delete renderer;
 	
-	//CLEARING KEYS AND VALUES CAUSES AN ERROR!!!
+	//TODO: CLEARING KEYS AND VALUES CAUSES AN ERROR!!!
+	delete resourceFactory;
 	delete modelManager;
 	delete materialManager;
 	delete imageManager;
-	delete resourceFactory;
+
 
 	//Delete managers and factory
 	//modelManager->~pModelManager();
@@ -144,12 +147,21 @@ void PhageEngine::onPostUpdate()
 void PhageEngine::doLoop() {
 	//While the window isn't being closed, call the looped functions
 	game->onStart();
+	//Create the last time
+	double lastTick = glfwGetTime();
 	do {
-		game->onUpdate();
+		//Get the current time
+		double currentTick = glfwGetTime();
+		//Calculate delta time from the time differences (in ms) * 10 (for seconds)
+		double deltaTime = (currentTick - lastTick) * 10;
+		//Store the current tick as the last one, then run loop
+		lastTick = currentTick;
+		game->onUpdate(deltaTime);
 		game->onPostUpdate();
 		game->onPreRender();
 		game->onRender();
 		game->onPostRender();
+
 		//onUpdate();
 		//onPostUpdate();
 		//onPreRender();

@@ -15,7 +15,6 @@ public:
 	~pModel();
 
 	std::string getName() override;
-	GLuint getID() override;
 
 	GLuint getShaderProgramID();
 	GLuint getVertCount();
@@ -64,6 +63,5 @@ private:
 	glm::mat4 modelMatrix;
 
 	std::string name;
-	GLuint ID;
 };
 

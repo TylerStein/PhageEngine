@@ -45,5 +45,6 @@ private:
 	pModelManager* modelManager;
 	pMaterialManager* materialManager;
 	pImageManager* imageManager;
+	pShaderManager* shaderManager;
 };
 

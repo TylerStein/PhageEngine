@@ -3,11 +3,6 @@
 
 #include <iostream>
 
-pImage::pImage(std::string name, std::string imageDir)
-{
-	pImage(name, imageDir, GL_LINEAR, GL_LINEAR, GL_REPEAT);
-}
-
 pImage::pImage(std::string name, std::string imageDir, GLuint minFilterType, GLuint magFilterType, GLuint wrapMode)
 {
 	this->name = name;
@@ -15,16 +10,13 @@ pImage::pImage(std::string name, std::string imageDir, GLuint minFilterType, GLu
 	this->minFilterType = minFilterType;
 	this->magFilterType = magFilterType;
 	this->wrapMode = wrapMode;
-	loadImage();
+	if (imageDir != "") {
+		loadImage();
+	}
+	else {
+		generateCheckerboard();
+	}
 }
-
-pImage::pImage(std::string name)
-{
-	this->name = name;
-	this->imageDirectory = "";
-	generateCheckerboard();
-}
-
 
 pImage::~pImage()
 {
@@ -34,6 +26,16 @@ pImage::~pImage()
 void pImage::bindTexture()
 {
 	glBindTexture(GL_TEXTURE_2D, textureID);
+}
+
+GLuint pImage::getWidth() const
+{
+	return width;
+}
+
+GLuint pImage::getHeight() const
+{
+	return height;
 }
 
 void pImage::generateCheckerboard()
@@ -72,11 +74,6 @@ GLuint pImage::getTextureID()
 std::string pImage::getName()
 {
 	return name;
-}
-
-GLuint pImage::getID()
-{
-	return ID;
 }
 
 void pImage::loadImage()

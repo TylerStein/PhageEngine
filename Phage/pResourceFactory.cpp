@@ -29,6 +29,11 @@ void pResourceFactory::setImageManager(pImageManager* imageManager)
 	this->imageManager = imageManager;
 }
 
+void pResourceFactory::setShaderManager(pShaderManager * shaderManager)
+{
+	this->shaderManager = shaderManager;
+}
+
 pModel * pResourceFactory::createModel(std::string name, pMaterial * mat, GLfloat * vertPositions,  GLfloat * vertNormals, GLfloat * vertColors, GLfloat * vertUVs, GLuint numVerts)
 {
 	//Create the model in memory
@@ -40,35 +45,16 @@ pModel * pResourceFactory::createModel(std::string name, pMaterial * mat, GLfloa
 	return modelManager->getModel(mdlH);
 }
 
-pMaterial * pResourceFactory::createMaterial(std::string name, pMaterial::materialInfo info)
+pMaterial * pResourceFactory::createMaterial(std::string name, pShader* shader, MaterialInfo info)
 {
 	//Create the material in memory
-	pMaterial* mtl = new pMaterial(name, info.diffuse, info.ambient, info.shininess, info.alpha);
+	pMaterial* mtl = new pMaterial(name, shader, info);
 	//Add the material to the manager table
 	pResourceHandle<pMaterial> mtlH = materialManager->addMaterial(name, mtl);
 	//Return the material from the table
 	return materialManager->getMaterial(mtlH);
 }
 
-pMaterial * pResourceFactory::createMaterial(std::string name, pImage * img)
-{
-	//Create the material in memory
-	pMaterial* mtl = new pMaterial(name, img);
-	//Add the material to the manager table
-	pResourceHandle<pMaterial> mtlH = materialManager->addMaterial(name, mtl);
-	//Return the material from the table
-	return materialManager->getMaterial(mtlH);
-}
-
-pMaterial * pResourceFactory::createMaterial(std::string name, std::vector<pImage*> images, GLenum blendMode)
-{
-	//Create the material in memory
-	pMaterial* mtl = new pMaterial(name, images, blendMode);
-	//Add the material to the manager table
-	pResourceHandle<pMaterial> mtlH = materialManager->addMaterial(name, mtl);
-	//Return the material from the table
-	return materialManager->getMaterial(mtlH);
-}
 
 pImage * pResourceFactory::createImage(std::string name, std::string filePath)
 {
@@ -90,12 +76,20 @@ pImage * pResourceFactory::createDebugImage(std::string name)
 	return imageManager->getImage(imgH);
 }
 
+pShader * pResourceFactory::createShader(std::string name, std::string vertShaderPath, std::string fragShaderPath, ShaderInfo shaderInfo)
+{
+	pResourceHandle<pShader> shdr = shaderManager->createShader(name, vertShaderPath, fragShaderPath, shaderInfo);
+	return shaderManager->getShader(shdr);
+}
+
 pModel * pResourceFactory::getModel(std::string name, std::string path)
 {
 	//Generate a model and get it's handle
-	pResourceHandle<pModel> mdlHandle = modelManager->createModel(name, path);
+	//pResourceHandle<pModel> mdlHandle = modelManager->createModel(name, path);
 	//Get the model from the hashtable
-	return modelManager->getModel(mdlHandle);
+	//return modelManager->getModel(mdlHandle);
+	std::cout << "Attempted to read model from file, not yet functional!" << std::endl;
+	return nullptr;
 }
 
 pModel * pResourceFactory::getModel(std::string name)
@@ -125,4 +119,9 @@ pImage * pResourceFactory::getImage(std::string name, std::string path)
 pImage * pResourceFactory::getImage(std::string name)
 {
 	return imageManager->getImage(name);
+}
+
+pShader * pResourceFactory::getShader(std::string name)
+{
+	return shaderManager->getShader(name);
 }
