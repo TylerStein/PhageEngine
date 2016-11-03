@@ -20,7 +20,7 @@ public:
 
 	//Functions to create assets
 	//Create a model
-	pModel* createModel(std::string name, pMaterial* mat, GLfloat* vertPositions, GLfloat* vertNormals, GLfloat* vertColors, GLfloat* vertUVs, GLuint numVerts);
+	pModel* createModel(std::string name, pMaterial* mat, GLfloat* vertPositions, GLfloat* vertNormals, GLfloat* vertColors, GLfloat* vertUVs, GLuint numVerts, GLenum drawMode);
 	//Create a material
 	pMaterial* createMaterial(std::string name, pShader* shader, MaterialInfo info);
 	//Create an image

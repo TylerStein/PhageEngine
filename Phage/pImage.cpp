@@ -2,6 +2,7 @@
 #include "pImageLoader.h"
 
 #include <iostream>
+#include "GLError.h"
 
 pImage::pImage(std::string name, std::string imageDir, GLuint minFilterType, GLuint magFilterType, GLuint wrapMode)
 {
@@ -21,11 +22,6 @@ pImage::pImage(std::string name, std::string imageDir, GLuint minFilterType, GLu
 pImage::~pImage()
 {
 
-}
-
-void pImage::bindTexture()
-{
-	glBindTexture(GL_TEXTURE_2D, textureID);
 }
 
 GLuint pImage::getWidth() const
@@ -52,12 +48,14 @@ void pImage::generateCheckerboard()
 	};
 
 	//Allocate memory for image data
-	imageData = (char*)malloc(unitCount * sizeof(GLfloat));
+	imageData = (GLubyte*)malloc(unitCount * sizeof(GLfloat));
+	imageData = (GLubyte*)memcpy(imageData, textureData, sizeof(textureData));
 
+	/*
 	//Copy over the texture data
 	for (int i(0); i < unitCount; ++i) {
 		imageData[i] = textureData[i];
-	}
+	}*/
 
 	width = 2;
 	height = 2;
@@ -66,10 +64,12 @@ void pImage::generateCheckerboard()
 	wrapMode = GL_REPEAT;
 }
 
+
 GLuint pImage::getTextureID()
 {
 	return textureID;
 }
+
 
 std::string pImage::getName()
 {
@@ -85,28 +85,42 @@ void pImage::loadImage()
 		imageData = loader.loadImage((char*)imageDirectory.c_str());
 		width = loader.getWidth();
 		height = loader.getHeight();
-
-		//Generate a textureID
-		glGenTextures(1, &textureID);
-
-		//Bind the new texture
-		glBindTexture(GL_TEXTURE_2D, textureID);
-
-		//Feed the image data to our new texture (image is BGR format because of freeimage)
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_BGR, GL_FLOAT, (void*)imageData);
-
-		//Set texture parameters
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilterType);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilterType);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
-
-		//Generate image mipmaps if using mipmaps
-		if ((magFilterType == GL_LINEAR_MIPMAP_LINEAR || magFilterType == GL_LINEAR_MIPMAP_NEAREST)
-			|| (minFilterType == GL_LINEAR_MIPMAP_LINEAR || minFilterType == GL_LINEAR_MIPMAP_NEAREST))
-		{
-			glGenerateMipmap(GL_TEXTURE_2D);
-		}
-
 	}
+}
+
+void pImage::setupTexture()
+{
+	//Generate a textureID
+	glGenTextures(1, &textureID);
+	GLError::printError(__FILE__, __LINE__);
+
+	//Set the active texture to 0
+	//glActiveTexture(GL_TEXTURE0);
+	//GLError::printError(__FILE__, __LINE__);
+
+	//Bind the new texture
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	GLError::printError(__FILE__, __LINE__);
+
+	//Feed the image data to our new texture (image is BGR format because of freeimage)
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_BGR, GL_FLOAT, (void*)imageData);
+
+	//Make a border color (black)
+	float borderColor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+
+	//Set texture parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilterType);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilterType);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
+
+	//Generate image mipmaps if using mipmaps
+	if ((magFilterType == GL_LINEAR_MIPMAP_LINEAR || magFilterType == GL_LINEAR_MIPMAP_NEAREST)
+		|| (minFilterType == GL_LINEAR_MIPMAP_LINEAR || minFilterType == GL_LINEAR_MIPMAP_NEAREST))
+	{
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+
+	GLError::printError(__FILE__, __LINE__);
 }

@@ -1,5 +1,6 @@
 #include "pShader.h"
 #include "pFileReader.h"
+#include "GLError.h"
 #include <iostream>
 
 pShader::pShader(std::string shaderName, std::string vertPath, std::string fragPath, ShaderInfo info)
@@ -47,17 +48,7 @@ void pShader::createShader(std::string vertPath, std::string fragPath)
 	glLinkProgram(shaderProgramID);
 
 	//Check for linking errors
-	GLint linked;
-	glGetProgramiv(shaderProgramID, GL_LINK_STATUS, &linked);
-	if (!linked) {
-		GLsizei len;
-		glGetProgramiv(shaderProgramID, GL_INFO_LOG_LENGTH, &len);
-
-		GLchar* log = new GLchar[len + 1];
-		glGetProgramInfoLog(shaderProgramID, len, &len, log);
-		std::cerr << "Shader linking failed: " << log << std::endl;
-		delete[] log;
-	}
+	GLError::checkLinkError(shaderProgramID);
 }
 
 ShaderInfo pShader::getShaderInfo()

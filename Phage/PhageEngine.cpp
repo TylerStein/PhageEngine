@@ -109,41 +109,6 @@ void PhageEngine::Start()
 	doLoop();
 }
 
-//Update for pre-rendering events called every frame
-void PhageEngine::onPreRender()
-{
-	//Clear the drawing surface
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
-
-//Update for rendering events called every frame
-void PhageEngine::onRender()
-{
-	if (!modelList.empty()) {
-		for (int i(0); i < modelList.size(); ++i) {
-			renderer->renderModel(modelList.at(i));
-		}
-	}
-}
-
-//Update for events called after render every frame
-void PhageEngine::onPostRender()
-{
-	glfwSwapBuffers(window);
-}
-
-//Function for update events called every frame
-void PhageEngine::onUpdate()
-{
-	glfwPollEvents();
-
-}
-
-//Function for post-update events every frame
-void PhageEngine::onPostUpdate()
-{
-}
-
 void PhageEngine::doLoop() {
 	//While the window isn't being closed, call the looped functions
 	game->onStart();
@@ -162,11 +127,6 @@ void PhageEngine::doLoop() {
 		game->onRender();
 		game->onPostRender();
 
-		//onUpdate();
-		//onPostUpdate();
-		//onPreRender();
-		//onRender();
-		//onPostRender();
 	} while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
 	this->~PhageEngine();
 	game->onEnd();

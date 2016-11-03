@@ -5,11 +5,12 @@
 #include <iostream>
 #include <vector>
 
-pModel::pModel(std::string name, pMaterial * material, GLfloat * verts, GLfloat * vertColors, GLfloat* vertUVs, GLuint numVertices)
+pModel::pModel(std::string name, pMaterial * material, GLfloat * verts, GLfloat * vertColors, GLfloat* vertUVs, GLfloat* vertNorms, GLuint numVertices, GLenum drawMode)
 {
 	this->name = name;
 	this->type = pType::MODEL;
 	this->material = material;
+	this->drawMode = drawMode;
 	vertCount = numVertices;
 
 	//Allocate the required memory for the model's vertices (each vertex is 3 floats, so #verts * 3 * size of a float)
@@ -32,9 +33,17 @@ pModel::pModel(std::string name, pMaterial * material, GLfloat * verts, GLfloat 
 	//Allocate memory for the UVs
 	vertexUVs = (GLfloat*)malloc(numVertices * 2 * sizeof(GLfloat));
 
-	//Copy the incoming color info to the vertexColors member
-	for (GLuint x(0); x < (numVertices * 3); ++x) {
+	//Copy the incoming UV info to the vertexUVs member
+	for (GLuint x(0); x < (numVertices * 2); ++x) {
 		vertexUVs[x] = vertUVs[x];
+	}
+
+	//Allocate memory for the normals
+	vertexNormals = (GLfloat*)malloc(numVertices * 3 * sizeof(GLfloat));
+
+	//Copy incoming normal info into the vertexNormals member
+	for (GLuint x(0); x < (numVertices * 3); ++x) {
+		vertexNormals[x] = vertNorms[x];
 	}
 
 	//Set the position and rotational matrices to 0
@@ -101,9 +110,14 @@ pMaterial * pModel::getMaterial()
 	return material;
 }
 
+GLenum pModel::getDrawMode()
+{
+	return drawMode;
+}
+
 void pModel::rotateAround(glm::vec3 rot, GLfloat amount)
 {
-	rotationMatrix = glm::rotate(glm::radians(amount), rot);
+	rotationMatrix *= glm::rotate(glm::radians(amount), rot);
 }
 
 void pModel::scale(glm::vec3 scl)
@@ -124,6 +138,11 @@ void pModel::translate(glm::vec3 pos)
 void pModel::setPosition(glm::vec3 pos)
 {
 	translationMatrix = glm::translate(glm::mat4(1.0f), pos);
+}
+
+void pModel::setRotation(glm::vec3 rot, GLfloat amount)
+{
+	rotationMatrix = glm::rotate(glm::radians(amount), rot);
 }
 
 
@@ -147,6 +166,12 @@ void pModel::setupModel()
 	glBindBuffer(GL_ARRAY_BUFFER, VBOID[2]);
 	glBufferData(GL_ARRAY_BUFFER, vertCount * 2 * sizeof(GLfloat), vertexUVs, GL_STATIC_DRAW);
 
+	//Generate Normals VBO, bind it and copy the points onto the buffer
+	VBOID[3] = 0;
+	glGenBuffers(1, &VBOID[3]);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOID[3]);
+	glBufferData(GL_ARRAY_BUFFER, vertCount * 3 * sizeof(GLfloat), vertexNormals, GL_STATIC_DRAW);
+
 	//Create the vertex array object to hold our VBOs and bind it
 	glGenVertexArrays(1, &VAOID);
 	glBindVertexArray(VAOID);
@@ -159,7 +184,7 @@ void pModel::setupModel()
 
 	//Bind our second (color) buffer to the VAO
 	glBindBuffer(GL_ARRAY_BUFFER, VBOID[1]);
-	//Bind the vColor shader attribute to the 1st VBO (color)
+	//Bind the vColor shader attribute to the 2nd VBO (color)
 	glBindAttribLocation(getShaderProgramID(), 1, material->getShaderInfo().vertexColorAttribute);
 	//Attirbute pointer to the 1st index, 3 of type, type is float, not normalized, 0 stride, no pointer
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
@@ -171,14 +196,22 @@ void pModel::setupModel()
 	//Attirbute pointer to the 1st index, 2 of type, type is float, not normalized, 0 stride, no pointer
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, NULL);
 
+	//Bind our fourth (Normal) buffer to the VAO
+	glBindBuffer(GL_ARRAY_BUFFER, VBOID[3]);
+	glBindAttribLocation(getShaderProgramID(), 1, material->getShaderInfo().vertexNormalAttribute);
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+
 	//Enable the vertex attribute arrays
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
+	glEnableVertexAttribArray(3);
 
 	modelMatrixLocation = glGetUniformLocation(getShaderProgramID(), material->getShaderInfo().modelViewAttribute);
 	viewMatrixLocation = glGetUniformLocation(getShaderProgramID(), material->getShaderInfo().viewAttribute);
 	projectionMatrixLocation = glGetUniformLocation(getShaderProgramID(), material->getShaderInfo().projectionAttribute);
+
+	material->setupTexture();
 }
 
 void pModel::initDefaultMatrix()

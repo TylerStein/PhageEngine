@@ -13,7 +13,7 @@ struct MaterialInfo {
 	float shininess;
 	float alpha;
 	GLuint blendMode;
-	std::vector<pImage*> textureList;
+	pImage* texture0;
 	GLboolean bHasTexture;
 };
 
@@ -27,16 +27,16 @@ public:
 
 	std::string getName() override;
 
+	void setupTexture();
+
 	GLuint getShaderProgramID();
 	ShaderInfo getShaderInfo();
 	GLboolean hasTexture();
-	void bindTextures();
-
+	GLuint getTexture0ID();
 
 private:
+	GLuint textureID[1];
 	std::string name;
-	GLuint shaderProgramID;
-
 	pShader* shader;
 	MaterialInfo matInfo;
 };
