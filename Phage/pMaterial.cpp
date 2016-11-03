@@ -1,6 +1,7 @@
 #include "pMaterial.h"
 #include "pFileReader.h"
 #include "LogManager.h"
+#include "GLError.h"
 #include <iostream>
 
 
@@ -22,6 +23,20 @@ std::string pMaterial::getName()
 	return name.c_str();
 }
 
+void pMaterial::setupTexture()
+{
+	GLubyte* textureData = matInfo.texture0->imageData;
+
+	glGenTextures(1, textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID[0]);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, matInfo.texture0->getWidth(), matInfo.texture0->getHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, textureData);
+	GLError::printError(__FILE__, __LINE__);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+}
+
 
 GLuint pMaterial::getShaderProgramID()
 {
@@ -38,12 +53,8 @@ GLboolean pMaterial::hasTexture()
 	return matInfo.bHasTexture;
 }
 
-void pMaterial::bindTextures()
+GLuint pMaterial::getTexture0ID()
 {
-	if (matInfo.bHasTexture) {
-		for (int i(0); i < matInfo.textureList.size(); ++i) {
-			matInfo.textureList.at(i)->bindTexture();
-		}
-	}
+	return matInfo.texture0->getTextureID();
 }
 

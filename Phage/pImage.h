@@ -6,12 +6,12 @@ class pImage :
 	public pAsset
 {
 public:
+	friend class pMaterial;
+
 	//Constructor has defaults: takes a name, directory, filter type, and wrap mode
 	pImage(std::string name = "NONE", std::string imageDir = "", GLuint minFilterType = GL_LINEAR, GLuint magFilterType = GL_LINEAR, GLuint wrapMode = GL_REPEAT);
 
 	~pImage();
-
-	void bindTexture();
 
 	GLuint getWidth() const;
 	GLuint getHeight() const;
@@ -27,11 +27,13 @@ public:
 private:
 	//Uses pImageLoader to get the image data
 	void loadImage();
+
+	void setupTexture();
 	
 	//ID of the openGL texture object
 	GLuint textureID;
 	//Data containing the image
-	char* imageData;
+	GLubyte* imageData;
 	//Directory of the image file
 	std::string imageDirectory;
 	//Mini filter type

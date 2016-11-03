@@ -5,13 +5,14 @@
 struct ShaderInfo {
 public:
 	ShaderInfo() {}
-	ShaderInfo(GLchar* vertPosAttribute, GLchar* vertColorAttribute, GLchar* vertCoordAttribute,
-		GLchar* modelViewAttribute, GLchar* projectionAttribute, GLchar* viewAttribute) 
+	ShaderInfo(GLchar* vertPosAttribute, GLchar* vertColorAttribute, GLchar* vertCoordAttribute, GLchar* vertNormalAttribute,
+		GLchar* modelViewAttribute, GLchar* projectionAttribute, GLchar* viewAttribute, GLchar* pixelLightPositionAttribute, GLchar* pixelLightIntensityAttribute)
 	{
 
 		vertexPositionAttribute = vertPosAttribute;
 		vertexColorAttribute = vertColorAttribute;
 		vertexCoordinateAttribute = vertCoordAttribute;
+		vertexNormalAttribute = vertNormalAttribute;
 		this->modelViewAttribute = modelViewAttribute;
 		this->projectionAttribute = projectionAttribute;
 		this->viewAttribute = viewAttribute;
@@ -23,6 +24,8 @@ public:
 	GLchar* vertexColorAttribute;
 	//The texture UV coordinate attribute name
 	GLchar* vertexCoordinateAttribute;
+	//The texture normal coordinate attribute name
+	GLchar* vertexNormalAttribute;
 	//The model-view matrix uniform variable name
 	GLchar* modelViewAttribute;
 	//The camera projection matrix uniform variable name

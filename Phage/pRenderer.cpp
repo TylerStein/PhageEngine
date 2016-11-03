@@ -1,4 +1,7 @@
 #include "pRenderer.h"
+#include <iostream>
+#include "GLError.h"
+
 const GLfloat bg[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 pRenderer::pRenderer(GLFWwindow* window)
@@ -17,6 +20,7 @@ pRenderer::~pRenderer()
 void pRenderer::setupGLOptions() {
 	glEnable(GL_DEPTH_TEST); //Enable depth-testing
 	glDepthFunc(GL_LESS); //Interpret smaller values as closer
+	glEnable(GL_TEXTURE_2D); //Enable 2d textures
 }
 
 void pRenderer::setWindowRef(GLFWwindow* window)
@@ -28,20 +32,21 @@ void pRenderer::renderModel(pModel* model)
 {
 	//Bind the model's vertex array id
 	glBindVertexArray(model->getVertexArrayID());
+
 	//Link the shader program ID
 	glLinkProgram(model->getShaderProgramID());
 	//Use the shader program!
 	glUseProgram(model->getShaderProgramID());
+
 	//Apply the model position matrix
 	glUniformMatrix4fv(model->getModelMatrixID(), 1, GL_FALSE, &model->getModelMatrix()[0][0]);
 	//Apply the view matrix
 	glUniformMatrix4fv(model->getViewMatrixID(), 1, GL_FALSE, &cameraView[0][0]);
 	//Apply the perspective matrix
 	glUniformMatrix4fv(model->getProjectionMatrixID(), 1, GL_FALSE, &projMatrix[0][0]);
-	//Bind any materials that the model's material may have
-	model->getMaterial()->bindTextures();
+
 	//Draw the model's points from the currently bound VAO with currently used shader
-	glDrawArrays(GL_TRIANGLES, 0, model->getVertCount());
+	glDrawArrays(model->getDrawMode(), 0, model->getVertCount());
 }
 
 void pRenderer::setViewMatrix(glm::vec3 cameraLocation, glm::vec3 cameraTarget, glm::vec3 cameraUp)

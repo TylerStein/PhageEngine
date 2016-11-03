@@ -1,5 +1,6 @@
 #pragma once
 #include "PhageEngine.h"
+#include "pLight.h"
 
 class TestScene : public GameImplement
 {

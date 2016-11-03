@@ -1,8 +1,7 @@
 e:\github\phageengine\phage\x64\debug\phage.pdb
 e:\github\phageengine\phage\x64\debug\phage.idb
-e:\github\phageengine\phage\x64\debug\pimage.obj
-e:\github\phageengine\phage\x64\debug\pimageloader.obj
 e:\github\phageengine\phage\x64\debug\pimagemanager.obj
+e:\github\phageengine\phage\x64\debug\plight.obj
 e:\github\phageengine\phage\x64\debug\pmaterialmanager.obj
 e:\github\phageengine\phage\x64\debug\pmatrixstack.obj
 e:\github\phageengine\phage\x64\debug\passet.obj
@@ -12,6 +11,7 @@ e:\github\phageengine\phage\x64\debug\pmaterial.obj
 e:\github\phageengine\phage\x64\debug\pmodel.obj
 e:\github\phageengine\phage\x64\debug\pmodelloader.obj
 e:\github\phageengine\phage\x64\debug\pmodelmanager.obj
+e:\github\phageengine\phage\x64\debug\pplane.obj
 e:\github\phageengine\phage\x64\debug\prenderer.obj
 e:\github\phageengine\phage\x64\debug\presourcefactory.obj
 e:\github\phageengine\phage\x64\debug\presourcemanager.obj
@@ -24,7 +24,10 @@ e:\github\phageengine\phage\x64\debug\clock.obj
 e:\github\phageengine\phage\x64\debug\logmanager.obj
 e:\github\phageengine\phage\x64\debug\pboundingbox.obj
 e:\github\phageengine\phage\x64\debug\pboundingsphere.obj
+e:\github\phageengine\phage\x64\debug\pfrustum.obj
 e:\github\phageengine\phage\x64\debug\phashtable.obj
+e:\github\phageengine\phage\x64\debug\pimage.obj
+e:\github\phageengine\phage\x64\debug\pimageloader.obj
 e:\github\phageengine\x64\debug\phage.lib
 e:\github\phageengine\x64\debug\phage.pdb
 e:\github\phageengine\phage\x64\debug\phage.tlog\cl.command.1.tlog
