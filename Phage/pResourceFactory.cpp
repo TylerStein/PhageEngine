@@ -34,11 +34,11 @@ void pResourceFactory::setShaderManager(pShaderManager * shaderManager)
 	this->shaderManager = shaderManager;
 }
 
-pModel * pResourceFactory::createModel(std::string name, pMaterial * mat, GLfloat * vertPositions,  GLfloat * vertNormals, GLfloat * vertColors, GLfloat * vertUVs, GLuint numVerts)
+pModel * pResourceFactory::createModel(std::string name, pMaterial * mat, GLfloat * vertPositions,  GLfloat * vertNormals, GLfloat * vertColors, GLfloat * vertUVs, GLuint numVerts, GLenum drawMode)
 {
 	//Create the model in memory
 	//pModel* mdl = new pModel(name, mat, vertPositions, vertNormals, vertColors, vertUVs, numVerts);
-	pModel* mdl = new pModel(name, mat, vertPositions, vertColors, vertUVs, numVerts);
+	pModel* mdl = new pModel(name, mat, vertPositions, vertColors, vertUVs, vertNormals, numVerts, drawMode);
 	//Add the model to the manager table
 	pResourceHandle<pModel> mdlH = modelManager->addModel(name, mdl);
 	//Return the model from the table

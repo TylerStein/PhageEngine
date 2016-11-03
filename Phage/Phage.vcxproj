@@ -151,6 +151,7 @@
   <ItemGroup>
     <ClInclude Include="Clock.h" />
     <ClInclude Include="GameImplement.h" />
+    <ClInclude Include="GLError.h" />
     <ClInclude Include="LogManager.h" />
     <ClInclude Include="pBoundingBox.h" />
     <ClInclude Include="pBoundingSphere.h" />
@@ -159,6 +160,7 @@
     <ClInclude Include="pImage.h" />
     <ClInclude Include="pImageLoader.h" />
     <ClInclude Include="pImageManager.h" />
+    <ClInclude Include="pLight.h" />
     <ClInclude Include="pMaterialManager.h" />
     <ClInclude Include="pMatrixStack.h" />
     <ClInclude Include="pAsset.h" />
@@ -189,6 +191,7 @@
     <ClCompile Include="pImage.cpp" />
     <ClCompile Include="pImageLoader.cpp" />
     <ClCompile Include="pImageManager.cpp" />
+    <ClCompile Include="pLight.cpp" />
     <ClCompile Include="pMaterialManager.cpp" />
     <ClCompile Include="pMatrixStack.cpp" />
     <ClCompile Include="pAsset.cpp" />
