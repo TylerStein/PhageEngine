@@ -23,12 +23,6 @@ public:
 	void CreateWindow(GLint width, GLint height, char* title);
 	void Start();
 
-	void onPreRender();
-	void onRender();
-	void onPostRender();
-	void onUpdate();
-	void onPostUpdate();
-
 	pRenderer* renderer;
 	pResourceFactory* resourceFactory;
 
@@ -45,5 +39,6 @@ private:
 	pModelManager* modelManager;
 	pMaterialManager* materialManager;
 	pImageManager* imageManager;
+	pShaderManager* shaderManager;
 };
 

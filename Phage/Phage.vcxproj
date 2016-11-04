@@ -151,6 +151,7 @@
   <ItemGroup>
     <ClInclude Include="Clock.h" />
     <ClInclude Include="GameImplement.h" />
+    <ClInclude Include="GLError.h" />
     <ClInclude Include="LogManager.h" />
     <ClInclude Include="pBoundingBox.h" />
     <ClInclude Include="pBoundingSphere.h" />
@@ -159,6 +160,7 @@
     <ClInclude Include="pImage.h" />
     <ClInclude Include="pImageLoader.h" />
     <ClInclude Include="pImageManager.h" />
+    <ClInclude Include="pLight.h" />
     <ClInclude Include="pMaterialManager.h" />
     <ClInclude Include="pMatrixStack.h" />
     <ClInclude Include="pAsset.h" />
@@ -176,6 +178,8 @@
     <ClInclude Include="pSceneGraph.h" />
     <ClInclude Include="pSceneNode.h" />
     <ClInclude Include="pSceneObject.h" />
+    <ClInclude Include="pShader.h" />
+    <ClInclude Include="pShaderManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Clock.cpp" />
@@ -187,6 +191,7 @@
     <ClCompile Include="pImage.cpp" />
     <ClCompile Include="pImageLoader.cpp" />
     <ClCompile Include="pImageManager.cpp" />
+    <ClCompile Include="pLight.cpp" />
     <ClCompile Include="pMaterialManager.cpp" />
     <ClCompile Include="pMatrixStack.cpp" />
     <ClCompile Include="pAsset.cpp" />
@@ -203,6 +208,8 @@
     <ClCompile Include="pSceneGraph.cpp" />
     <ClCompile Include="pSceneNode.cpp" />
     <ClCompile Include="pSceneObject.cpp" />
+    <ClCompile Include="pShader.cpp" />
+    <ClCompile Include="pShaderManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resources\Shaders\SimpleFragmentShader.frag" />

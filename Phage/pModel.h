@@ -11,11 +11,10 @@ class pModel : public pAsset
 	friend class pBoundingBox;
 
 public:
-	pModel(std::string name, pMaterial* material, GLfloat* verts, GLfloat* vertColors, GLfloat* vertUVs, GLuint numVertices);
+	pModel(std::string name, pMaterial* material, GLfloat* verts, GLfloat* vertColors, GLfloat* vertUVs, GLfloat* vertNorms, GLuint numVertices, GLenum drawMode);
 	~pModel();
 
 	std::string getName() override;
-	GLuint getID() override;
 
 	GLuint getShaderProgramID();
 	GLuint getVertCount();
@@ -28,6 +27,8 @@ public:
 	glm::mat4 getModelMatrix();
 	pMaterial* getMaterial();
 
+	GLenum getDrawMode();
+
 	//Adds rotation relative to current around a provided axis by <amount> degrees
 	void rotateAround(glm::vec3 rot, GLfloat amount);
 	//Scales relative to current scale by <xyz>
@@ -38,6 +39,8 @@ public:
 	void translate(glm::vec3 pos);
 	//Translates relative to center by <xyz>
 	void setPosition(glm::vec3 pos);
+	//Set the rotation relative to 0
+	void setRotation(glm::vec3 rot, GLfloat amount);
 
 	pType type;
 
@@ -51,11 +54,14 @@ private:
 	GLfloat* vertices;
 	GLfloat* vertexColors;
 	GLfloat* vertexUVs;
+	GLfloat* vertexNormals;
 	GLuint VBOID[3]; //3 vertex buffer objects, for points, colors, and UVs
 	GLuint VAOID; //One vertex array object to hold the vertex buffer objects
 	GLuint modelMatrixLocation;
 	GLuint viewMatrixLocation;
 	GLuint projectionMatrixLocation;
+
+	GLenum drawMode;
 
 	glm::mat4 translationMatrix;
 	glm::mat4 rotationMatrix;
@@ -64,6 +70,5 @@ private:
 	glm::mat4 modelMatrix;
 
 	std::string name;
-	GLuint ID;
 };
 

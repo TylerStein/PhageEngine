@@ -19,6 +19,7 @@ pModelManager::~pModelManager()
 	clear();
 }
 
+/*
 pModelManager::HandleType pModelManager::createModel(std::string modelName, std::string filePath)
 {
 	pModelManager::HandleType result(-1);
@@ -63,13 +64,13 @@ pModelManager::HandleType pModelManager::createModel(std::string modelName, std:
 		vertUVs[x + 2] = info.uvs[y].z;
 	}
 
-	//Check if there's an associated material
+	//TODO: Check if there's an associated material and generate it based on that....
+	ShaderInfo shaderInfo;
+	MaterialInfo materialInfo;
 
-	//Generate or grab the material
-	pMaterial* mat = new pMaterial("DefaultMat");
+	pMaterial* mat = new pMaterial((modelName + "-Material"), new pShader("", "", "", shaderInfo), materialInfo);
 
 	//Create a model based on that info
-	//pModel* mdl = new pModel(modelName, mat, vertPositions, vertNormals, vertColors, vertUVs, (GLuint)info.positions.size());
 	pModel* mdl = new pModel(modelName, mat, vertPositions, vertColors, vertUVs, info.positions.size());
 
 	result = modelResources.put(modelName, mdl);
@@ -82,6 +83,7 @@ pModelManager::HandleType pModelManager::createModel(std::string modelName, std:
 
 	return result;
 }
+*/
 
 pModelManager::HandleType pModelManager::addModel(std::string modelName, pModel* mdl)
 {

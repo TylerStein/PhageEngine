@@ -1,9 +1,11 @@
 #pragma once
 #include "PhageEngine.h"
+#include "pLight.h"
 
 class TestScene : public GameImplement
 {
 public:
+	pShader* simpleShader;
 	pImage* testImg;
 	pMaterial* testMat;
 	pModel* testModel;
@@ -15,7 +17,7 @@ public:
 
 	// Inherited via GameImplement
 	virtual void onStart() override;
-	virtual void onUpdate() override;
+	virtual void onUpdate(GLdouble deltaTime) override;
 	virtual void onPostUpdate() override;
 	virtual void onPreRender() override;
 	virtual void onRender() override;

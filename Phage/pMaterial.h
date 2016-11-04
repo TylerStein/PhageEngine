@@ -2,51 +2,42 @@
 #include "pAsset.h"
 #include "glm\vec3.hpp"
 #include "pImage.h"
+#include "pShader.h"
 #include "pEnums.h"
 #include <vector>
+
+
+struct MaterialInfo {
+	glm::vec3 diffuse;
+	glm::vec3 ambient;
+	float shininess;
+	float alpha;
+	GLuint blendMode;
+	pImage* texture0;
+	GLboolean bHasTexture;
+};
 
 class pMaterial : public pAsset
 {
 public:
 	pType type;
 
-	pMaterial(std::string name, pImage *image);
-	pMaterial(std::string name, std::vector<pImage*> images, GLuint blendMode);
-	pMaterial(std::string name, glm::vec3 diffuseRGB);
-	pMaterial(std::string name, glm::vec3 diffuseRGB, glm::vec3 ambientRGB, float shininess, float alpha);
-	pMaterial(std::string name);
-	pMaterial();
+	pMaterial(std::string name, pShader* matShader, MaterialInfo matInfo);
 	~pMaterial();
 
 	std::string getName() override;
-	GLuint getID() override;
+
+	void setupTexture();
 
 	GLuint getShaderProgramID();
-	void loadShader(char* vertexShaderPath, char* fragmentShaderPath);
+	ShaderInfo getShaderInfo();
 	GLboolean hasTexture();
-	void bindTextures();
-
-	struct materialInfo {
-		glm::vec3 diffuse;
-		glm::vec3 ambient;
-		float shininess;
-		float alpha;
-		GLuint blendMode;
-		GLboolean bHasTexture;
-	};
+	GLuint getTexture0ID();
 
 private:
+	GLuint textureID[1];
 	std::string name;
-	GLuint shaderProgramID;
-	GLuint ID;
-
-	glm::vec3 diffuse;
-	glm::vec3 ambient;
-	float shininess;
-	float alpha;
-	GLuint blendMode;
-	GLboolean bHasTexture;
-
-	std::vector<pImage*> textures;
+	pShader* shader;
+	MaterialInfo matInfo;
 };
 
