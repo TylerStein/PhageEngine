@@ -211,6 +211,7 @@ void pModel::setupModel()
 	viewMatrixLocation = glGetUniformLocation(getShaderProgramID(), material->getShaderInfo().viewAttribute);
 	projectionMatrixLocation = glGetUniformLocation(getShaderProgramID(), material->getShaderInfo().projectionAttribute);
 
+	material->setupShader();
 	material->setupTexture();
 }
 

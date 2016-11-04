@@ -10,6 +10,8 @@ public:
 	pMaterial* testMat;
 	pModel* testModel;
 
+	pModel* floor;
+
 	TestScene();
 	~TestScene();
 

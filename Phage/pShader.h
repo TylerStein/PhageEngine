@@ -6,7 +6,8 @@ struct ShaderInfo {
 public:
 	ShaderInfo() {}
 	ShaderInfo(GLchar* vertPosAttribute, GLchar* vertColorAttribute, GLchar* vertCoordAttribute, GLchar* vertNormalAttribute,
-		GLchar* modelViewAttribute, GLchar* projectionAttribute, GLchar* viewAttribute, GLchar* pixelLightPositionAttribute, GLchar* pixelLightIntensityAttribute)
+		GLchar* modelViewAttribute, GLchar* projectionAttribute, GLchar* viewAttribute, GLchar* lightPosAttribute, GLchar* lightPowAttribute,
+		GLchar* diffuseAttribute, GLchar* ambientAttribute, GLchar* specularAttribute, GLchar* shininessAttribute, GLchar* alphaAttribute)
 	{
 
 		vertexPositionAttribute = vertPosAttribute;
@@ -16,6 +17,13 @@ public:
 		this->modelViewAttribute = modelViewAttribute;
 		this->projectionAttribute = projectionAttribute;
 		this->viewAttribute = viewAttribute;
+		this->diffuseAttribute = diffuseAttribute;
+		this->ambientAttribute = ambientAttribute;
+		this->specularAttribute = specularAttribute;
+		this->shininessAttribute = shininessAttribute;
+		this->lightPosAttribute = lightPosAttribute;
+		this->lightPowAttribute = lightPowAttribute;
+		this->alphaAttribute = alphaAttribute;
 	}
 
 	//The vertex position attribute name
@@ -32,6 +40,20 @@ public:
 	GLchar* projectionAttribute;
 	//The camera view matrix uniform variable name
 	GLchar* viewAttribute;
+	//The diffuse color color attribute
+	GLchar* diffuseAttribute;
+	//The ambient color color attribute
+	GLchar* ambientAttribute;
+	//The specular highlight color attribute
+	GLchar* specularAttribute;
+	//The shininess value attribute
+	GLchar* shininessAttribute;
+	//The alpha value attribute
+	GLchar* alphaAttribute;
+	//The single light position attribute
+	GLchar* lightPosAttribute;
+	//The single light power attribute
+	GLchar* lightPowAttribute;
 };
 
 class pShader : public pAsset

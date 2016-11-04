@@ -65,7 +65,6 @@ public:
 			errorString = "No error";
 		}
 
-		glError = glGetError();
 		if (glError != GL_NO_ERROR) {
 			std::cout << ("OpenGL error @ (" + (std::string)file + "), (" + (char*)line + "): \n" + errorString) << std::endl;
 			returnCode = 1;

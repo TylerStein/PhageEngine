@@ -20,7 +20,6 @@ pRenderer::~pRenderer()
 void pRenderer::setupGLOptions() {
 	glEnable(GL_DEPTH_TEST); //Enable depth-testing
 	glDepthFunc(GL_LESS); //Interpret smaller values as closer
-	glEnable(GL_TEXTURE_2D); //Enable 2d textures
 }
 
 void pRenderer::setWindowRef(GLFWwindow* window)
@@ -44,6 +43,8 @@ void pRenderer::renderModel(pModel* model)
 	glUniformMatrix4fv(model->getViewMatrixID(), 1, GL_FALSE, &cameraView[0][0]);
 	//Apply the perspective matrix
 	glUniformMatrix4fv(model->getProjectionMatrixID(), 1, GL_FALSE, &projMatrix[0][0]);
+
+	model->getMaterial()->setLightEffect(sceneLight->getPosition(), sceneLight->getPower());
 
 	//Draw the model's points from the currently bound VAO with currently used shader
 	glDrawArrays(model->getDrawMode(), 0, model->getVertCount());
