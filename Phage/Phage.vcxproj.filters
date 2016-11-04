@@ -67,15 +67,6 @@
     <ClCompile Include="pResourceFactory.cpp">
       <Filter>Management</Filter>
     </ClCompile>
-    <ClCompile Include="pSceneObject.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="pSceneNode.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="pSceneGraph.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
     <ClCompile Include="pShader.cpp">
       <Filter>Asset</Filter>
     </ClCompile>
@@ -83,6 +74,18 @@
       <Filter>Management</Filter>
     </ClCompile>
     <ClCompile Include="pPlane.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="pSceneGraph.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="pSceneNode.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="pSceneObject.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="pScript.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
   </ItemGroup>
@@ -162,15 +165,6 @@
     <ClInclude Include="pResourceFactory.h">
       <Filter>Management</Filter>
     </ClInclude>
-    <ClInclude Include="pSceneObject.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="pSceneNode.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="pSceneGraph.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
     <ClInclude Include="pShader.h">
       <Filter>Asset</Filter>
     </ClInclude>
@@ -178,6 +172,18 @@
       <Filter>Management</Filter>
     </ClInclude>
     <ClInclude Include="pPlane.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="pSceneGraph.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="pSceneNode.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="pSceneObject.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="pScript.h">
       <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>
