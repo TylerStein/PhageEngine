@@ -4,33 +4,49 @@ layout(location = 1) in vec4 vColor;
 layout(location = 2) in vec2 vTexCoord;
 layout(location = 3) in vec3 vNormal;
 
-uniform mat4 model_matrix;
-uniform mat4 view_matrix;
-uniform mat4 projection_matrix;
+struct View {
+	mat4 camera;
+	mat4 projection;
+	mat4 model;
+};
 
-uniform vec3 lightsource;
-uniform vec3 lightpower;
+struct VertData {
+	vec2 texCoord;
+	vec4 color;
+	vec3 normal;
+	vec3 vertex;
+};
 
-out vec4 fColor;
-out vec2 fTexCoord;
-out vec3 fNormal;
+//Uniform inputs
+uniform View vView;
+uniform int vFlags;
 
-out vec3 fVert;
-out vec3 fLightSource;
-out vec3 fLightPower;
-
-out mat4 fModel;
+//Outputs to Fragment Shader
+out View fView;
+out VertData fVert;
+flat out int fFlags;
+out vec3 fMovedVertex;
 
 void main(){
-	fColor = vColor;
-	fTexCoord = vTexCoord;
-	fNormal = vNormal;
+	//Pass flags on to the fragment shader
+	fFlags = vFlags;
 
-	gl_Position = projection_matrix * view_matrix * model_matrix * vec4(vPosition, 1);
+	//Pass vertex and matrix info on to the fragment shader
+	fVert.texCoord = vTexCoord;
+	fVert.color = vColor;
+	fVert.normal = vNormal;
+	fVert.vertex = vPosition;
 
-	fModel = model_matrix;
+	fView.camera = vView.camera;
+	fView.projection = vView.projection;
+	fView.model = vView.model;
 
-	fLightPower = lightpower;
-	fLightSource = lightsource;
-	fVert = vPosition;
+	//Calculate the position from matrices and vertex position
+	vec4 finalPos =  vView.projection * vView.camera * vView.model * vec4(vPosition, 1);
+
+	//Send the transformed vertex position to the fragment shader
+	fMovedVertex = finalPos.xyz;
+
+	//Set the vertex position to this final position
+	gl_Position = finalPos;
 }

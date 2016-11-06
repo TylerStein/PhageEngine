@@ -1,41 +1,73 @@
 #version 400
-uniform sampler2D fTexture;
-uniform vec3 diffuse;
-uniform vec3 ambient;
-uniform vec3 specular;
-uniform float shininess;
-uniform float alpha;
 
-in vec2 fTexCoord;
-in vec4 fColor;
-in vec3 fNormal;
+struct Material{
+	vec3 diffuse;
+	vec3 ambient;
+	vec3 specular;
+	float shininess;
+};
 
-in vec3 fVert;
+struct Textures{
+	sampler2D diffuse;
+	sampler2D specular;
+	sampler2D bump;
+};
 
-in vec3 fLightSource;
-in vec3 fLightPower;
+struct Light{
+	vec3 position;
+	vec3 color;
+	vec3 power;
+	float attenuation;
+	float ambient;
+};
 
-in mat4 fModel;
+struct View {
+	mat4 camera;
+	mat4 projection;
+	mat4 model;
+};
 
+struct VertData {
+	vec2 texCoord;
+	vec4 color;
+	vec3 normal;
+	vec3 vertex;
+};
+
+//Uniform inputs
+uniform Material fMaterial;
+uniform Textures fTextures;
+uniform Light fLight;
+
+//Inputs from the Vertex Shader
+in View fView;
+in VertData fVert;
+flat in int fFlags;
+in vec3 fMovedVertex;
+
+//Output the final pixel color
 out vec4 finalColor;
 
 void main(){
-	//calculate normal in world coordinates
-    mat3 normalMatrix = transpose(inverse(mat3(fModel)));
-    vec3 normal = normalize(normalMatrix * fNormal);
-    
-    //calculate the location of this fragment (pixel) in world coordinates
-    vec3 fragPosition = vec3(fModel * vec4(fVert, 1));
-    
-    //calculate the vector from this pixels surface to the light source
-    vec3 surfaceToLight = fLightSource - fVert;
+	mat3 normalMatrix = transpose(inverse(mat3(fView.model)));
+	vec3 normal = normalize(normalMatrix * fVert.normal);
 
-    //calculate the cosine of the angle of incidence
-    float brightness = dot(normal, surfaceToLight) / (length(surfaceToLight) * length(normal));
-    brightness = clamp(brightness, 0, 1);
+	vec3 fragPosition = vec3(fView.model * vec4(fVert.vertex, 1));
 
-    //calculate final color of the pixel plus ambient
-    vec4 surfaceColor = texture(fTexture, fTexCoord);
-	vec4 finalAmbient = vec4(ambient, 1.0);
-    finalColor = finalAmbient + vec4(brightness * fLightPower * surfaceColor.rgb, alpha);
+	vec3 surfaceToLight = fLight.position - fVert.vertex;
+	
+	float brightness = dot(normal, surfaceToLight) / length(surfaceToLight) * length(normal);
+	brightness = clamp(brightness, 0, 1);
+
+	vec4 surfaceColor = texture(fTextures.diffuse, fVert.texCoord);
+	vec4 finalAmbient = vec4(fMaterial.ambient, 1.0);
+
+	//finalColor = finalAmbient + surfaceColor * fVert.color;
+	finalColor = finalAmbient + vec4(brightness * fLight.power * surfaceColor.rgb, surfaceColor.a);
+
+	//Material Info		1
+	//Diffuse texture	2
+	//Specular texture	4
+	//Bump texture		8
+	//Phong Shading		16
 }

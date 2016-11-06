@@ -8,8 +8,20 @@
 pMaterial::pMaterial(std::string name, pShader * matShader, MaterialInfo matInfo)
 {
 	this->name = name;
+
+	//Use the incoming shader as this material's shader
 	this->shader = matShader;
-	this->matInfo = matInfo;
+
+	//Send incoming data to the shader
+	setDiffuseColor(matInfo.diffuse);
+	setAmbientColor(matInfo.ambient);
+	setSpecularColor(matInfo.specular);
+	setShininess(matInfo.shininess);
+
+	//Send incoming textures to the shader
+	if(matInfo.diffuseTexture != NULL) { setDiffuseTexture(matInfo.diffuseTexture); }
+	if(matInfo.specularTexture != NULL) { setSpecularTexture(matInfo.specularTexture); }
+	if(matInfo.bumpTexture != NULL) { setBumpTexture(matInfo.bumpTexture); }
 }
 
 pMaterial::~pMaterial()
@@ -23,95 +35,99 @@ std::string pMaterial::getName()
 	return name.c_str();
 }
 
-void pMaterial::setupTexture()
-{
-	GLubyte* textureData = matInfo.texture0->imageData;
-
-	glGenTextures(1, textureID);
-	glBindTexture(GL_TEXTURE_2D, textureID[0]);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, matInfo.texture0->getWidth(), matInfo.texture0->getHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, textureData);
-	GLError::printError(__FILE__, __LINE__);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-}
-
-void pMaterial::setupShader()
+void pMaterial::setViewMatrices(glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
 {
 	//Make sure the shader is being used
 	glUseProgram(getShaderProgramID());
 
-	//Generate IDs for material attributes
-	ambientID = glGetUniformLocation(getShaderProgramID(), shader->getShaderInfo().ambientAttribute);
-	diffuseID = glGetUniformLocation(getShaderProgramID(), shader->getShaderInfo().diffuseAttribute);
-	specularID = glGetUniformLocation(getShaderProgramID(), shader->getShaderInfo().specularAttribute);
-	shininessID = glGetUniformLocation(getShaderProgramID(), shader->getShaderInfo().shininessAttribute);
-	alphaID = glGetUniformLocation(getShaderProgramID(), shader->getShaderInfo().alphaAttribute);
+	shader->setPropertyMat4(shader->getPropertyID(pShader::Model_View), modelMatrix);
+	shader->setPropertyMat4(shader->getPropertyID(pShader::Camera_View), viewMatrix);
+	shader->setPropertyMat4(shader->getPropertyID(pShader::Projection_View), projectionMatrix);
+}
 
-	//Generate IDs for light position and power
-	lightPosID = glGetUniformLocation(getShaderProgramID(), shader->getShaderInfo().lightPosAttribute);
-	lightPowID = glGetUniformLocation(getShaderProgramID(), shader->getShaderInfo().lightPowAttribute);
+void pMaterial::setDiffuseColor(glm::vec3 diffuseColor)
+{
+	//Make sure the shader is being used
+	glUseProgram(getShaderProgramID());
 
-	//Pass the ambient and diffuse attributes the appropriate information
-	glUniform3f(ambientID, matInfo.ambient.r, matInfo.ambient.g, matInfo.ambient.b);
-	glUniform3f(diffuseID, matInfo.diffuse.r, matInfo.diffuse.g, matInfo.diffuse.b);
-	glUniform3f(specularID, matInfo.specular.r, matInfo.specular.g, matInfo.specular.b);
-	glUniform1f(shininessID, matInfo.shininess);
-	glUniform1f(alphaID, matInfo.alpha);
+	shader->setPropertyVec3(shader->getPropertyID(pShader::DiffuseColor), diffuseColor);
+}
+
+void pMaterial::setSpecularColor(glm::vec3 specularColor)
+{
+	//Make sure the shader is being used
+	glUseProgram(getShaderProgramID());
+
+	shader->setPropertyVec3(shader->getPropertyID(pShader::SpecularColor), specularColor);
+}
+
+void pMaterial::setAmbientColor(glm::vec3 ambientColor)
+{
+	//Make sure the shader is being used
+	glUseProgram(getShaderProgramID());
+
+	shader->setPropertyVec3(shader->getPropertyID(pShader::AmbientColor), ambientColor);
+}
+
+void pMaterial::setShininess(GLfloat shininess)
+{
+	//Make sure the shader is being used
+	glUseProgram(getShaderProgramID());
+
+	shader->setPropertyFloat(shader->getPropertyID(pShader::Shininess), shininess);
+}
+
+void pMaterial::setDiffuseTexture(pImage * tex)
+{
+	tex->setupTexture(GL_TEXTURE0);
+	shader->setPropertyTextureID(pShader::Attributes::DiffuseColor, tex->textureID);
+}
+
+void pMaterial::setSpecularTexture(pImage * tex)
+{
+	tex->setupTexture(GL_TEXTURE1);
+	shader->setPropertyTextureID(pShader::Attributes::SpecularTexture, tex->textureID);
+}
+
+void pMaterial::setBumpTexture(pImage * tex)
+{
+	tex->setupTexture(GL_TEXTURE2);
+	shader->setPropertyTextureID(pShader::Attributes::BumpTexture, tex->textureID);
+}
+
+GLuint pMaterial::getModelMatrixID()
+{
+	return shader->getPropertyID(pShader::Attributes::Model_View);
+}
+
+GLuint pMaterial::getViewMatrixID()
+{
+	return shader->getPropertyID(pShader::Attributes::Camera_View);
+}
+
+GLuint pMaterial::getProjectionMatrixID()
+{
+	return shader->getPropertyID(pShader::Attributes::Projection_View);
 }
 
 
 GLuint pMaterial::getShaderProgramID()
 {
-	return shader->getShaderProgramID();
+	return shader->getShaderID();
 }
 
-ShaderInfo pMaterial::getShaderInfo()
+
+void pMaterial::setLightEffect(Light light)
 {
-	return shader->getShaderInfo();
+	//if ((shader->getFlags() & pShader::Light_Affected) == pShader::Light_Affected) {
+		//Make sure the shader is being used
+		glUseProgram(getShaderProgramID());
+
+		//Set all light properties
+		shader->setPropertyVec3(shader->getPropertyID(pShader::Light_Position), light.position);
+		shader->setPropertyVec3(shader->getPropertyID(pShader::Light_Color), light.color);
+		shader->setPropertyVec3(shader->getPropertyID(pShader::Light_Power), light.intensity);
+		shader->setPropertyFloat(shader->getPropertyID(pShader::Light_Ambient), light.ambientCoefficient);
+		shader->setPropertyFloat(shader->getPropertyID(pShader::Light_Attenuation), light.attenuation);
+	//}
 }
-
-GLboolean pMaterial::hasTexture()
-{
-	return matInfo.bHasTexture;
-}
-
-GLuint pMaterial::getTexture0ID()
-{
-	return matInfo.texture0->getTextureID();
-}
-
-GLuint pMaterial::getDiffuseID()
-{
-	return diffuseID;
-}
-
-GLuint pMaterial::getAmbientID()
-{
-	return ambientID;
-}
-
-GLuint pMaterial::getSpecularID()
-{
-	return specularID;
-}
-
-
-GLuint pMaterial::getShininessID()
-{
-	return shininessID;
-}
-
-GLuint pMaterial::getAlphaID()
-{
-	return alphaID;
-}
-
-void pMaterial::setLightEffect(glm::vec3 pos, glm::vec3 pow)
-{
-	//Pass in the light position and power vec3 pair
-	glUniform3f(lightPosID, pos.x, pos.y, pos.z);
-	glUniform3f(lightPowID, pow.r, pow.g, pow.b);
-}
-

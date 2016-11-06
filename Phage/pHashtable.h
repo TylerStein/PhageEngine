@@ -264,12 +264,12 @@ public:
 			}
 		}
 
-		//deletes the Hashtable but not the values in the table
+		//TODO: deletes the Hashtable but not the values in the table
 		~Hashtable(void)
 		{
 			if (table != NULL)
 			{
-				delete [] table;
+				delete table;
 				table = NULL;
 			}
 		}

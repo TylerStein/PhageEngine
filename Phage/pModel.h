@@ -55,11 +55,8 @@ private:
 	GLfloat* vertexColors;
 	GLfloat* vertexUVs;
 	GLfloat* vertexNormals;
-	GLuint VBOID[3]; //3 vertex buffer objects, for points, colors, and UVs
+	GLuint VBOID[4]; //3 vertex buffer objects, for points, colors, and UVs
 	GLuint VAOID; //One vertex array object to hold the vertex buffer objects
-	GLuint modelMatrixLocation;
-	GLuint viewMatrixLocation;
-	GLuint projectionMatrixLocation;
 
 	GLenum drawMode;
 

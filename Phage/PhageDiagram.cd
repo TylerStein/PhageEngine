@@ -1,0 +1,276 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="GameImplement" Collapsed="true">
+    <Position X="0.75" Y="6.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AQQAAAAAAAAAAAAAAAACIBAAAAAAAAAgAAAAAAAIBEA=</HashCode>
+      <FileName>GameImplement.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PhageEngine" Collapsed="true">
+    <Position X="4.25" Y="6.5" Width="2.75" />
+    <AssociationLine Name="renderer" Type="pRenderer" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7" Y="6.781" />
+        <Point X="7.375" Y="6.781" />
+        <Point X="7.375" Y="5.75" />
+        <Point X="9.75" Y="5.75" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AgAJAAAAACAAAAgAAAAEAAgQAAJAAAAYAAAAAAAAoAQ=</HashCode>
+      <FileName>PhageEngine.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="renderer" />
+      <Field Name="resourceFactory" />
+      <Field Name="game" />
+      <Field Name="modelManager" />
+      <Field Name="materialManager" />
+      <Field Name="imageManager" />
+      <Field Name="shaderManager" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="pImage" Collapsed="true">
+    <Position X="2.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QQAAAAABAAACAAQAwAgAEAAAAAAFQhgAAAAEAAAQIAA=</HashCode>
+      <FileName>pImage.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pLight" Collapsed="true">
+    <Position X="2.5" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQIAKAAAgAAAAAAAAAAAABACAAEACgAAAAAAgAAABAA=</HashCode>
+      <FileName>pLight.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pAsset" Collapsed="true">
+    <Position X="0.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAA=</HashCode>
+      <FileName>pAsset.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pMaterial" Collapsed="true">
+    <Position X="2.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>RIAAAAAACCEQBAAAAABAAAQAAAAFAQAAAgAEgUAQAAA=</HashCode>
+      <FileName>pMaterial.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pModel" Collapsed="true">
+    <Position X="2.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>SICAACgAgiBABAAAACBAAAACjDAVMAwCAAAEAAhgDAE=</HashCode>
+      <FileName>pModel.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pShader" Collapsed="true">
+    <Position X="2.5" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAIAAAAAAAABAACAAAAAEAAEAAAAIYCEEQAAAAA=</HashCode>
+      <FileName>pShader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pImageManager" Collapsed="true">
+    <Position X="7.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAACAAABBAAIAAQAABAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>pImageManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pMaterialManager" Collapsed="true">
+    <Position X="7.5" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QEAAIAAACAEQAAAAAAAABAIAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>pMaterialManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pModelManager" Collapsed="true">
+    <Position X="7.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AkAAYIIACgQAAAAAAAAAEAAAAAAAAEAAAAAAAAAAIAA=</HashCode>
+      <FileName>pModelManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pResourceFactory" Collapsed="true">
+    <Position X="7.5" Y="7.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>QgAAIIAACgAAAAABABAEBEEQAAAFAEAAAAAAAAAEYAA=</HashCode>
+      <FileName>pResourceFactory.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pResourceHandle&lt;ResouceType&gt;" Collapsed="true">
+    <Position X="9.75" Y="12.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAMAAAAEQAAAAAAAAAAAAAgCAABAAA=</HashCode>
+      <FileName>pResourceManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pResourceManager&lt;ResourceType&gt;" Collapsed="true">
+    <Position X="6.25" Y="12.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAiAABAAAAABAEAAAAQAAAAAAgAQAAAACAAAAAAAA=</HashCode>
+      <FileName>pResourceManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pShaderManager" Collapsed="true">
+    <Position X="7.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CEAAAAAAAAAAAAAAAAAAAAAAAAAAAMEAAAAAAAAAQgA=</HashCode>
+      <FileName>pShaderManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pImageLoader" Collapsed="true">
+    <Position X="9.75" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAAAQAwAAAAAIAAAABUEAAAAAAAAAAAAA=</HashCode>
+      <FileName>pImageLoader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pModelLoader" Collapsed="true">
+    <Position X="9.75" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAgAEAAAAAAAAABAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>pModelLoader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Clock" Collapsed="true">
+    <Position X="0.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Clock.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GLError" Collapsed="true">
+    <Position X="2.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQIAAAAAEAAAAAAAAAAAAAAAAAAAAEAAAAAAA=</HashCode>
+      <FileName>GLError.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LogManager" Collapsed="true">
+    <Position X="0.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAEBgAAAAQABAAAAAMACAAAUBBQAAAAQAAAAAAgCAA=</HashCode>
+      <FileName>LogManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HashItem&lt;KeyType, T&gt;" Collapsed="true">
+    <Position X="11.75" Y="8.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAFgIEAQCAAAABACAAAAAgAAAAAAA=</HashCode>
+      <FileName>pHashtable.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HashtableIterator&lt;KeyType, TT&gt;" Collapsed="true">
+    <Position X="11.75" Y="9.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAAQAAAAQEAAAAAAAAAAAAgAQIAAAQ=</HashCode>
+      <FileName>pHashtable.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Hashtable&lt;KeyType, T&gt;" Collapsed="true">
+    <Position X="11.75" Y="7.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AECACAAKCAAAABBGIAAAQAAQAAAAAAKAAAAAAAAAAAA=</HashCode>
+      <FileName>pHashtable.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pFileReader" Collapsed="true">
+    <Position X="2.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAABAAAAAAAAAAAAAAAAAAAAiAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>pFileReader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pPlane" Collapsed="true">
+    <Position X="13.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACACAAAACQAAAAAAAAgAAAAAAAACkAQAgAAAAAAA=</HashCode>
+      <FileName>pPlane.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pBoundingBox" Collapsed="true">
+    <Position X="13.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAACBAAAAAAAAAAAAQAAAAAAAAQAIAEAAAEggQAAAAA=</HashCode>
+      <FileName>pBoundingBox.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pBoundingSphere" Collapsed="true">
+    <Position X="13.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgCAAAACAAAAAAAAAAAAAAAAAUAACAACAAggAAAIAA=</HashCode>
+      <FileName>pBoundingSphere.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pFrustum" Collapsed="true">
+    <Position X="11.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AUwAACAQAAIgEGAAABAAAAEAAQgBBgkAACAgIgACgAA=</HashCode>
+      <FileName>pFrustum.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pRenderer" Collapsed="true">
+    <Position X="9.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAYAQAAAAIAEAAgAIABAgAAAAgACAgYAAAAAAAo=</HashCode>
+      <FileName>pRenderer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pMatrixStack" Collapsed="true">
+    <Position X="5.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IBAAEgDjYAAAABAAIAAAiAAggAAAAAkAACEkIgAgAAA=</HashCode>
+      <FileName>pMatrixStack.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pSceneGraph" Collapsed="true">
+    <Position X="5.25" Y="5.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAAABAEAACAAAgAgAAgAAAAAABAAAAA=</HashCode>
+      <FileName>pSceneGraph.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="rootSceneNode" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="pSceneNode" Collapsed="true">
+    <Position X="9.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACoAAMAIBYACEAQABACAKAISCAgghAACAQAAAAAAIAI=</HashCode>
+      <FileName>pSceneNode.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="pSceneObject" Collapsed="true">
+    <Position X="9.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>pSceneObject.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="Light" Collapsed="true">
+    <Position X="4.25" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAAAAAAAAAAAIAAAAAAACACBAAAAAAAAAAA=</HashCode>
+      <FileName>pLight.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="MaterialInfo" Collapsed="true">
+    <Position X="9.75" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAABAAAAAAAAAAAAEBAAAAIAAAAAAAAAAAAABABAAAA=</HashCode>
+      <FileName>pMaterial.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="pType" Collapsed="true">
+    <Position X="2.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAEAAAQAAEAAAAAAAAAAAAAAIAAA=</HashCode>
+      <FileName>pEnums.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

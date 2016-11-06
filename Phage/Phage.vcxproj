@@ -214,6 +214,7 @@
   <ItemGroup>
     <None Include="..\Resources\Shaders\SimpleFragmentShader.frag" />
     <None Include="..\Resources\Shaders\SimpleVertexShader.vert" />
+    <None Include="PhageDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

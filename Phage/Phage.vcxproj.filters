@@ -188,6 +188,7 @@
     <None Include="..\Resources\Shaders\SimpleFragmentShader.frag">
       <Filter>Resources\Shaders</Filter>
     </None>
+    <None Include="PhageDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -220,7 +221,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt">
-      <Filter>Resources</Filter>
+      <Filter>Scene</Filter>
     </Text>
   </ItemGroup>
 </Project>

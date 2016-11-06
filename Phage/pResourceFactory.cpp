@@ -76,18 +76,17 @@ pImage * pResourceFactory::createDebugImage(std::string name)
 	return imageManager->getImage(imgH);
 }
 
-pShader * pResourceFactory::createShader(std::string name, std::string vertShaderPath, std::string fragShaderPath, ShaderInfo shaderInfo)
+pShader * pResourceFactory::createShader(std::string name, std::string vertShaderPath, std::string fragShaderPath, GLint flags)
 {
-	pResourceHandle<pShader> shdr = shaderManager->createShader(name, vertShaderPath, fragShaderPath, shaderInfo);
+	pResourceHandle<pShader> shdr = pResourceHandle<pShader>(-1);
+	shdr = shaderManager->createShader(name, vertShaderPath, fragShaderPath, flags);
 	return shaderManager->getShader(shdr);
 }
 
 pModel * pResourceFactory::getModel(std::string name, std::string path)
 {
-	//Generate a model and get it's handle
-	//pResourceHandle<pModel> mdlHandle = modelManager->createModel(name, path);
-	//Get the model from the hashtable
-	//return modelManager->getModel(mdlHandle);
+	pResourceHandle<pShader> mdl = pResourceHandle<pShader>(-1);
+	//mdl = createModel
 	std::cout << "Attempted to read model from file, not yet functional!" << std::endl;
 	return nullptr;
 }

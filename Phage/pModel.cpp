@@ -57,6 +57,7 @@ pModel::~pModel()
 	delete vertices;
 	delete vertexColors;
 	delete vertexUVs;
+	delete vertexNormals;
 }
 
 std::string pModel::getName()
@@ -86,17 +87,17 @@ GLuint pModel::getVertexBufferID(GLuint index)
 
 GLuint pModel::getModelMatrixID()
 {
-	return modelMatrixLocation;
+	return material->getModelMatrixID();
 }
 
 GLuint pModel::getViewMatrixID()
 {
-	return viewMatrixLocation;
+	return material->getViewMatrixID();
 }
 
 GLuint pModel::getProjectionMatrixID()
 {
-	return projectionMatrixLocation;
+	return material->getProjectionMatrixID();
 }
 
 glm::mat4 pModel::getModelMatrix()
@@ -178,27 +179,27 @@ void pModel::setupModel()
 	//Bind our first (point) buffer to the VAO
 	glBindBuffer(GL_ARRAY_BUFFER, VBOID[0]);
 	//Bind the vPosition shader attribute to the 0th VBO (points)
-	glBindAttribLocation(getShaderProgramID(), 0, material->getShaderInfo().vertexPositionAttribute);
+	glBindAttribLocation(getShaderProgramID(), 0, "vPosition");
 	//Attirbute pointer to the 0th index, 3 of type, type is float, not normalized, 0 stride, no pointer
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
 	//Bind our second (color) buffer to the VAO
 	glBindBuffer(GL_ARRAY_BUFFER, VBOID[1]);
 	//Bind the vColor shader attribute to the 2nd VBO (color)
-	glBindAttribLocation(getShaderProgramID(), 1, material->getShaderInfo().vertexColorAttribute);
+	glBindAttribLocation(getShaderProgramID(), 1, "vColor");
 	//Attirbute pointer to the 1st index, 3 of type, type is float, not normalized, 0 stride, no pointer
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
 	//Bind our third (UV) buffer to the VAO
 	glBindBuffer(GL_ARRAY_BUFFER, VBOID[2]);
 	//Bind the vColor shader attribute to the 3rd VBO (UV)
-	glBindAttribLocation(getShaderProgramID(), 1, material->getShaderInfo().vertexColorAttribute);
+	glBindAttribLocation(getShaderProgramID(), 2, "vTexCoord");
 	//Attirbute pointer to the 1st index, 2 of type, type is float, not normalized, 0 stride, no pointer
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, NULL);
 
 	//Bind our fourth (Normal) buffer to the VAO
 	glBindBuffer(GL_ARRAY_BUFFER, VBOID[3]);
-	glBindAttribLocation(getShaderProgramID(), 1, material->getShaderInfo().vertexNormalAttribute);
+	glBindAttribLocation(getShaderProgramID(), 3, "vNormal");
 	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
 	//Enable the vertex attribute arrays
@@ -206,13 +207,6 @@ void pModel::setupModel()
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
 	glEnableVertexAttribArray(3);
-
-	modelMatrixLocation = glGetUniformLocation(getShaderProgramID(), material->getShaderInfo().modelViewAttribute);
-	viewMatrixLocation = glGetUniformLocation(getShaderProgramID(), material->getShaderInfo().viewAttribute);
-	projectionMatrixLocation = glGetUniformLocation(getShaderProgramID(), material->getShaderInfo().projectionAttribute);
-
-	material->setupShader();
-	material->setupTexture();
 }
 
 void pModel::initDefaultMatrix()

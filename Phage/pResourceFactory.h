@@ -27,7 +27,7 @@ public:
 	pImage* createImage(std::string name, std::string filePath);
 	pImage* createDebugImage(std::string name);
 	//Create a shader
-	pShader* createShader(std::string name, std::string vertShaderPath, std::string fragShaderPath, ShaderInfo shaderInfo);
+	pShader* createShader(std::string name, std::string vertShaderPath, std::string fragShaderPath, GLint flags);
 
 	//Functions to receive assets from cache or file
 	//Retreive a model from file

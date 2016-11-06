@@ -59,8 +59,8 @@ void pImage::generateCheckerboard()
 
 	width = 2;
 	height = 2;
-	minFilterType = GL_LINEAR;
-	magFilterType = GL_LINEAR;
+	minFilterType = GL_NEAREST;
+	magFilterType = GL_NEAREST;
 	wrapMode = GL_REPEAT;
 }
 
@@ -88,14 +88,14 @@ void pImage::loadImage()
 	}
 }
 
-void pImage::setupTexture()
+void pImage::setupTexture(GLenum texturePlace)
 {
 	//Generate a textureID
 	glGenTextures(1, &textureID);
 	GLError::printError(__FILE__, __LINE__);
 
 	//Set the active texture to 0
-	//glActiveTexture(GL_TEXTURE0);
+	glActiveTexture(texturePlace);
 	//GLError::printError(__FILE__, __LINE__);
 
 	//Bind the new texture
@@ -121,6 +121,8 @@ void pImage::setupTexture()
 	{
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
+
+
 
 	GLError::printError(__FILE__, __LINE__);
 }

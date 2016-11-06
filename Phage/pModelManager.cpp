@@ -19,8 +19,8 @@ pModelManager::~pModelManager()
 	clear();
 }
 
-/*
-pModelManager::HandleType pModelManager::createModel(std::string modelName, std::string filePath)
+
+pModelManager::HandleType pModelManager::createModel(std::string modelName, pMaterial* material, std::string filePath)
 {
 	pModelManager::HandleType result(-1);
 
@@ -55,23 +55,25 @@ pModelManager::HandleType pModelManager::createModel(std::string modelName, std:
 	}
 
 	//Get UVs
-	GLfloat* vertUVs = (GLfloat*)malloc(info.uvs.size() * 3 * sizeof(GLfloat));
+	GLfloat* vertUVs = (GLfloat*)malloc(info.uvs.size() * 2 * sizeof(GLfloat));
 	y = 0;
-	for (int x(0); x < info.positions.size(); x += 3) {
+	for (int x(0); x < info.positions.size(); x += 2) {
 		y++;
 		vertUVs[x] = info.uvs[y].x;
 		vertUVs[x + 1] = info.uvs[y].y;
-		vertUVs[x + 2] = info.uvs[y].z;
 	}
 
 	//TODO: Check if there's an associated material and generate it based on that....
-	ShaderInfo shaderInfo;
+	//Create a unique shader (Bad!) with material info (automatically filled)
+	//Next use manager to load one with certain flags by search?
+	pShader* tmpShader = new pShader("TempShader", pShader::MaterialInfo, "", "");
+
 	MaterialInfo materialInfo;
 
-	pMaterial* mat = new pMaterial((modelName + "-Material"), new pShader("", "", "", shaderInfo), materialInfo);
+	pMaterial* mat = new pMaterial((modelName + "_Material"), tmpShader, materialInfo);
 
 	//Create a model based on that info
-	pModel* mdl = new pModel(modelName, mat, vertPositions, vertColors, vertUVs, info.positions.size());
+	pModel* mdl = new pModel(modelName, mat, vertPositions, vertColors, vertUVs, vertNormals, info.positions.size(), GL_QUADS);
 
 	result = modelResources.put(modelName, mdl);
 
@@ -83,7 +85,7 @@ pModelManager::HandleType pModelManager::createModel(std::string modelName, std:
 
 	return result;
 }
-*/
+
 
 pModelManager::HandleType pModelManager::addModel(std::string modelName, pModel* mdl)
 {

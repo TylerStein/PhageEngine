@@ -11,11 +11,11 @@ pShaderManager::~pShaderManager()
 {
 }
 
-pShaderManager::HandleType pShaderManager::createShader(std::string shaderName, std::string vertShaderPath, std::string fragShaderPath, ShaderInfo shaderInfo)
+pShaderManager::HandleType pShaderManager::createShader(std::string shaderName, std::string vertShaderPath, std::string fragShaderPath, GLint properties)
 {
 	pShaderManager::HandleType result(-1);
 
-	pShader* shdr = new pShader(shaderName, vertShaderPath, fragShaderPath, shaderInfo);
+	pShader* shdr = new pShader(shaderName, properties, vertShaderPath, fragShaderPath);
 	result =  shaderResources.put(shaderName, shdr);
 	return result;
 }

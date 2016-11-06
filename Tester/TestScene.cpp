@@ -192,39 +192,21 @@ void TestScene::onStart()
 		1, 0, 0
 	};
 
-	//Store the names of variables the loaded shader takes
-	ShaderInfo simpleShaderInfo;
-	simpleShaderInfo.modelViewAttribute = "model_matrix";
-	simpleShaderInfo.projectionAttribute = "projection_matrix";
-	simpleShaderInfo.viewAttribute = "view_matrix";
-	simpleShaderInfo.vertexPositionAttribute = "vPosition";
-	simpleShaderInfo.vertexColorAttribute = "vColor";
-	simpleShaderInfo.vertexCoordinateAttribute = "vTexCoord";
-	simpleShaderInfo.vertexNormalAttribute = "vNormal";
-	simpleShaderInfo.ambientAttribute = "ambient";
-	simpleShaderInfo.diffuseAttribute = "diffuse";
-	simpleShaderInfo.specularAttribute = "specular";
-	simpleShaderInfo.shininessAttribute = "shininess";
-	simpleShaderInfo.alphaAttribute = "alpha";
-	simpleShaderInfo.lightPosAttribute = "lightsource";
-	simpleShaderInfo.lightPowAttribute = "lightpower";
-
-	//Create the shader
-	simpleShader = engine->resourceFactory->createShader("SimpleShader", "../Resources/Shaders/SimpleVertexShader.vert", "../Resources/Shaders/SimpleFragmentShader.frag", simpleShaderInfo);
-
+	//Create the shader flags and shader itself
+	int shaderFlags = pShader::MaterialInfo | pShader::DiffuseTexture | pShader::Light_Affected;
+	simpleShader = engine->resourceFactory->createShader("SimpleShader", "../Resources/Shaders/SimpleVertexShader.vert", "../Resources/Shaders/SimpleFragmentShader.frag", shaderFlags);
 	//Generate an image called TestImage
-	testImg = engine->resourceFactory->createImage("TestImage", "../Resources/Images/bricks.png");
-
+	//testImg = engine->resourceFactory->createImage("TestImage", "../Resources/Images/bricks.png");
+	testImg = engine->resourceFactory->createDebugImage("TestImage");
 	//Manually create some material info
 	MaterialInfo matInfo;
 	matInfo.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
-	matInfo.ambient = glm::vec3(0.4f, 0.4f, 0.4f);
+	matInfo.ambient = glm::vec3(0.01f, 0.01f, 0.01f);
 	matInfo.specular = glm::vec3(0.2f, 0.2f, 0.2f);
-	matInfo.alpha = 1.0f;
 	matInfo.shininess = 0.8f;
-	matInfo.bHasTexture = true;
-	matInfo.texture0 = testImg;
-	matInfo.blendMode = GL_ADD;
+	matInfo.specularTexture = NULL;
+	matInfo.bumpTexture = NULL;
+	matInfo.diffuseTexture = testImg;
 
 	//Generate a material called TestMat
 	testMat = engine->resourceFactory->createMaterial("TestMat", simpleShader, matInfo);
@@ -247,7 +229,7 @@ void TestScene::onStart()
 
 	floor->setScale(glm::vec3(8.0f, 8.0f, 1.0f));
 
-	engine->renderer->sceneLight = new pLight(glm::vec3(0.0f, 0.0f, 4.0f), glm::vec3(1, 1, 1));
+	engine->renderer->sceneLight = new pLight(glm::vec3(0.0f, 0.0f, 4.0f), glm::vec3(1, 1, 1), glm::vec3(1, 1, 1), 1.0f, 0.2f);
 }
 
 void TestScene::onPreRender()

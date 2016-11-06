@@ -44,7 +44,9 @@ void pRenderer::renderModel(pModel* model)
 	//Apply the perspective matrix
 	glUniformMatrix4fv(model->getProjectionMatrixID(), 1, GL_FALSE, &projMatrix[0][0]);
 
-	model->getMaterial()->setLightEffect(sceneLight->getPosition(), sceneLight->getPower());
+
+	//Send the scene light to the material
+	model->getMaterial()->setLightEffect(sceneLight->getLight());
 
 	//Draw the model's points from the currently bound VAO with currently used shader
 	glDrawArrays(model->getDrawMode(), 0, model->getVertCount());
