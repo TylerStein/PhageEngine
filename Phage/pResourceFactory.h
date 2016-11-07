@@ -5,6 +5,7 @@
 #include "pResourceManager.h"
 #include "pModelManager.h"
 #include "pShaderManager.h"
+#include <array>
 
 class pResourceFactory
 {
@@ -21,6 +22,7 @@ public:
 	//Functions to create assets
 	//Create a model
 	pModel* createModel(std::string name, pMaterial* mat, GLfloat* vertPositions, GLfloat* vertNormals, GLfloat* vertColors, GLfloat* vertUVs, GLuint numVerts, GLenum drawMode);
+	pModel* createModel(std::string dir, pShader *shader, GLenum drawMode);
 	//Create a material
 	pMaterial* createMaterial(std::string name, pShader* shader, MaterialInfo info);
 	//Create an image

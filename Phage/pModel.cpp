@@ -16,7 +16,6 @@ pModel::pModel(std::string name, pMaterial * material, GLfloat * verts, GLfloat 
 	//Allocate the required memory for the model's vertices (each vertex is 3 floats, so #verts * 3 * size of a float)
 	//Could be made more convenient with a vertex struct
 	vertices = (GLfloat*)malloc(numVertices * 3 * sizeof(GLfloat));
-
 	//Copy over the verticies array (numVertices * 3 because there are 3x locations per vertex, again would be better with a vertex struct)
 	for (GLuint x(0); x < (numVertices * 3); ++x) {
 		vertices[x] = verts[x];
@@ -211,7 +210,11 @@ void pModel::setupModel()
 	viewMatrixLocation = glGetUniformLocation(getShaderProgramID(), material->getShaderInfo().viewAttribute);
 	projectionMatrixLocation = glGetUniformLocation(getShaderProgramID(), material->getShaderInfo().projectionAttribute);
 
-	material->setupTexture();
+	if (material != NULL)
+	{
+		material->setupTexture();
+	}
+	
 }
 
 void pModel::initDefaultMatrix()

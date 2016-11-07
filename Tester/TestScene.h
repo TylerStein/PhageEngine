@@ -9,6 +9,8 @@ public:
 	pImage* testImg;
 	pMaterial* testMat;
 	pModel* testModel;
+	pModelLoader* modelLoader;
+	pModel* loadedModel;
 
 	TestScene();
 	~TestScene();
