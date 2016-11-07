@@ -31,9 +31,9 @@ void TestScene::onStart()
 
 	GLfloat floorUVs[] = {
 		0, 0,
-		1, 0,
-		1, 1,
-		0, 1
+		4, 0,
+		4, 4,
+		0, 4
 	};
 
 	GLfloat floorColors[] = {
@@ -44,10 +44,10 @@ void TestScene::onStart()
 	};
 
 	GLfloat floorNormals[] = {
-		0, 1, 0,
-		0, 1, 0,
-		0, 1, 0,
-		0, 1, 0
+		0, 0, 1,
+		0, 0, 1,
+		0, 0, 1,
+		0, 0, 1
 	};
 
 	GLfloat testVertCount = 24;
@@ -192,17 +192,21 @@ void TestScene::onStart()
 		1, 0, 0
 	};
 
+	//Print controls
+	std::cout << "Controls:\nMove cube with WASD, Q/E for Z movement\nMove light with IJKL, U/O for Z movement\n\n";
+
 	//Create the shader flags and shader itself
 	int shaderFlags = pShader::MaterialInfo | pShader::DiffuseTexture | pShader::Light_Affected;
-	simpleShader = engine->resourceFactory->createShader("SimpleShader", "../Resources/Shaders/SimpleVertexShader.vert", "../Resources/Shaders/SimpleFragmentShader.frag", shaderFlags);
+	simpleShader = engine->resourceFactory->createShader("PhongShader", "../Resources/Shaders/PhongShading.vert", "../Resources/Shaders/PhongShading.frag", shaderFlags);
+	
 	//Generate an image called TestImage
-	//testImg = engine->resourceFactory->createImage("TestImage", "../Resources/Images/bricks.png");
-	testImg = engine->resourceFactory->createDebugImage("TestImage");
+	testImg = engine->resourceFactory->createImage("BrickImage", "../Resources/Images/bricks.png");
+
 	//Manually create some material info
 	MaterialInfo matInfo;
 	matInfo.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
-	matInfo.ambient = glm::vec3(0.01f, 0.01f, 0.01f);
-	matInfo.specular = glm::vec3(0.2f, 0.2f, 0.2f);
+	matInfo.ambient = glm::vec3(1.0f, 1.0f, 1.0f);
+	matInfo.specular = glm::vec3(0.1f, 0.1f, 0.1f);
 	matInfo.shininess = 0.8f;
 	matInfo.specularTexture = NULL;
 	matInfo.bumpTexture = NULL;
@@ -221,15 +225,17 @@ void TestScene::onStart()
 
 	//Set the position of the model to 0, 0, 0
 	testModel->setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
-	floor->setPosition(glm::vec3(0.0f, 0.0, -1.0f));
+	floor->scale(glm::vec3(2.0f, 2.0f, 2.0f));
+	floor->setPosition(glm::vec3(0.0f, -4.0, -1.0f));
 
 	//Set the rotation of the model Z to 0
 	testModel->rotateAround(glm::vec3(0.0f, 0.0f, 1.0f), 0.0f);
-	floor->setRotation(glm::vec3(0.0f, 0.0f, 1.0f), 0.0);
+	floor->setRotation(glm::vec3(1.0f, 0.0f, 0.0f), 90.0);
+	floor->rotateAround(glm::vec3(0.0f, 1.0f, 0.0f), 180);
 
 	floor->setScale(glm::vec3(8.0f, 8.0f, 1.0f));
 
-	engine->renderer->sceneLight = new pLight(glm::vec3(0.0f, 0.0f, 4.0f), glm::vec3(1, 1, 1), glm::vec3(1, 1, 1), 1.0f, 0.2f);
+	engine->renderer->sceneLight = new pLight(glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(1, 1, 1), glm::vec3(1, 1, 1), 0.8f, 0.01f);
 }
 
 void TestScene::onPreRender()
@@ -291,6 +297,14 @@ void TestScene::onUpdate(GLdouble deltaTime)
 
 	if (glfwGetKey(engine->window, GLFW_KEY_D)) {
 		testModel->translate(glm::vec3(1 * deltaTime, 0, 0));
+	}
+
+	if (glfwGetKey(engine->window, GLFW_KEY_Q)) {
+		testModel->translate(glm::vec3(0.0f, 0.0f, 1.0f * deltaTime));
+	}
+
+	if (glfwGetKey(engine->window, GLFW_KEY_E)) {
+		testModel->translate(glm::vec3(0.0f, 0.0f, -1.0f * deltaTime));
 	}
 
 	//Cube rotation

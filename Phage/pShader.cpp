@@ -137,7 +137,6 @@ void pShader::setPropertyTextureID(GLuint attributeID, GLuint textureID)
 	glUseProgram(shaderID);
 
 	glUniform1i(attributeID, textureID);
-	GLError::printError(__FILE__, __LINE__);
 }
 
 GLuint pShader::getPropertyID(Attributes propertyAttribute)
@@ -229,7 +228,7 @@ GLuint pShader::getPropertyID(Attributes propertyAttribute)
 #ifdef _DEBUG
 		if (res == -1)
 		{
-			std::cout << "PropertyID could not be reached for attirubute (" << attr << ")" << std::endl;
+			//std::cout << "PropertyID could not be reached for attirubute (" << attr << ")" << std::endl;
 		} else {
 			std::cout << "Created property ID (" << res << ") from attribute (" << attr << ")" << std::endl;
 

@@ -103,7 +103,7 @@ void pImage::setupTexture(GLenum texturePlace)
 	GLError::printError(__FILE__, __LINE__);
 
 	//Feed the image data to our new texture (image is BGR format because of freeimage)
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_BGR, GL_FLOAT, (void*)imageData);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_BGR, GL_UNSIGNED_BYTE, (void*)imageData);
 
 	//Make a border color (black)
 	float borderColor[] = { 0.0f, 0.0f, 0.0f, 0.0f };

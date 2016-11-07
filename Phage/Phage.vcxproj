@@ -212,8 +212,10 @@
     <ClCompile Include="pShaderManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Resources\Shaders\SimpleFragmentShader.frag" />
-    <None Include="..\Resources\Shaders\SimpleVertexShader.vert" />
+    <None Include="..\Resources\Shaders\PhongShading.frag" />
+    <None Include="..\Resources\Shaders\PhongShading.vert" />
+    <None Include="..\Resources\Shaders\SimpleLight.frag" />
+    <None Include="..\Resources\Shaders\SimpleLight.vert" />
     <None Include="PhageDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
