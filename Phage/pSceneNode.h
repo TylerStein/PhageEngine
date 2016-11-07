@@ -2,12 +2,13 @@
 
 #include <vector>
 #include "glm/gtc/quaternion.hpp"
-#include "pSceneObject.h"
+
+class pSceneObject;
 
 class pSceneNode
 {
 public:
-
+	std::vector<pSceneObject*> sceneObjectList;
 	//iterator to iterate through list of models in scene node
 	typedef std::vector<pSceneObject*>::iterator sceneObject_list_iterator;
 
@@ -20,19 +21,19 @@ public:
 	/* constructor will be resposible for setting position to origin, rotataion up the Y axis, and set
 	*scale to 1.0 on x, y, and z.
 	*/
-	pSceneNode(const glm::vec3 &pos, const glm::quat &rot, const glm::vec3 &scale);
+	pSceneNode(glm::vec3 &pos, glm::quat &rot, glm::vec3 &scale);
 
 	//method to set position
-	void setPosition(const glm::vec3 &position);
+	void setPosition(glm::vec3 &position);
 
 	//returns number of sceneObjects attached to the scene node
 	int numAttachedSceneOnjects() const;
 
 	//returns current position of scene node, relative to parent
-	glm::vec3 getLocation() const;
+	glm::vec3 getLocation();
 
 	//sets the rotation of the node, relative to its parent
-	void setRotation(const glm::quat &rot);
+	void setRotation(glm::quat &rot);
 
 	/*rotates a scene node about a point in the scene
 	*point is the point it will rotate about
@@ -87,6 +88,12 @@ public:
 		return userData;
 	}
 
+	void addSceneObject(pSceneObject* sceneObject);
+
+	void removeSceneObject(pSceneObject* sceneObject);
+
+	int getNumberSceneObjects() const;
+
 
 private:
 	glm::vec3 position;
@@ -100,7 +107,7 @@ private:
 	pSceneNode *previousSibling;
 	pSceneNode *nextSibling;
 	pSceneNode *parentNode;
-	std::vector<pSceneObject*> sceneObjectList;
+	
 	void* userData;
 };
 
