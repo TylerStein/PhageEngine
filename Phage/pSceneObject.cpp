@@ -92,14 +92,30 @@ void pSceneObject::attachScript(pScript * script)
 	attachedScript = script;
 }
 
+void pSceneObject::attachSoundSystem(pSoundSystem * soundSystem)
+{
+	detachSoundSystem();
+	attachedSoundSystem = soundSystem;
+}
+
 void pSceneObject::detachScript()
 {
 	attachedScript = nullptr;
 }
 
+void pSceneObject::detachSoundSystem()
+{
+	attachedSoundSystem = nullptr;
+}
+
 bool pSceneObject::hasScript() const
 {
 	return attachedScript != nullptr;
+}
+
+bool pSceneObject::hasSoundSystem() const
+{
+	return attachedSoundSystem != nullptr;
 }
 
 void pSceneObject::attachChild(pSceneObject * child)

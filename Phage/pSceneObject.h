@@ -7,6 +7,7 @@
 #include "pScript.h"
 #include "pRenderer.h"
 #include "pSceneNode.h"
+#include "pSoundSystem.h"
 
 class pSceneObject
 {
@@ -47,12 +48,22 @@ public:
 	//Return a pointer to the attached model or nullptr if no model is attached.
 	pModel* getAttachedModel() const;
 
-	// Attach a script object to this game object
+	// Attach a script object to this game object. if one is already attached.
+	//if one is already attached it will be removed and replaced with the new one
 	void attachScript(pScript* script);
+
+	//attaches a sound System to this game object
+	//if one is already attached it will be removed and replaced with the new one
+	void attachSoundSystem(pSoundSystem* soundSystem);
 
 	void detachScript();
 
+	//detaches a script from this game object
+	void detachSoundSystem();
+
 	bool hasScript() const;
+
+	bool hasSoundSystem() const;
 
 	void attachChild(pSceneObject* child);
 
@@ -64,5 +75,5 @@ private:
 		pModel* attachedModel;
 		std::string materialName;
 		pScript* attachedScript = nullptr;
-
+		pSoundSystem* attachedSoundSystem = nullptr;
 };

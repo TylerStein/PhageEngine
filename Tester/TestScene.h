@@ -9,6 +9,7 @@ public:
 	pImage* testImg;
 	pMaterial* testMat;
 	pModel* testModel;
+	pSoundSystem *soundSystem;
 
 	TestScene();
 	~TestScene();
