@@ -44,6 +44,9 @@ void pRenderer::renderModel(pModel* model)
 	//Apply the perspective matrix
 	glUniformMatrix4fv(model->getProjectionMatrixID(), 1, GL_FALSE, &projMatrix[0][0]);
 
+	//Use the appropriate texture(s)
+	model->getMaterial()->useTextures();
+
 	//Send the scene light to the material
 	model->getMaterial()->setLightEffect(sceneLight->getLight());
 

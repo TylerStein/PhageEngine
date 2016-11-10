@@ -41,21 +41,17 @@ void pImage::generateCheckerboard()
 
 	//Create some checkerboard texture data
 	GLfloat textureData[unitCount] = {
-		1.0f, 0.0f, 0.0f,
 		1.0f, 1.0f, 1.0f,
 		1.0f, 1.0f, 1.0f,
-		1.0f, 0.0f, 0.0f
+		1.0f, 1.0f, 1.0f,
+		1.0f, 1.0f, 1.0f
 	};
 
-	//Allocate memory for image data
-	imageData = (GLubyte*)malloc(unitCount * sizeof(GLfloat));
-	imageData = (GLubyte*)memcpy(imageData, textureData, sizeof(textureData));
+	GLubyte* finalData = (GLubyte*)textureData;
 
-	/*
-	//Copy over the texture data
-	for (int i(0); i < unitCount; ++i) {
-		imageData[i] = textureData[i];
-	}*/
+	//Allocate memory for image data
+	imageData = (GLubyte*)malloc(sizeof(finalData));
+	imageData = (GLubyte*)memcpy(imageData, finalData, sizeof(finalData));
 
 	width = 2;
 	height = 2;
@@ -96,11 +92,9 @@ void pImage::setupTexture(GLenum texturePlace)
 
 	//Set the active texture to 0
 	glActiveTexture(texturePlace);
-	//GLError::printError(__FILE__, __LINE__);
 
 	//Bind the new texture
 	glBindTexture(GL_TEXTURE_2D, textureID);
-	GLError::printError(__FILE__, __LINE__);
 
 	//Feed the image data to our new texture (image is BGR format because of freeimage)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_BGR, GL_UNSIGNED_BYTE, (void*)imageData);
@@ -122,7 +116,13 @@ void pImage::setupTexture(GLenum texturePlace)
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 
+	glBindTexture(GL_TEXTURE_2D, -1);
+}
 
+void pImage::useTexture(GLenum texturePlace)
+{
+	glActiveTexture(texturePlace);
 
-	GLError::printError(__FILE__, __LINE__);
+	//Bind the new texture
+	glBindTexture(GL_TEXTURE_2D, textureID);
 }

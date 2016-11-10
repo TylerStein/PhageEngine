@@ -19,7 +19,6 @@ void TestScene::giveEngineReference(PhageEngine * engine)
 
 void TestScene::onStart()
 {
-
 	//Make a plane for the floor
 	GLfloat floorVertCount = 4;
 	GLfloat	floorVerts[] = {
@@ -201,6 +200,7 @@ void TestScene::onStart()
 	
 	//Generate an image called TestImage
 	testImg = engine->resourceFactory->createImage("BrickImage", "../Resources/Images/bricks.png");
+	tilesImg = engine->resourceFactory->createImage("TileImage", "../Resources/Images/tiles.png");
 
 	//Manually create some material info
 	MaterialInfo matInfo;
@@ -212,11 +212,21 @@ void TestScene::onStart()
 	matInfo.bumpTexture = NULL;
 	matInfo.diffuseTexture = testImg;
 
+	MaterialInfo checkerMatInfo;
+	checkerMatInfo.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
+	checkerMatInfo.ambient = glm::vec3(1.0f, 1.0f, 1.0f);
+	checkerMatInfo.specular = glm::vec3(0.1f, 0.1f, 0.1f);
+	checkerMatInfo.shininess = 1.0f;
+	checkerMatInfo.specularTexture = NULL;
+	checkerMatInfo.bumpTexture = NULL;
+	checkerMatInfo.diffuseTexture = tilesImg;
+
 	//Generate a material called TestMat
 	testMat = engine->resourceFactory->createMaterial("TestMat", simpleShader, matInfo);
+	tilesMat = engine->resourceFactory->createMaterial("CheckerMat", simpleShader, checkerMatInfo);
 
 	//Generate a model called TestModel
-	testModel = engine->resourceFactory->createModel("TestModel", testMat, testVerts, testNormals, testColors, testUVs, testVertCount, GL_QUADS);
+	testModel = engine->resourceFactory->createModel("TestModel", tilesMat, testVerts, testNormals, testColors, testUVs, testVertCount, GL_QUADS);
 	floor = engine->resourceFactory->createModel("Floor", testMat, floorVerts, floorNormals, floorColors, floorUVs, floorVertCount, GL_QUADS);
 
 	//Set the renderer view matrix

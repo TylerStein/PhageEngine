@@ -59,7 +59,10 @@ public:
 
 	void setLightEffect(Light light);
 
+	void useTextures();
+
 private:
+	MaterialInfo matInfo;
 	std::string name;
 	pShader* shader;
 };
