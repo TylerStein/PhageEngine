@@ -9,8 +9,12 @@ public:
 	pImage* testImg;
 	pMaterial* testMat;
 	pModel* testModel;
+<<<<<<< HEAD
 	pModelLoader* modelLoader;
 	pModel* loadedModel;
+=======
+	pSoundSystem *soundSystem;
+>>>>>>> refs/remotes/origin/Development
 
 	TestScene();
 	~TestScene();

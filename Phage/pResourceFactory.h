@@ -5,7 +5,11 @@
 #include "pResourceManager.h"
 #include "pModelManager.h"
 #include "pShaderManager.h"
+<<<<<<< HEAD
 #include <array>
+=======
+#include "pAudioManager.h"
+>>>>>>> refs/remotes/origin/Development
 
 class pResourceFactory
 {
@@ -18,6 +22,7 @@ public:
 	void setMaterialManager(pMaterialManager* materialManager);
 	void setImageManager(pImageManager* imageManager);
 	void setShaderManager(pShaderManager* shaderManager);
+	void setAudioManager(pAudioManager* audioManager);
 
 	//Functions to create assets
 	//Create a model
@@ -30,6 +35,9 @@ public:
 	pImage* createDebugImage(std::string name);
 	//Create a shader
 	pShader* createShader(std::string name, std::string vertShaderPath, std::string fragShaderPath, ShaderInfo shaderInfo);
+
+	//create a soundSystem
+	pSoundSystem* createSoundSystem(std::string soundSystemName, std::string audioFilePath, bool loop);
 
 	//Functions to receive assets from cache or file
 	//Retreive a model from file
@@ -46,6 +54,8 @@ public:
 	pImage* getImage(std::string name);
 	//Retreive existing shader
 	pShader* getShader(std::string name);
+	//retrieve existing sound
+	pSoundSystem* getSoundSystem(std::string name);
 
 private:
 	//Manager references
@@ -53,5 +63,6 @@ private:
 	pMaterialManager* materialManager;
 	pImageManager* imageManager;
 	pShaderManager* shaderManager;
+	pAudioManager* soundSystemManager;
 };
 

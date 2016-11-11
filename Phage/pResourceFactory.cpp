@@ -12,6 +12,7 @@ pResourceFactory::~pResourceFactory()
 	delete modelManager;
 	delete materialManager;
 	delete imageManager;
+	delete soundSystemManager;
 }
 
 void pResourceFactory::setModelManager(pModelManager* modelManager)
@@ -32,6 +33,11 @@ void pResourceFactory::setImageManager(pImageManager* imageManager)
 void pResourceFactory::setShaderManager(pShaderManager * shaderManager)
 {
 	this->shaderManager = shaderManager;
+}
+
+void pResourceFactory::setAudioManager(pAudioManager * audioManager)
+{
+	this->soundSystemManager = audioManager;
 }
 
 pModel * pResourceFactory::createModel(std::string name, pMaterial * mat, GLfloat * vertPositions,  GLfloat * vertNormals, GLfloat * vertColors, GLfloat * vertUVs, GLuint numVerts, GLenum drawMode)
@@ -121,6 +127,12 @@ pShader * pResourceFactory::createShader(std::string name, std::string vertShade
 	return shaderManager->getShader(shdr);
 }
 
+pSoundSystem * pResourceFactory::createSoundSystem(std::string soundSystemName, std::string audioFilePath, bool loop)
+{
+	pResourceHandle<pSoundSystem> sndSystm = soundSystemManager->createSoundSystem(soundSystemName, audioFilePath, loop);
+	return soundSystemManager->getSoundSystem(sndSystm);
+}
+
 pModel * pResourceFactory::getModel(std::string name, std::string path)
 {
 	//Generate a model and get it's handle
@@ -164,3 +176,10 @@ pShader * pResourceFactory::getShader(std::string name)
 {
 	return shaderManager->getShader(name);
 }
+
+pSoundSystem * pResourceFactory::getSoundSystem(std::string name)
+{
+	return soundSystemManager->getSoundSystem(name);
+}
+
+

@@ -326,6 +326,9 @@ void TestScene::onStart()
 	matInfo.texture0 = testImg;
 	matInfo.blendMode = GL_ADD;
 
+	//generate a soundSystem called bustinSound
+	soundSystem = engine->resourceFactory->createSoundSystem("bustinSound", "../Resources/Sounds/DKCTF_Aquatic_Ambiance.mp3", true);
+
 	//Generate a material called TestMat
 	testMat = engine->resourceFactory->createMaterial("TestMat", simpleShader, matInfo);
 
@@ -348,6 +351,10 @@ void TestScene::onStart()
 	std::cout << "TextureID: " << engine->resourceFactory->getImage("TestImage")->getTextureID ()<< std::endl;
 
 	LogManager::instance()->warning("Here be the log manager.");
+
+	//play the sound
+	soundSystem->playSound();
+
 }
 
 void TestScene::onPreRender()
@@ -369,6 +376,10 @@ void TestScene::onPostRender()
 void TestScene::onUpdate(GLdouble deltaTime)
 {
 	testModel->rotateAround(glm::vec3(0, 1, 0), 5 * deltaTime);
+
+	//sound update method required to run
+	soundSystem->update();
+
 	glfwPollEvents();
 }
 

@@ -88,6 +88,12 @@
     <ClCompile Include="pScript.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
+    <ClCompile Include="pAudioManager.cpp">
+      <Filter>Management</Filter>
+    </ClCompile>
+    <ClCompile Include="pSoundSystem.cpp">
+      <Filter>Asset</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Clock.h">
@@ -168,9 +174,6 @@
     <ClInclude Include="pShader.h">
       <Filter>Asset</Filter>
     </ClInclude>
-    <ClInclude Include="pShaderManager.h">
-      <Filter>Management</Filter>
-    </ClInclude>
     <ClInclude Include="pPlane.h">
       <Filter>Utility</Filter>
     </ClInclude>
@@ -185,6 +188,15 @@
     </ClInclude>
     <ClInclude Include="pScript.h">
       <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="pShaderManager.h">
+      <Filter>Management</Filter>
+    </ClInclude>
+    <ClInclude Include="pAudioManager.h">
+      <Filter>Management</Filter>
+    </ClInclude>
+    <ClInclude Include="pSoundSystem.h">
+      <Filter>Asset</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

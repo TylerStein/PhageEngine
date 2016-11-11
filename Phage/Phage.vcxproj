@@ -103,7 +103,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)\ThirdParty\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32.lib;glew32s.lib;FreeImage.lib;assimp.lib;opengl32.lib;glfw3.lib</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;glew32s.lib;FreeImage.lib;assimp.lib;opengl32.lib;fmod64_vc.lib;glfw3.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -142,7 +142,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)\ThirdParty\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32.lib;glew32s.lib;FreeImage.lib;assimp.lib;opengl32.lib;glfw3.lib</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;glew32s.lib;FreeImage.lib;assimp.lib;opengl32.lib;fmod64_vc.lib;glfw3.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -153,6 +153,7 @@
     <ClInclude Include="GameImplement.h" />
     <ClInclude Include="GLError.h" />
     <ClInclude Include="LogManager.h" />
+    <ClInclude Include="pAudioManager.h" />
     <ClInclude Include="pBoundingBox.h" />
     <ClInclude Include="pBoundingSphere.h" />
     <ClInclude Include="pFrustum.h" />
@@ -181,10 +182,12 @@
     <ClInclude Include="pScript.h" />
     <ClInclude Include="pShader.h" />
     <ClInclude Include="pShaderManager.h" />
+    <ClInclude Include="pSoundSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Clock.cpp" />
     <ClCompile Include="LogManager.cpp" />
+    <ClCompile Include="pAudioManager.cpp" />
     <ClCompile Include="pBoundingBox.cpp" />
     <ClCompile Include="pBoundingSphere.cpp" />
     <ClCompile Include="pFrustum.cpp" />
@@ -212,6 +215,7 @@
     <ClCompile Include="pScript.cpp" />
     <ClCompile Include="pShader.cpp" />
     <ClCompile Include="pShaderManager.cpp" />
+    <ClCompile Include="pSoundSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resources\Shaders\SimpleFragmentShader.frag" />
