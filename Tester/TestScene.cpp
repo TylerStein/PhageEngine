@@ -327,20 +327,20 @@ void TestScene::onStart()
 	matInfo.blendMode = GL_ADD;
 
 	//Generate a material called TestMat
-	//testMat = engine->resourceFactory->createMaterial("TestMat", simpleShader, matInfo);
+	testMat = engine->resourceFactory->createMaterial("TestMat", simpleShader, matInfo);
 
 	//Generate a model called TestModel
-	//testModel = engine->resourceFactory->createModel("TestModel", testMat, testVerts, testNormals, testColors, testUVs, testVertCount, GL_QUADS);
+	testModel = engine->resourceFactory->createModel("TestModel", testMat, testVerts, testNormals, testColors, testUVs, testVertCount, GL_QUADS);
 
 	//Set the renderer view matrix
 	engine->renderer->setViewMatrix(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	engine->renderer->setProjectionMatrix(-0.5f, 0.5f, -0.5f, 0.5f, 0.2f, 5.0f);
 
 	//Set the position of the model to 0, 0, 0
-	//testModel->setPosition(glm::vec3(0.0f, 0.0f, -2.0f));
+	testModel->setPosition(glm::vec3(0.0f, 0.0f, -2.0f));
 
 	//Set the rotation of the model Z to 0
-	//testModel->rotateAround(glm::vec3(0.0f, 0.0f, 1.0f), 0.0f);
+	testModel->rotateAround(glm::vec3(0.0f, 0.0f, 1.0f), 0.0f);
 	
 	std::cout << "Image Info: \n";
 	std::cout << "Width: " << engine->resourceFactory->getImage("TestImage")->getWidth() << std::endl;
@@ -348,16 +348,6 @@ void TestScene::onStart()
 	std::cout << "TextureID: " << engine->resourceFactory->getImage("TestImage")->getTextureID ()<< std::endl;
 
 	LogManager::instance()->warning("Here be the log manager.");
-	
-	//ModelInfo info = pModelLoader::instance()->loadModel("../Resources/Models/FarmhouseOBJ.obj", simpleShader);
-
-	loadedModel = engine->resourceFactory->createModel("../Resources/Models/FarmhouseOBJ.obj", simpleShader, GL_QUADS);
-	loadedModel->setPosition(glm::vec3(0.0f, -10.0f, -32.0f));
-	//engine->renderer->renderModel(loadedModel);
-	
-	
-	
-	
 }
 
 void TestScene::onPreRender()
@@ -368,8 +358,7 @@ void TestScene::onPreRender()
 
 void TestScene::onRender()
 {
-	//engine->renderer->renderModel(testModel);
-	engine->renderer->renderModel(loadedModel);
+	engine->renderer->renderModel(testModel);
 }
 
 void TestScene::onPostRender()
@@ -379,7 +368,7 @@ void TestScene::onPostRender()
 
 void TestScene::onUpdate(GLdouble deltaTime)
 {
-	loadedModel->rotateAround(glm::vec3(0, 1, 0), 5 * deltaTime);
+	testModel->rotateAround(glm::vec3(0, 1, 0), 5 * deltaTime);
 	glfwPollEvents();
 }
 

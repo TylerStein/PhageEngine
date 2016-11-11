@@ -64,6 +64,9 @@ pModel * pResourceFactory::createModel(std::string dir, pShader *shader, GLenum 
 	for (int i = 0; i < info.positions.size(); i++) {
 		tVerts[i] = info.positions[i];
 		tNormals[i] = info.normals[i];
+	}
+	for (int i = 0; i < info.colors.size(); i++)
+	{
 		tCVerts[i] = info.colors[i];
 	}
 	for (int i = 0; i < info.uvs.size(); i++) {
