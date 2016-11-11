@@ -14,7 +14,7 @@ class pSceneObject
 
 public:
 	//Create an empty game object with a given name
-	pSceneObject(std::string& name);
+	pSceneObject(std::string name);
 
 	/**
 	* This creates a game object and attaches it to the root of the scene graph. Either or both of the
