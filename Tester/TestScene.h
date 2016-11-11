@@ -10,6 +10,9 @@ public:
 	pMaterial* testMat;
 	pModel* testModel;
 	pSoundSystem *soundSystem;
+	pSceneGraph* sceneGraph;
+	pSceneNode* sceneNode;
+	pSceneObject* sceneObject;
 
 	TestScene();
 	~TestScene();
