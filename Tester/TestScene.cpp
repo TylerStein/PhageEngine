@@ -344,7 +344,7 @@ void TestScene::onStart()
 
 	//Set the rotation of the model Z to 0
 	testModel->rotateAround(glm::vec3(0.0f, 0.0f, 1.0f), 0.0f);
-
+	
 	std::cout << "Image Info: \n";
 	std::cout << "Width: " << engine->resourceFactory->getImage("TestImage")->getWidth() << std::endl;
 	std::cout << "Height: " << engine->resourceFactory->getImage("TestImage")->getHeight() << std::endl;
@@ -400,4 +400,5 @@ void TestScene::onEnd()
 	delete testImg;
 	delete testMat;
 	delete testModel;
+	delete loadedModel;
 }

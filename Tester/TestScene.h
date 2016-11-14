@@ -9,10 +9,18 @@ public:
 	pImage* testImg;
 	pMaterial* testMat;
 	pModel* testModel;
+<<<<<<< HEAD
+	pModelLoader* modelLoader;
+	pModel* loadedModel;
+=======
 	pSoundSystem *soundSystem;
+<<<<<<< HEAD
+>>>>>>> refs/remotes/origin/Development
+=======
 	pSceneGraph* sceneGraph;
 	pSceneNode* sceneNode;
 	pSceneObject* sceneObject;
+>>>>>>> refs/remotes/origin/Development
 
 	TestScene();
 	~TestScene();

@@ -1,21 +1,5 @@
-﻿  pSceneGraph.cpp
-glew32s.lib(glew.obj) : warning LNK4006: glewGetErrorString already defined in glew32.lib(glew32.dll); second definition ignored
-glew32s.lib(glew.obj) : warning LNK4006: glewGetExtension already defined in glew32.lib(glew32.dll); second definition ignored
-glew32s.lib(glew.obj) : warning LNK4006: glewGetString already defined in glew32.lib(glew32.dll); second definition ignored
-glew32s.lib(glew.obj) : warning LNK4006: glewInit already defined in glew32.lib(glew32.dll); second definition ignored
-glew32s.lib(glew.obj) : warning LNK4006: glewIsSupported already defined in glew32.lib(glew32.dll); second definition ignored
-glew32s.lib(glew.obj) : warning LNK4006: wglewGetExtension already defined in glew32.lib(glew32.dll); second definition ignored
-glew32s.lib(glew.obj) : warning LNK4006: wglewInit already defined in glew32.lib(glew32.dll); second definition ignored
-glew32s.lib(glew.obj) : warning LNK4006: wglewIsSupported already defined in glew32.lib(glew32.dll); second definition ignored
-FreeImage.lib(FreeImage.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in glew32.lib(glew32.dll); second definition ignored
-FreeImage.lib(FreeImage.dll) : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
-assimp.lib(assimp.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in glew32.lib(glew32.dll); second definition ignored
-assimp.lib(assimp.dll) : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
-opengl32.lib(OPENGL32.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in glew32.lib(glew32.dll); second definition ignored
-opengl32.lib(OPENGL32.dll) : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
-fmod64_vc.lib(fmod64.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR already defined in glew32.lib(glew32.dll); second definition ignored
-fmod64_vc.lib(fmod64.dll) : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
-pModelLoader.obj : warning LNK4006: "public: struct aiScene const * __cdecl Assimp::Importer::ReadFile(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,unsigned int)" (?ReadFile@Importer@Assimp@@QEAAPEBUaiScene@@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@I@Z) already defined in assimp.lib(assimp.dll); second definition ignored
-pAsset.obj : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
-pHashtable.obj : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
-  Phage.vcxproj -> C:\Users\Luigi\OneDrive\Documents\GitHub\PhageEngine\x64\Debug\Phage.lib
+﻿Build started 11/14/2016 10:56:45 AM.
+
+Build succeeded.
+
+Time Elapsed 00:00:00.02
