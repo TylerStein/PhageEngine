@@ -14,6 +14,12 @@ public:
 	pModel* loadedModel;
 =======
 	pSoundSystem *soundSystem;
+<<<<<<< HEAD
+>>>>>>> refs/remotes/origin/Development
+=======
+	pSceneGraph* sceneGraph;
+	pSceneNode* sceneNode;
+	pSceneObject* sceneObject;
 >>>>>>> refs/remotes/origin/Development
 
 	TestScene();

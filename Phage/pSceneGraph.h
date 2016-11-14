@@ -1,17 +1,15 @@
 #pragma once
 
 #include "pSceneNode.h"
-
-class pFrustum;
-class pRenderer;
-class pCamera;
+#include "pRenderer.h"
+#include "pSceneObject.h"
 
 class pSceneGraph
 {
 public:
 
 	//creates empty scene graph
-	pSceneGraph(float worldSz, std::string indexType) : worldSize(worldSz)
+	pSceneGraph()
 	{
 		initialize();
 	}
@@ -22,22 +20,16 @@ public:
 		return rootSceneNode;
 	}
 
-	//returns world size
-	int getWorldSize()
-	{
-		return worldSize;
-	}
-
 	//render the scene graph using the renderer. 
-	void renderSceneGraph (pFrustum &frustum, pRenderer &renderer, pCamera *camera);
+	void renderSceneGraph (pSceneNode * sceneRoot, pRenderer * renderer);
 
 private:
 	pSceneNode *rootSceneNode;
-	float worldSize;
 	glm::vec3 renderOffset;
+	pRenderer *rndr;
 
 	void initialize();
 
-	void renderSceneNode(pSceneNode *sceneRoot, pFrustum &frustum, pRenderer &renderer, pCamera *camera);
+	void renderSceneNode(pSceneNode *sceneRoot, pRenderer *renderer);
 };
 

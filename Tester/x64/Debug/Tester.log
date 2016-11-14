@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿Build started 11/14/2016 10:54:10 AM.
      1>Project "C:\Users\Kojah\Documents\PhageEngine\Tester\Tester.vcxproj" on node 2 (Build target(s)).
      1>Link:
@@ -11,3 +12,6 @@
 Build FAILED.
 
 Time Elapsed 00:00:00.18
+=======
+﻿  Tester.vcxproj -> C:\Users\Luigi\OneDrive\Documents\GitHub\PhageEngine\x64\Debug\Tester.exe
+>>>>>>> refs/remotes/origin/Development

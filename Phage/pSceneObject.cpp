@@ -1,6 +1,6 @@
 #include "pSceneObject.h"
 
-pSceneObject::pSceneObject(std::string & name)
+pSceneObject::pSceneObject(std::string  name)
 {
 	objectName = name;
 	sceneNode = nullptr;

@@ -5,38 +5,27 @@ void pSceneGraph::initialize()
 	rootSceneNode = new pSceneNode();
 }
 
-void pSceneGraph::renderSceneGraph(pFrustum &frustum, pRenderer &renderer, pCamera *camera)
+void pSceneGraph::renderSceneGraph(pSceneNode * sceneRoot, pRenderer * renderer)
 {
-	renderOffset = glm::vec3(0.0f, 0.0f, 0.0f);
-
-	//TO DO::call renderers render function to render to the camera
-
-	renderSceneNode(rootSceneNode, frustum, renderer, camera);
+	renderSceneNode(rootSceneNode, renderer);
+	pSceneNode* nodeToRender = rootSceneNode->getFirstChild();
+	while (nodeToRender != nullptr)
+	{
+		renderSceneNode(nodeToRender, renderer);
+		nodeToRender = nodeToRender->getNextSibling();
+	}
 }
 
 
-void pSceneGraph::renderSceneNode(pSceneNode * sceneRoot, pFrustum & frustum, pRenderer & renderer, pCamera * camera)
+void pSceneGraph::renderSceneNode(pSceneNode * node, pRenderer * renderer)
 {
-	//TO DO::call renderers renderSceneNode, and pass  reference to the scene node to be rendererd, as well as the camera
-
-	renderOffset = renderOffset + sceneRoot->getLocation();
-	pSceneNode::sceneObject_list_iterator miter = sceneRoot->sceneObjectBegin();
-	while (miter != sceneRoot->sceneObjectEnd())
+	for (int i = 0; i < node->sceneObjectList.size(); i++)
 	{
-
-		//TO DO:: prepare SceneObject to be rendered
-
-		miter++;
+		pSceneObject* sceneObject = node->sceneObjectList[i];
+		pModel* modelToRender = sceneObject->getAttachedModel();
+		if (modelToRender != nullptr)
+		{
+			renderer->renderModel(modelToRender);
+		}
 	}
-
-	pSceneNode *child = sceneRoot->getFirstChild();
-	while (child != NULL)
-	{
-		renderSceneNode(child, frustum, renderer, camera);
-		child = child->getNextSibling();
-	}
-
-	renderOffset = renderOffset - sceneRoot->getLocation();
-
-	//TO DO::call renderers renderSceneNode, and pass  reference to the scene node to be rendererd, as well as the camera
 }

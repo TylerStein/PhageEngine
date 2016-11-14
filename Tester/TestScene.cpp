@@ -355,6 +355,12 @@ void TestScene::onStart()
 	//play the sound
 	soundSystem->playSound();
 
+	sceneNode = new pSceneNode();
+	sceneGraph = new pSceneGraph();
+	sceneObject = new pSceneObject("testObject");
+	sceneGraph->renderSceneGraph(sceneNode, engine->renderer);
+
+
 }
 
 void TestScene::onPreRender()
