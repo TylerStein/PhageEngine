@@ -5,11 +5,11 @@
 #include "pResourceManager.h"
 #include "pModelManager.h"
 #include "pShaderManager.h"
-<<<<<<< HEAD
+//<<<<<<< HEAD
 #include <array>
-=======
+//=======
 #include "pAudioManager.h"
->>>>>>> refs/remotes/origin/Development
+//>>>>>>> refs/remotes/origin/Development
 
 class pResourceFactory
 {
