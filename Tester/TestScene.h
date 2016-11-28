@@ -6,14 +6,10 @@ class TestScene : public GameImplement
 {
 public:
 	pShader* simpleShader;
-
 	pImage* testImg;
-	pImage* tilesImg;
-
 	pMaterial* testMat;
-	pMaterial* tilesMat;
-
 	pModel* testModel;
+
 	pModel* floor;
 
 	TestScene();

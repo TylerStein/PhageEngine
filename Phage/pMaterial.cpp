@@ -12,8 +12,6 @@ pMaterial::pMaterial(std::string name, pShader * matShader, MaterialInfo matInfo
 	//Use the incoming shader as this material's shader
 	this->shader = matShader;
 
-	this->matInfo = matInfo;
-
 	//Send incoming data to the shader
 	setDiffuseColor(matInfo.diffuse);
 	setAmbientColor(matInfo.ambient);
@@ -132,13 +130,4 @@ void pMaterial::setLightEffect(Light light)
 		shader->setPropertyFloat(shader->getPropertyID(pShader::Light_Ambient), light.ambientCoefficient);
 		shader->setPropertyFloat(shader->getPropertyID(pShader::Light_Attenuation), light.attenuation);
 	//}
-}
-
-void pMaterial::useTextures() {
-	//Bind the texture to 0th slot for use this pass
-	matInfo.diffuseTexture->useTexture(GL_TEXTURE0);
-	
-	//Potential bump and specular texture use
-	//matInfo.bumpTexture->useTexture(GL_TEXTURE1);
-	//matInfo.specularTexture->useTexture(GL_TEXTURE2);
 }
