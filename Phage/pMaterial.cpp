@@ -2,6 +2,7 @@
 #include "pFileReader.h"
 #include "LogManager.h"
 #include "GLError.h"
+#include "pLightManager.h"
 #include <iostream>
 
 
@@ -11,17 +12,14 @@ pMaterial::pMaterial(std::string name, pShader * matShader, MaterialInfo matInfo
 
 	//Use the incoming shader as this material's shader
 	this->shader = matShader;
+	
+	//Copy over the material info
+	mat.copyFrom(matInfo);
 
-	//Send incoming data to the shader
-	setDiffuseColor(matInfo.diffuse);
-	setAmbientColor(matInfo.ambient);
-	setSpecularColor(matInfo.specular);
-	setShininess(matInfo.shininess);
-
-	//Send incoming textures to the shader
-	if(matInfo.diffuseTexture != NULL) { setDiffuseTexture(matInfo.diffuseTexture); }
-	if(matInfo.specularTexture != NULL) { setSpecularTexture(matInfo.specularTexture); }
-	if(matInfo.bumpTexture != NULL) { setBumpTexture(matInfo.bumpTexture); }
+	//Set up incoming textures
+	if (mat.diffuseTexture != NULL) { setDiffuseTexture(mat.diffuseTexture, false); }
+	if (mat.specularTexture != NULL) { setSpecularTexture(mat.specularTexture, false); }
+	if (mat.bumpTexture != NULL) { setBumpTexture(mat.bumpTexture, false); }
 }
 
 pMaterial::~pMaterial()
@@ -37,77 +35,159 @@ std::string pMaterial::getName()
 
 void pMaterial::setViewMatrices(glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
 {
-	//Make sure the shader is being used
-	glUseProgram(getShaderProgramID());
-
-	shader->setPropertyMat4(shader->getPropertyID(pShader::Model_View), modelMatrix);
-	shader->setPropertyMat4(shader->getPropertyID(pShader::Camera_View), viewMatrix);
-	shader->setPropertyMat4(shader->getPropertyID(pShader::Projection_View), projectionMatrix);
+	shader->setUniformMat4(shader->getUniformID(Uniforms::Model_View), modelMatrix);
+	shader->setUniformMat4(shader->getUniformID(Uniforms::Camera_View), viewMatrix);
+	shader->setUniformMat4(shader->getUniformID(Uniforms::Projection_View), projectionMatrix);
 }
 
-void pMaterial::setDiffuseColor(glm::vec3 diffuseColor)
+void pMaterial::setDiffuseColor(glm::vec3 diffuseColor, bool sendToShader)
 {
-	//Make sure the shader is being used
-	glUseProgram(getShaderProgramID());
-
-	shader->setPropertyVec3(shader->getPropertyID(pShader::DiffuseColor), diffuseColor);
+	if (sendToShader) {
+		if (shader->hasUniform(Uniforms::DiffuseColor)) {
+			shader->setUniformVec3(shader->getUniformID(Uniforms::DiffuseColor), diffuseColor);
+		}
+	}
+	else {
+		mat.diffuse = diffuseColor;
+	}
 }
 
-void pMaterial::setSpecularColor(glm::vec3 specularColor)
+void pMaterial::setSpecularColor(glm::vec3 specularColor, bool sendToShader)
 {
-	//Make sure the shader is being used
-	glUseProgram(getShaderProgramID());
-
-	shader->setPropertyVec3(shader->getPropertyID(pShader::SpecularColor), specularColor);
+	if (sendToShader) {
+	if (shader->hasUniform(Uniforms::SpecularColor)) {
+		shader->setUniformVec3(shader->getUniformID(Uniforms::SpecularColor), specularColor);
+	}
+	}
+	else {
+		mat.specular = specularColor;
+	}
 }
 
-void pMaterial::setAmbientColor(glm::vec3 ambientColor)
+void pMaterial::setAmbientColor(glm::vec3 ambientColor, bool sendToShader)
 {
-	//Make sure the shader is being used
-	glUseProgram(getShaderProgramID());
-
-	shader->setPropertyVec3(shader->getPropertyID(pShader::AmbientColor), ambientColor);
+	if (sendToShader) {
+	if (shader->hasUniform(Uniforms::AmbientColor)) {
+		shader->setUniformVec3(shader->getUniformID(Uniforms::AmbientColor), ambientColor);
+	}
+	}
+	else {
+		mat.ambient = ambientColor;
+	}
 }
 
-void pMaterial::setShininess(GLfloat shininess)
+void pMaterial::setShininess(GLfloat shininess, bool sendToShader)
 {
-	//Make sure the shader is being used
-	glUseProgram(getShaderProgramID());
-
-	shader->setPropertyFloat(shader->getPropertyID(pShader::Shininess), shininess);
+	if (sendToShader) {
+	if (shader->hasUniform(Uniforms::Shininess)) {
+		shader->setUniformFloat(shader->getUniformID(Uniforms::Shininess), shininess);
+	}
+	}
+	else {
+		mat.shininess = shininess;
+	}
 }
 
-void pMaterial::setDiffuseTexture(pImage * tex)
+void pMaterial::setDiffuseTexture(pImage * tex, bool sendToShader)
 {
-	tex->setupTexture(GL_TEXTURE0);
-	shader->setPropertyTextureID(pShader::Attributes::DiffuseColor, tex->textureID);
+	if (sendToShader) {
+	if (shader->hasUniform(Uniforms::DiffuseTexture)) {
+		shader->setUniformTextureID(shader->getUniformID(Uniforms::DiffuseTexture), tex->textureID);
+	}
+	}
+	else {
+		mat.diffuseTexture = tex;
+		tex->setupTexture(GL_TEXTURE0);
+	}
 }
 
-void pMaterial::setSpecularTexture(pImage * tex)
+void pMaterial::setSpecularTexture(pImage * tex, bool sendToShader)
 {
-	tex->setupTexture(GL_TEXTURE1);
-	shader->setPropertyTextureID(pShader::Attributes::SpecularTexture, tex->textureID);
+	if (sendToShader) {
+	if (shader->hasUniform(Uniforms::SpecularTexture)) {
+
+	shader->setUniformTextureID(shader->getUniformID(Uniforms::SpecularTexture), tex->textureID);
+	}
+	}
+	else {
+		mat.specularTexture = tex;
+		tex->setupTexture(GL_TEXTURE1);
+	}
 }
 
-void pMaterial::setBumpTexture(pImage * tex)
+void pMaterial::setEmission(glm::vec3 emissionColor, bool sendToShader) 
 {
-	tex->setupTexture(GL_TEXTURE2);
-	shader->setPropertyTextureID(pShader::Attributes::BumpTexture, tex->textureID);
+	if (sendToShader) {
+	if (shader->hasUniform(Uniforms::Emission)) {
+		shader->setUniformVec3(shader->getUniformID(Uniforms::Emission), emissionColor);
+	}
+	}
+	else {
+		mat.emission = emissionColor;
+	}
+}
+
+void pMaterial::setBumpTexture(pImage * tex, bool sendToShader)
+{
+	if (sendToShader) {
+	if (shader->hasUniform(Uniforms::BumpTexture)) {
+		tex->setupTexture(GL_TEXTURE2);
+		shader->setUniformTextureID(shader->getUniformID(Uniforms::BumpTexture), tex->textureID);
+	}
+	}
+	else {
+		mat.bumpTexture = tex;
+	}
+}
+
+void pMaterial::setLightSources(std::vector<pLight*> lights)
+{
+	if (mat.useLight) {
+		//Make sure the shader is being used
+		glUseProgram(getShaderProgramID());
+
+		std::vector<glm::vec3> aPos = std::vector<glm::vec3>();
+		std::vector<glm::vec3> aColor = std::vector<glm::vec3>();
+		std::vector<glm::vec3> aAmb = std::vector<glm::vec3>();
+		std::vector<glm::vec3> aPow = std::vector<glm::vec3>();
+		std::vector<GLfloat> aRange = std::vector<GLfloat>();
+		std::vector<GLfloat> aAtten = std::vector<GLfloat>();
+
+		for (int i = 0; i < lights.size(); ++i) {
+			pLight* cl = lights.at(i);
+
+			aPos.push_back(cl->getPosition());
+			aColor.push_back(cl->getColor());
+			aAmb.push_back(cl->getAmbient());
+			aPow.push_back(cl->getIntensity());
+			aRange.push_back(cl->getRange());
+			aAtten.push_back(cl->getAttenuation());
+		}
+
+		//Set all light properties
+		shader->setUniformInt(shader->getUniformID(Uniforms::Light_Count), lights.size());
+		shader->setUniformVec3(shader->getUniformID(Uniforms::Light_Position), aPos);
+		shader->setUniformVec3(shader->getUniformID(Uniforms::Light_Color), aColor);
+		shader->setUniformVec3(shader->getUniformID(Uniforms::Light_Power), aAmb);
+		shader->setUniformVec3(shader->getUniformID(Uniforms::Light_Ambient), aPow);
+		shader->setUniformFloat(shader->getUniformID(Uniforms::Light_Range), aRange);
+		shader->setUniformFloat(shader->getUniformID(Uniforms::Light_Attenuation), aAtten);
+	}
 }
 
 GLuint pMaterial::getModelMatrixID()
 {
-	return shader->getPropertyID(pShader::Attributes::Model_View);
+	return shader->getUniformID(Uniforms::Model_View);
 }
 
 GLuint pMaterial::getViewMatrixID()
 {
-	return shader->getPropertyID(pShader::Attributes::Camera_View);
+	return shader->getUniformID(Uniforms::Camera_View);
 }
 
 GLuint pMaterial::getProjectionMatrixID()
 {
-	return shader->getPropertyID(pShader::Attributes::Projection_View);
+	return shader->getUniformID(Uniforms::Projection_View);
 }
 
 
@@ -116,18 +196,37 @@ GLuint pMaterial::getShaderProgramID()
 	return shader->getShaderID();
 }
 
-
-void pMaterial::setLightEffect(Light light)
+void pMaterial::useMaterial()
 {
-	//if ((shader->getFlags() & pShader::Light_Affected) == pShader::Light_Affected) {
-		//Make sure the shader is being used
-		glUseProgram(getShaderProgramID());
+	
 
-		//Set all light properties
-		shader->setPropertyVec3(shader->getPropertyID(pShader::Light_Position), light.position);
-		shader->setPropertyVec3(shader->getPropertyID(pShader::Light_Color), light.color);
-		shader->setPropertyVec3(shader->getPropertyID(pShader::Light_Power), light.intensity);
-		shader->setPropertyFloat(shader->getPropertyID(pShader::Light_Ambient), light.ambientCoefficient);
-		shader->setPropertyFloat(shader->getPropertyID(pShader::Light_Attenuation), light.attenuation);
-	//}
+	//Send incoming data to the shader
+	if (&mat.diffuse != NULL || shader->hasUniform(Uniforms::DiffuseColor)) { setDiffuseColor(mat.diffuse, true); }
+	if (&mat.ambient != NULL || shader->hasUniform(Uniforms::AmbientColor)) { setAmbientColor(mat.ambient, true); }
+	if (&mat.specular != NULL || shader->hasUniform(Uniforms::SpecularColor)) { setSpecularColor(mat.specular, true); }
+	if (&mat.shininess != NULL || shader->hasUniform(Uniforms::Shininess)) { setShininess(mat.shininess, true); }
+	if (&mat.emission != NULL || shader->hasUniform(Uniforms::Emission)) { setEmission(mat.emission, true); }
+
+	//Send incoming textures to the shader
+	if (mat.diffuseTexture != NULL) { mat.diffuseTexture->useTexture(GL_TEXTURE0); }
+	if (mat.specularTexture != NULL) { mat.specularTexture->useTexture(GL_TEXTURE1); }
+	if (mat.bumpTexture != NULL) { mat.bumpTexture->useTexture(GL_TEXTURE2); }
+
+	if(mat.useLight == true){
+		std::vector<pLight*> lights = pLightManager::instance()->getAllLights();
+		setLightSources(lights);
+	}
+}
+
+void pMaterial::unuseMaterial()
+{
+	//Unuse the textures
+	if (mat.diffuseTexture != NULL) { mat.diffuseTexture->unuseTexture(GL_TEXTURE0); }
+	if (mat.specularTexture != NULL) { mat.specularTexture->unuseTexture(GL_TEXTURE1); }
+	if (mat.bumpTexture != NULL) { mat.bumpTexture->unuseTexture(GL_TEXTURE2); }
+}
+
+pShader * pMaterial::getShader()
+{
+	return shader;
 }

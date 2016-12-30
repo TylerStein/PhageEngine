@@ -29,6 +29,8 @@ public:
 
 	GLenum getDrawMode();
 
+	void UseMaterial();
+
 	//Adds rotation relative to current around a provided axis by <amount> degrees
 	void rotateAround(glm::vec3 rot, GLfloat amount);
 	//Scales relative to current scale by <xyz>
@@ -48,6 +50,11 @@ private:
 	//Function for initializing the VBO, VAO and ShaderProgram
 	void setupModel();
 	void initDefaultMatrix();
+
+	bool useVertices;
+	bool useNormals;
+	bool useTexCoords;
+	bool useColors;
 
 	pMaterial* material;
 	GLuint vertCount;

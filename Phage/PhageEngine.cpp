@@ -20,6 +20,7 @@ PhageEngine::PhageEngine(GameImplement* game)
 	materialManager = new pMaterialManager();
 	imageManager = new pImageManager();
 	shaderManager = new pShaderManager();
+	lightManager = pLightManager::instance();
 
 	//Give the modelmanager the other managers
 	modelManager->setMaterialManager(materialManager);
@@ -47,10 +48,10 @@ PhageEngine::~PhageEngine()
 	delete renderer;
 	
 	//TODO: CLEARING KEYS AND VALUES CAUSES AN ERROR!!!
-	delete resourceFactory;
-	delete modelManager;
-	delete materialManager;
-	delete imageManager;
+	//delete resourceFactory;
+	//delete modelManager;
+	//delete materialManager;
+	//delete imageManager;
 
 
 	//Delete managers and factory

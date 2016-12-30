@@ -3,6 +3,8 @@
 #include "LogManager.h"
 #include "GL/glew.h"
 
+#define $PRINT_GLERROR GLError::printError(__FILE__, __LINE__)
+
 class GLError {
 public:
 	static inline int logError(char* file, int line) {

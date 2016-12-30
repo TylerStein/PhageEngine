@@ -8,7 +8,7 @@
 
 
 
-pShader::pShader(std::string name, GLint flags, std::string vertexShaderPath, std::string fragmentShaderPath)
+pShader::pShader(std::string name, attribNameMap attributeNames, uniformNameMap uniformNames, std::string vertexShaderPath, std::string fragmentShaderPath)
 {
 	if (fragmentShaderPath == "" || vertexShaderPath == "") {
 		#ifdef _DEBUG
@@ -18,89 +18,35 @@ pShader::pShader(std::string name, GLint flags, std::string vertexShaderPath, st
 		return;
 	}
 
-	this->flags = flags;
-
 	//Set the name
 	this->name = name;
+
+	//Store the shader file paths
+	vertPath = vertexShaderPath;
+	fragPath = fragmentShaderPath;
+
 	//Compile the shader
-	compileShader(vertexShaderPath, fragmentShaderPath);
+	compileShader();
 
-	//Use the shader
-	glUseProgram(shaderID);
-	//Find the locationID of the flags value
-	GLuint flagsLocation = glGetUniformLocation(shaderID, "vFlags");
-	//Pass the flags to the shader
-	glUniform1i(flagsLocation, flags);
+	attributeMap = new attribLocMap();
+	uniformMap = new uniformLocMap();
 
-	attributeMap = new SimpleKeyValue<Attributes, GLuint>();
-	GLuint tmpID;
-
-	//Initialize the view matrices
-	const glm::mat4 idmat = glm::mat4(1);
-	setPropertyMat4(getPropertyID(Model_View), idmat);
-	setPropertyMat4(getPropertyID(Camera_View), idmat);
-	setPropertyMat4(getPropertyID(Projection_View), idmat);
-
-	//Has material info
-	if ((flags & MaterialInfo) == MaterialInfo) {
-		//Get the needed attribute IDs and initialize the shader variables
-		setPropertyVec3(getPropertyID(DiffuseColor), glm::vec3(1, 1, 1));
-
-		setPropertyVec3(getPropertyID(AmbientColor), glm::vec3(1, 1, 1));
-
-		setPropertyVec3(getPropertyID(SpecularColor), glm::vec3(1, 1, 1));
-
-		setPropertyFloat(getPropertyID(Shininess), 1);
-
-		LogManager::instance()->info("Material Info Set (Shader)");
+	for (int i = 0; i < attributeNames.Count(); ++i) {
+		addAttribute(attributeNames.findKey(i), attributeNames.findValue(i));
 	}
 
-	
-
-	//Has diffuse texture info
-	if ((flags & Texture_Diffuse) == Texture_Diffuse) {
-		setPropertyTextureID(getPropertyID(DiffuseTexture), -1);
-		LogManager::instance()->info("Dffuse Texture Info Set (Shader)");
+	for (int i = 0; i < uniformNames.Count(); ++i) {
+		addUniform(uniformNames.findKey(i), uniformNames.findValue(i));
 	}
-
-	//Has bumpmap texture info
-	if ((flags & Texture_Bump) == Texture_Bump) {
-		setPropertyTextureID(getPropertyID(BumpTexture), -1);
-
-		LogManager::instance()->info("Bump Texture Info Set (Shader)");
-	}
-
-	//Has specular texture info
-	if ((flags & Texture_Specular) == Texture_Specular) {
-		//Create a temporary pair to hold on the attribute map's return type
-		setPropertyTextureID(getPropertyID(SpecularTexture), -1);
-
-		LogManager::instance()->info("Specular Texture Info Set (Shader)");
-	}
-
-	//Has light receiving info
-	if ((flags & Light_Affected) == Light_Affected) {
-		//Get the needed attribute IDs and initialize the shader variables
-		setPropertyVec3(getPropertyID(Light_Position), glm::vec3(0, 0, 0));
-
-		setPropertyVec3(getPropertyID(Light_Color), glm::vec3(1, 1, 1));
-
-		setPropertyVec3(getPropertyID(Light_Power), glm::vec3(1, 1, 1));
-
-		setPropertyFloat(getPropertyID(Light_Attenuation), 1.0);
-
-		setPropertyFloat(getPropertyID(Light_Ambient), 1.0);
-
-		LogManager::instance()->info("Light Info Set (Shader)");
-	}
-
 }
 
 pShader::~pShader()
 {
+	delete attributeMap;
+	delete uniformMap;
 }
 
-void pShader::setPropertyMat4(GLuint attributeID, glm::mat4 data)
+void pShader::setUniformMat4(GLuint attributeID, glm::mat4 data)
 {
 	//Make sure the shader is being used
 	glUseProgram(shaderID);
@@ -108,7 +54,7 @@ void pShader::setPropertyMat4(GLuint attributeID, glm::mat4 data)
 	glUniformMatrix4fv(attributeID, 1, GL_FALSE, &data[0][0]);
 }
 
-void pShader::setPropertyVec3(GLuint attributeID, glm::vec3 data)
+void pShader::setUniformVec3(GLuint attributeID, glm::vec3 data)
 {
 	//Make sure the shader is being used
 	glUseProgram(shaderID);
@@ -116,7 +62,7 @@ void pShader::setPropertyVec3(GLuint attributeID, glm::vec3 data)
 	glUniform3fv(attributeID, 1, &data[0]);
 }
 
-void pShader::setPropertyVec2(GLuint attributeID, glm::vec2 data)
+void pShader::setUniformVec2(GLuint attributeID, glm::vec2 data)
 {
 	//Make sure the shader is being used
 	glUseProgram(shaderID);
@@ -124,7 +70,7 @@ void pShader::setPropertyVec2(GLuint attributeID, glm::vec2 data)
 	glUniform2fv(attributeID, 1, &data[0]);
 }
 
-void pShader::setPropertyFloat(GLuint attributeID, GLfloat data)
+void pShader::setUniformFloat(GLuint attributeID, GLfloat data)
 {
 	//Make sure the shader is being used
 	glUseProgram(shaderID);
@@ -132,124 +78,150 @@ void pShader::setPropertyFloat(GLuint attributeID, GLfloat data)
 	glUniform1f(attributeID, data);
 }
 
-void pShader::setPropertyTextureID(GLuint attributeID, GLuint textureID)
-{	//Make sure the shader is being used
+void pShader::setUniformInt(GLuint attributeID, GLint data)
+{
+	//Make sure the shader is being used
+	glUseProgram(shaderID);
+
+	glUniform1i(attributeID, data);
+}
+
+void pShader::setUniformTextureID(GLuint attributeID, GLuint textureID)
+{	
+	//Make sure the shader is being used
 	glUseProgram(shaderID);
 
 	glUniform1i(attributeID, textureID);
 }
 
-GLuint pShader::getPropertyID(Attributes propertyAttribute)
+void pShader::setUniformVec3(GLuint attributeID, std::vector<glm::vec3> data)
 {
 	//Make sure the shader is being used
 	glUseProgram(shaderID);
 
-	//Temporary string to track desired attribute retreived
-	std::string attr = "";
+	//Create a vec3 array pointer from the incoming data
+	const glm::vec3* arr = data.data();
 
+	//Pass in the array
+	glUniform3fv(attributeID, data.size(), &arr[0][0]);
+}
+
+void pShader::setUniformFloat(GLuint attributeID, std::vector<GLfloat> data)
+{
+	//Make sure the shader is being used
+	glUseProgram(shaderID);
+
+	//Create a float array pointer from the incoming data
+	const GLfloat* arr = data.data();
+
+	//Pass in the array
+	glUniform1fv(attributeID, data.size(), &arr[0]);
+}
+
+bool pShader::hasAttribute(Attributes attrib)
+{
+	bool ans = (attributeFlags & attrib);
+	return ans;
+}
+
+bool pShader::hasUniform(Uniforms uni)
+{
+	bool ans = (uniformFlags & uni);
+	return ans;
+}
+
+GLuint pShader::getAttributeLocation(std::string shaderVar)
+{
+	return glGetAttribLocation(shaderID, (char*)shaderVar.c_str());
+}
+
+GLuint pShader::getUniformLocation(std::string shaderVar)
+{
+	return glGetUniformLocation(shaderID, (char*)shaderVar.c_str());
+}
+
+bool pShader::addAttribute(Attributes targetAttrib, std::string shaderVar)
+{
+	//Check if attribute already exists
+	if (!hasAttribute(targetAttrib)) {
+		//Get the attribute location
+		GLuint varLocation = getAttributeLocation(shaderVar);
+
+		//Check if location is valid
+		if (varLocation != -1) {
+			attributeMap->insert(targetAttrib, varLocation);
+			attributeFlags = (attributeFlags | targetAttrib);
+			return true;
+		}
+		else {
+#ifdef _DEBUG
+			std::cout << "Unable to find attribute (" << shaderVar << ") in shader" << std::endl;
+			return false;
+#endif
+		}
+	}
+
+#ifdef _DEBUG
+	std::cout << "Attribute already exists (" << shaderVar << ") in map" << std::endl;
+#endif
+	return false;
+}
+
+bool pShader::addUniform(Uniforms targetUniform, std::string shaderVar)
+{
+	//Check if uniform already exists
+	if (!hasUniform(targetUniform)) {
+		//Get the attribute location
+		GLuint varLocation = getUniformLocation(shaderVar);
+
+		//Check if location is valid
+		if (varLocation != -1) {
+			uniformMap->insert(targetUniform, varLocation);
+			uniformFlags = (uniformFlags | targetUniform);
+			return true;
+		}
+		else {
+#ifdef _DEBUG
+			std::cout << "Unable to find uniform (" << shaderVar << ") in shader" << std::endl;
+			return false;
+#endif
+		}
+	}
+#ifdef _DEBUG
+	std::cout << "Uniform already exists (" << shaderVar << ") in map" << std::endl;
+#endif
+	return false;
+}
+
+GLuint pShader::getAttributeID(Attributes attrib)
+{
 	GLint res = -1;
-	//Check if property attribute already exists
-	res = attributeMap->findValue(propertyAttribute);
-	if (res!=-1) {
-		//Attribute already exists, just return it
-#ifdef _DEBUG
-		//std::cout << "Retreived property ID (" << res << ") from attribute (" << propertyAttribute << ")" << std::endl;
-#endif
-		return res;
-	}
-	else {
-		//Generate the propertyID
-		switch (propertyAttribute) {
-		case DiffuseColor:
-			res = glGetUniformLocationARB(shaderID, "fMaterial.diffuse");
-			attr = "fMaterial.diffuse";
-			break;
-		case AmbientColor:
-			res = glGetUniformLocationARB(shaderID, "fMaterial.ambient");
-			attr = "fMaterial.ambient";
-			break;
-		case SpecularColor:
-			res = glGetUniformLocationARB(shaderID, "fMaterial.specular");
-			attr = "fMaterial.specular";
-			break;
-		case Shininess:
-			res = glGetUniformLocationARB(shaderID, "fMaterial.shininess");
-			attr = "fMaterial.shininess";
-			break;
-		case DiffuseTexture:
-			res = glGetUniformLocation(shaderID, "fTextures.diffuse");
-			attr = "fTextures.diffuse";
-			break;
-		case SpecularTexture:
-			res = glGetUniformLocation(shaderID, "fTextures.specular");
-			attr = "fTextures.specular";
-			break;
-		case BumpTexture:
-			res = glGetUniformLocation(shaderID, "fTextures.bump");
-			attr = "fTextures.bump";
-			break;
-		case Camera_View:
-			res = glGetUniformLocationARB(shaderID, "vView.camera");
-			attr = "vView.camera";
-			break;
-		case Projection_View:
-			res = glGetUniformLocationARB(shaderID, "vView.projection");
-			attr = "vView.projection";
-			break;
-		case Model_View:
-			res = glGetUniformLocationARB(shaderID, "vView.model");
-			attr = "vView.model";
-			break;
-		case Light_Position:
-			res = glGetUniformLocationARB(shaderID, "fLight.position");
-			attr = "fLight.position";
-			break;
-		case Light_Color:
-			res = glGetUniformLocationARB(shaderID, "fLight.color");
-			attr = "fLight.color";
-			break;
-		case Light_Power:
-			res = glGetUniformLocationARB(shaderID, "fLight.power");
-			attr = "fLight.power";
-			break;
-		case Light_Attenuation:
-			res = glGetUniformLocationARB(shaderID, "fLight.attenuation");
-			attr = "fLight.attenuation";
-			break;
-		case Light_Ambient:
-			res = glGetUniformLocationARB(shaderID, "fLight.ambient");
-			attr = "fLight.ambient";
-			break;
-		default:
-			res = -1;
-			break;
-		}
 
-#ifdef _DEBUG
-		if (res == -1)
-		{
-			//std::cout << "PropertyID could not be reached for attirubute (" << attr << ")" << std::endl;
-		} else {
-			std::cout << "Created property ID (" << res << ") from attribute (" << attr << ")" << std::endl;
-
-		}
-#endif
-
+	if(hasAttribute(attrib)){
+		res = attributeMap->findValue(attrib);
 	}
 
-	//Add the found attribute ID to the map under the associated attribute enum
-	attributeMap->insert(propertyAttribute, res);
-	//Return the resulting ID
 	return res;
 }
 
-void pShader::compileShader(std::string vertexShaderPath, std::string fragmentShaderPath)
+GLuint pShader::getUniformID(Uniforms uni)
+{
+	GLint res = -1;
+
+	if (hasUniform(uni)) {
+		res = uniformMap->findValue(uni);
+	}
+
+	return res;
+}
+
+void pShader::compileShader()
 {
 	pFileReader reader;
 
 	//Read the shader files
-	std::string vs = reader.readFile((char*)vertexShaderPath.c_str());
-	std::string fs = reader.readFile((char*)fragmentShaderPath.c_str());
+	std::string vs = reader.readFile((char*)vertPath.c_str());
+	std::string fs = reader.readFile((char*)fragPath.c_str());
 
 	//Create char* of the shaders
 	const char* vertex_shader = vs.c_str();
@@ -294,7 +266,12 @@ std::string pShader::getName()
 	return name;
 }
 
-GLint pShader::getFlags()
+GLint pShader::getUniformFlags()
 {
-	return flags;
+	return uniformFlags;
+}
+
+GLint pShader::getAttributeFlags()
+{
+	return attributeFlags;
 }

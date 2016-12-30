@@ -85,6 +85,8 @@
     <ClCompile Include="pPlane.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
+    <ClCompile Include="pPrimitiveMaker.cpp" />
+    <ClCompile Include="pLightManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Clock.h">
@@ -180,19 +182,21 @@
     <ClInclude Include="pPlane.h">
       <Filter>Utility</Filter>
     </ClInclude>
+    <ClInclude Include="pPrimitiveMaker.h" />
+    <ClInclude Include="pLightManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PhageDiagram.cd" />
-    <None Include="..\Resources\Shaders\SimpleLight.frag">
+    <None Include="..\Resources\Shaders\phong.frag">
       <Filter>Resources\Shaders</Filter>
     </None>
-    <None Include="..\Resources\Shaders\SimpleLight.vert">
+    <None Include="..\Resources\Shaders\phong.vert">
       <Filter>Resources\Shaders</Filter>
     </None>
-    <None Include="..\Resources\Shaders\PhongShading.frag">
+    <None Include="..\Resources\Shaders\Primitive.frag">
       <Filter>Resources\Shaders</Filter>
     </None>
-    <None Include="..\Resources\Shaders\PhongShading.vert">
+    <None Include="..\Resources\Shaders\Primitive.vert">
       <Filter>Resources\Shaders</Filter>
     </None>
   </ItemGroup>

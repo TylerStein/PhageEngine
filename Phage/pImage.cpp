@@ -11,12 +11,8 @@ pImage::pImage(std::string name, std::string imageDir, GLuint minFilterType, GLu
 	this->minFilterType = minFilterType;
 	this->magFilterType = magFilterType;
 	this->wrapMode = wrapMode;
-	if (imageDir != "") {
-		loadImage();
-	}
-	else {
-		generateCheckerboard();
-	}
+	loadImage();
+
 }
 
 pImage::~pImage()
@@ -62,6 +58,12 @@ void pImage::generateCheckerboard()
 	minFilterType = GL_NEAREST;
 	magFilterType = GL_NEAREST;
 	wrapMode = GL_REPEAT;
+
+	//Set texture parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilterType);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilterType);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
 }
 
 
@@ -78,7 +80,10 @@ std::string pImage::getName()
 
 void pImage::loadImage()
 {
-	if (imageDirectory != "") {
+	if (imageDirectory == "") {
+		generateCheckerboard();
+	}
+	else {
 		pImageLoader loader = pImageLoader();
 
 		//Load the image and store its width and height
@@ -92,7 +97,7 @@ void pImage::setupTexture(GLenum texturePlace)
 {
 	//Generate a textureID
 	glGenTextures(1, &textureID);
-	GLError::printError(__FILE__, __LINE__);
+	
 
 	//Set the active texture to 0
 	glActiveTexture(texturePlace);
@@ -100,7 +105,7 @@ void pImage::setupTexture(GLenum texturePlace)
 
 	//Bind the new texture
 	glBindTexture(GL_TEXTURE_2D, textureID);
-	GLError::printError(__FILE__, __LINE__);
+	
 
 	//Feed the image data to our new texture (image is BGR format because of freeimage)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_BGR, GL_UNSIGNED_BYTE, (void*)imageData);
@@ -124,5 +129,23 @@ void pImage::setupTexture(GLenum texturePlace)
 
 
 
-	GLError::printError(__FILE__, __LINE__);
+	
+}
+
+void pImage::useTexture(GLenum texturePlace)
+{
+	//Set the active texture to 0
+	glActiveTexture(texturePlace);
+
+	//Bind the texture
+	glBindTexture(GL_TEXTURE_2D, textureID);
+}
+
+void pImage::unuseTexture(GLenum texturePlace)
+{
+	//Set the active texture to 0
+	glActiveTexture(texturePlace);
+
+	//Bind no texture
+	glBindTexture(GL_TEXTURE_2D, 0);
 }

@@ -11,7 +11,7 @@ public:
 	~pShaderManager();
 
 	//Creates a shader from provided info
-	HandleType createShader(std::string shaderName, std::string vertShaderPath, std::string fragShaderPath, GLint properties);
+	HandleType createShader(std::string shaderName, attribNameMap attribs, uniformNameMap uniforms, std::string vertShaderPath, std::string fragShaderPath);
 
 	//Adds a shader to the manager
 	HandleType addShader(std::string shaderName, pShader* shader);

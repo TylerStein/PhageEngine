@@ -66,7 +66,10 @@ pModelManager::HandleType pModelManager::createModel(std::string modelName, pMat
 	//TODO: Check if there's an associated material and generate it based on that....
 	//Create a unique shader (Bad!) with material info (automatically filled)
 	//Next use manager to load one with certain flags by search?
-	pShader* tmpShader = new pShader("TempShader", pShader::MaterialInfo, "", "");
+	attribNameMap aMap = attribNameMap();
+	uniformNameMap uMap = uniformNameMap();
+
+	pShader* tmpShader = new pShader("TempShader", aMap, uMap, "", "");
 
 	MaterialInfo materialInfo;
 

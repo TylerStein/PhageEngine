@@ -267,11 +267,7 @@ public:
 		//TODO: deletes the Hashtable but not the values in the table
 		~Hashtable(void)
 		{
-			if (table != NULL)
-			{
-				delete table;
-				table = NULL;
-			}
+
 		}
 
 		//returns the tableSize for the Hashtable

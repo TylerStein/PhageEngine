@@ -2,7 +2,7 @@
 #include "pAsset.h"
 #include "glm/vec3.hpp"
 #include "glm/mat4x4.hpp"
-#include <map>
+#include <string>
 #include "pHashtable.h"
 
 //A simple two-vector class that works with a key-value system similar to a hashtable or map
@@ -16,8 +16,9 @@ public:
 	}
 
 	~SimpleKeyValue() {
-		delete keyList;
-		delete valueList;
+		//delete keyList;
+		//delete valueList;
+		clear();
 		keyList = NULL;
 		valueList = NULL;
 	}
@@ -96,55 +97,83 @@ private:
 	std::vector<_value>*	valueList;
 };
 
+enum Attributes {
+	//Vertex Data
+	VertexPosition = 1 << 1,
+	VertexNormal = 1 << 2,
+	VertexCoordinate = 1 << 3,
+	VertexColor = 1 << 4
+};
+
+//Represents attributes for functions/flags
+enum Uniforms {
+	//Material Info
+	DiffuseColor = 1 << 1, //Diffuse color multiplier
+	AmbientColor = 1 << 2, //Ambient color multiplier
+	SpecularColor = 1 << 3, //Specular color multiplier
+	Shininess = 1 << 4, //Specular shine multiplier
+	Emission = 1 << 5,
+
+	//Textures
+	DiffuseTexture = 1 << 6, //Diffuse texture
+	SpecularTexture = 1 << 7, //Specular texture
+	BumpTexture = 1 << 8, //Bump texture
+
+	//View Matrices
+	Camera_View = 1 << 9, //The camera view matrix
+	Projection_View = 1 << 10, //The projection matrix
+	Model_View = 1 << 11, //The model movement matrix
+
+	//Light Properties
+	Light_Position = 1 << 12,
+	Light_Color = 1 << 13,
+	Light_Power = 1 << 14,
+	Light_Attenuation = 1 << 15,
+	Light_Ambient = 1 << 16,
+	Light_Range = 1 << 17,
+	Light_Count = 1 << 18
+};
+
+typedef SimpleKeyValue<Attributes, GLuint> attribLocMap;
+typedef SimpleKeyValue<Uniforms, GLuint> uniformLocMap;
+
+typedef SimpleKeyValue<Attributes, std::string> attribNameMap;
+typedef SimpleKeyValue<Uniforms, std::string> uniformNameMap;
+
 class pShader : public pAsset {
 public:
-	//32 Possible Property Flags (int = 32bits)
-	enum PropertyFlags {
-		MaterialInfo		= 1 << 0,	//Takes material data(Diffuse, Ambient, Specular, Shininess)
-		Texture_Diffuse		= 1 << 1,	//Takes a texture2d sampler for a diffuse base texture
-		Texture_Specular	= 1 << 2,	//Takes a texture2d sampler for a specular map texture
-		Texture_Bump		= 1 << 3,	//Takes a texture2d sampler for a bump map texture
-		Light_Affected		= 1 << 4	//Takes a list of pLight objects to be affected by
-	};
-
-	//Represents attributes for functions/flags
-	enum Attributes {
-		//Material Info
-		DiffuseColor		= 1 << 1, //Diffuse color multiplier
-		AmbientColor		= 1 << 2, //Ambient color multiplier
-		SpecularColor		= 1 << 3, //Specular color multiplier
-		Shininess			= 1 << 4, //Specular shine multiplier
-
-		//Textures
-		DiffuseTexture		= 1 << 5, //Diffuse texture
-		SpecularTexture		= 1 << 6, //Specular texture
-		BumpTexture			= 1 << 7, //Bump texture
-
-		//View Matrices
-		Camera_View			= 1 << 8, //The camera view matrix
-		Projection_View		= 1 << 9, //The projection matrix
-		Model_View			= 1 << 10, //The model movement matrix
-
-		//Light Properties
-		Light_Position		= 1 << 11,
-		Light_Color			= 1 << 12,
-		Light_Power			= 1 << 13,
-		Light_Attenuation	= 1 << 14,
-		Light_Ambient		= 1 << 15
-	};
-
-	pShader(std::string name, GLint flags, std::string vertexShaderPath, std::string fragmentShaderPath);
+	pShader(std::string name, attribNameMap attributeNames, uniformNameMap uniformNames, std::string vertexShaderPath, std::string fragmentShaderPath);
 	~pShader();
 
 	//Set property information in the shader
-	void setPropertyMat4(GLuint attributeID, glm::mat4 data);
-	void setPropertyVec3(GLuint attributeID, glm::vec3 data);
-	void setPropertyVec2(GLuint attributeID, glm::vec2 data);
-	void setPropertyFloat(GLuint attributeID, GLfloat data);
-	void setPropertyTextureID(GLuint attributeID, GLuint textureID);
+	void setUniformMat4(GLuint attributeID, glm::mat4 data);
+	void setUniformVec3(GLuint attributeID, glm::vec3 data);
+	void setUniformVec2(GLuint attributeID, glm::vec2 data);
+	void setUniformFloat(GLuint attributeID, GLfloat data);
+	void setUniformInt(GLuint attributeID, GLint data);
+	void setUniformTextureID(GLuint attributeID, GLuint textureID);
+
+	void setUniformVec3(GLuint attributeID, std::vector<glm::vec3> data);
+	void setUniformFloat(GLuint attributeID, std::vector<GLfloat> data);
+
+	//Check attribute/uniform existance (fast check via bitwise flags)
+	bool hasAttribute(Attributes attrib);
+	bool hasUniform(Uniforms uni);
+
+	//Get variable ID from shader
+	GLuint getAttributeLocation(std::string shaderVar);
+	GLuint getUniformLocation(std::string shaderVar);
+
+	//Search for the shader variable location and save it to the appropriate map
+	bool addAttribute(Attributes targetAttrib, std::string shaderVar);
+	bool addUniform(Uniforms targetUniform, std::string shaderVar);
+
+	//Get IDs
+	GLuint getAttributeID(Attributes attrib);
+	GLuint getUniformID(Uniforms uni);
 
 	//Compile the shader
-	void compileShader(std::string vertexShaderPath, std::string fragmentShaderPath);
+	void compileShader();
 
 	//ShaderID
 	GLuint getShaderID();
@@ -152,17 +181,20 @@ public:
 	//Asset name
 	std::string getName();
 
-	GLint getFlags();
-
-	//Get the ID of property locations
-	GLuint getPropertyID(const Attributes const propertyAttribute);
-
+	//Shader flags
+	GLint getUniformFlags();
+	GLint getAttributeFlags();
 private:
-	//std::map<const pShader::Attributes, GLuint>* attributeMap;
-	SimpleKeyValue<pShader::Attributes, GLuint>* attributeMap;
+	//Maps of attributes/uniforms and their shader IDs
+	attribLocMap* attributeMap;
+	uniformLocMap* uniformMap;
 
 	//Shader flags
-	GLint flags;
+	GLint uniformFlags;
+	GLint attributeFlags;
+
+	std::string fragPath;
+	std::string vertPath;
 
 	GLuint shaderID;
 	std::string name;

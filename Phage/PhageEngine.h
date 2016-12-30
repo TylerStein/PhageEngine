@@ -5,6 +5,7 @@
 #include "pRenderer.h"
 #include "pResourceFactory.h"
 #include "GameImplement.h"
+#include "pLightManager.h"
 
 class PhageEngine
 {
@@ -25,10 +26,12 @@ public:
 
 	pRenderer* renderer;
 	pResourceFactory* resourceFactory;
+	pLightManager* lightManager;
 
 	std::vector<pModel*> modelList;
 
-
+	float windowWidth;
+	float windowHeight;
 	GLFWwindow* window;
 private:
 	static PhageEngine* instance;

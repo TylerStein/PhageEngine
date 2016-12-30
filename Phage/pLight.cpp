@@ -1,22 +1,13 @@
 #include "pLight.h"
 
-
-pLight::pLight()
-{
-	lightInfo.position = glm::vec3(1);
-	lightInfo.color = glm::vec3(1);
-	lightInfo.intensity = glm::vec3(1);
-	lightInfo.attenuation = 1.0f;
-	lightInfo.ambientCoefficient = 1.0f;
-}
-
-
-pLight::pLight(glm::vec3 position, glm::vec3 color, glm::vec3 intensity, GLfloat attenuation, GLfloat ambientCoefficient)
+pLight::pLight(glm::vec3 position, GLfloat range, glm::vec3 color, glm::vec3 intensity, glm::vec3 ambient, GLfloat attenuation)
 {
 	lightInfo.position = position;
+	lightInfo.color = color;
 	lightInfo.intensity = intensity;
 	lightInfo.attenuation = attenuation;
-	lightInfo.ambientCoefficient = ambientCoefficient;
+	lightInfo.ambient = ambient;
+	lightInfo.range = range;
 }
 
 pLight::~pLight()
@@ -43,9 +34,13 @@ float pLight::getAttenuation()
 	return lightInfo.attenuation;
 }
 
-float pLight::getAmbientCoefficient()
+glm::vec3 pLight::getAmbient()
 {
-	return lightInfo.ambientCoefficient;
+	return lightInfo.ambient;
+}
+
+float pLight::getRange() {
+	return lightInfo.range;
 }
 
 Light pLight::getLight()
@@ -73,7 +68,12 @@ void pLight::setAttenuation(GLfloat atten)
 	lightInfo.attenuation = atten;
 }
 
-void pLight::setAmbientCoefficient(GLfloat ambCoef)
+void pLight::setAmbient(glm::vec3 ambient)
 {
-	lightInfo.ambientCoefficient = ambCoef;
+	lightInfo.ambient = ambient;
+}
+
+
+void pLight::setRange(GLfloat rng) {
+	lightInfo.range = rng;
 }

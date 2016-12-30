@@ -45,6 +45,17 @@ pModel * pResourceFactory::createModel(std::string name, pMaterial * mat, GLfloa
 	return modelManager->getModel(mdlH);
 }
 
+pModel * pResourceFactory::createPrimitive(std::string name, pPrimitiveMaker::Primitives type, glm::vec3 scale, glm::vec3 color)
+{
+	pModel* res = pPrimitiveMaker::GetPrimitive(name, type, scale, color);
+
+	pResourceHandle<pMaterial> mtlH = materialManager->addMaterial(std::string(name + "_material"), res->getMaterial());
+	pResourceHandle<pShader> shdH = shaderManager->addShader(std::string(name + "_shader"), res->getMaterial()->getShader());
+	pResourceHandle<pModel> mdlH = modelManager->addModel(name, res);
+
+	return modelManager->getModel(mdlH);
+}
+
 pMaterial * pResourceFactory::createMaterial(std::string name, pShader* shader, MaterialInfo info)
 {
 	//Create the material in memory
@@ -76,10 +87,10 @@ pImage * pResourceFactory::createDebugImage(std::string name)
 	return imageManager->getImage(imgH);
 }
 
-pShader * pResourceFactory::createShader(std::string name, std::string vertShaderPath, std::string fragShaderPath, GLint flags)
+pShader * pResourceFactory::createShader(std::string shaderName, attribNameMap attribs, uniformNameMap uniforms, std::string vertShaderPath, std::string fragShaderPath)
 {
 	pResourceHandle<pShader> shdr = pResourceHandle<pShader>(-1);
-	shdr = shaderManager->createShader(name, vertShaderPath, fragShaderPath, flags);
+	shdr = shaderManager->createShader(shaderName, attribs, uniforms, vertShaderPath, fragShaderPath);
 	return shaderManager->getShader(shdr);
 }
 

@@ -29,6 +29,8 @@ private:
 	void loadImage();
 
 	void setupTexture(GLenum texturePlace);
+	void useTexture(GLenum texturePlace);
+	void unuseTexture(GLenum texturePlace);
 	
 	//ID of the openGL texture object
 	GLuint textureID;

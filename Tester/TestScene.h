@@ -5,12 +5,13 @@
 class TestScene : public GameImplement
 {
 public:
-	pShader* simpleShader;
-	pImage* testImg;
-	pMaterial* testMat;
-	pModel* testModel;
+	pModel* crateRef;
+	pModel* floorRef;
 
-	pModel* floor;
+	pModel* lightSourceRef;
+
+	pLight* lightARef;
+	pLight* lightBRef;
 
 	TestScene();
 	~TestScene();
