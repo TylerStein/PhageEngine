@@ -21,7 +21,7 @@ pSceneNode::~pSceneNode()
 	}
 }
 
-pSceneNode::pSceneNode(const glm::vec3 & pos, const glm::quat & rot, const glm::vec3 & scaling)
+pSceneNode::pSceneNode(glm::vec3 & pos, glm::quat & rot, glm::vec3 & scaling)
 {
 	position = pos;
 	rotation = rot;
@@ -30,7 +30,7 @@ pSceneNode::pSceneNode(const glm::vec3 & pos, const glm::quat & rot, const glm::
 	userData = NULL;
 }
 
-void pSceneNode::setPosition(const glm::vec3 & pos)
+void pSceneNode::setPosition(glm::vec3 & pos)
 {
 	position = pos;
 }
@@ -40,13 +40,13 @@ int pSceneNode::numAttachedSceneOnjects() const
 	return sceneObjectList.size();
 }
 
-glm::vec3 pSceneNode::getLocation() const
+glm::vec3 pSceneNode::getLocation()
 {
 	glm::vec3 result = position;
 	return result;
 }
 
-void pSceneNode::setRotation(const glm::quat &rot)
+void pSceneNode::setRotation(glm::quat &rot)
 {
 	rotation = rot;
 }
@@ -143,4 +143,23 @@ pSceneNode::sceneObject_list_iterator pSceneNode::sceneObjectBegin()
 pSceneNode::sceneObject_list_iterator pSceneNode::sceneObjectEnd()
 {
 	return sceneObjectList.end();
+}
+
+void pSceneNode::addSceneObject(pSceneObject * sceneObject)
+{
+	sceneObjectList.push_back(sceneObject);
+}
+
+void pSceneNode::removeSceneObject(pSceneObject * sceneObject)
+{
+	sceneObject_list_iterator iter = std::find(sceneObjectList.begin(), sceneObjectList.end(), sceneObject);
+	if (iter != sceneObjectList.end())
+	{
+		sceneObjectList.erase(iter);
+	}
+}
+
+int pSceneNode::getNumberSceneObjects() const
+{
+	return sceneObjectList.size();
 }

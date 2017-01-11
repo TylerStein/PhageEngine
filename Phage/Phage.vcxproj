@@ -182,6 +182,7 @@
     <ClInclude Include="pSceneGraph.h" />
     <ClInclude Include="pSceneNode.h" />
     <ClInclude Include="pSceneObject.h" />
+    <ClInclude Include="pScript.h" />
     <ClInclude Include="pShader.h" />
     <ClInclude Include="pShaderManager.h" />
     <ClInclude Include="pSoundSystem.h" />
@@ -217,6 +218,7 @@
     <ClCompile Include="pSceneGraph.cpp" />
     <ClCompile Include="pSceneNode.cpp" />
     <ClCompile Include="pSceneObject.cpp" />
+    <ClCompile Include="pScript.cpp" />
     <ClCompile Include="pShader.cpp" />
     <ClCompile Include="pShaderManager.cpp" />
     <ClCompile Include="pSoundSystem.cpp" />
