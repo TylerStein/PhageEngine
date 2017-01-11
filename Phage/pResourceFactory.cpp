@@ -1,7 +1,7 @@
 #include "pResourceFactory.h"
+#include "DefaultPaths.h"
 
-
-
+pResourceFactory* pResourceFactory::_instance = 0;
 pResourceFactory::pResourceFactory()
 {
 }
@@ -12,6 +12,15 @@ pResourceFactory::~pResourceFactory()
 	delete modelManager;
 	delete materialManager;
 	delete imageManager;
+	delete shaderManager;
+}
+
+pResourceFactory * pResourceFactory::instance()
+{
+	if (_instance == 0) {
+		_instance = new pResourceFactory();
+	}
+	return _instance;
 }
 
 void pResourceFactory::setModelManager(pModelManager* modelManager)
@@ -37,24 +46,23 @@ void pResourceFactory::setShaderManager(pShaderManager * shaderManager)
 pModel * pResourceFactory::createModel(std::string name, pMaterial * mat, GLfloat * vertPositions,  GLfloat * vertNormals, GLfloat * vertColors, GLfloat * vertUVs, GLuint numVerts, GLenum drawMode)
 {
 	//Create the model in memory
-	//pModel* mdl = new pModel(name, mat, vertPositions, vertNormals, vertColors, vertUVs, numVerts);
-	pModel* mdl = new pModel(name, mat, vertPositions, vertColors, vertUVs, vertNormals, numVerts, drawMode);
+	pModel* mdl = new pModel(name, mat, drawMode, numVerts, vertPositions, 0, nullptr, vertUVs, vertNormals, nullptr, nullptr, vertColors);
 	//Add the model to the manager table
 	pResourceHandle<pModel> mdlH = modelManager->addModel(name, mdl);
 	//Return the model from the table
 	return modelManager->getModel(mdlH);
 }
 
-pModel * pResourceFactory::createPrimitive(std::string name, pPrimitiveMaker::Primitives type, glm::vec3 scale, glm::vec3 color)
+pModel * pResourceFactory::createModel(std::string name, pMaterial * material, GLenum drawMode, std::vector<GLfloat> vPositions, std::vector<GLuint> vIndeces, std::vector<GLfloat> vCoordinates, std::vector<GLfloat> vNormals, std::vector<GLfloat> vTangents, std::vector<GLfloat> vBiTangents, std::vector<GLfloat> vColors)
 {
-	pModel* res = pPrimitiveMaker::GetPrimitive(name, type, scale, color);
-
-	pResourceHandle<pMaterial> mtlH = materialManager->addMaterial(std::string(name + "_material"), res->getMaterial());
-	pResourceHandle<pShader> shdH = shaderManager->addShader(std::string(name + "_shader"), res->getMaterial()->getShader());
-	pResourceHandle<pModel> mdlH = modelManager->addModel(name, res);
-
+	//Create the model in memory
+	pModel* mdl = new pModel(name, material, drawMode, vPositions, vIndeces, vCoordinates, vNormals, vTangents, vBiTangents, vColors);
+	//Add the model to the manager table
+	pResourceHandle<pModel> mdlH = modelManager->addModel(name, mdl);
+	//Return the model from the table
 	return modelManager->getModel(mdlH);
 }
+
 
 pMaterial * pResourceFactory::createMaterial(std::string name, pShader* shader, MaterialInfo info)
 {
@@ -77,6 +85,16 @@ pImage * pResourceFactory::createImage(std::string name, std::string filePath)
 	return imageManager->getImage(imgH);
 }
 
+pModel * pResourceFactory::createPrimitiveShape(std::string name, pPrimitiveMaker::Primitives prim, glm::vec3 scale, glm::vec3 color, pMaterial* customMaterial)
+{
+	pModel* tmpModel = pPrimitiveMaker::instance()->GetPrimitive(name, prim, scale, color);
+	if (customMaterial != nullptr) { tmpModel->setMaterial(customMaterial); }
+	
+	pResourceHandle<pModel> mdlH = modelManager->addModel(name, tmpModel);
+
+	return modelManager->getModel(mdlH);
+}
+
 pImage * pResourceFactory::createDebugImage(std::string name)
 {
 	//Create the image in memory
@@ -87,6 +105,48 @@ pImage * pResourceFactory::createDebugImage(std::string name)
 	return imageManager->getImage(imgH);
 }
 
+pMaterial * pResourceFactory::createDebugMaterial()
+{
+	pMaterial* tmpMat = materialManager->getMaterial("Primitive");
+
+	if (tmpMat == nullptr) {
+		MaterialInfo matInfo;
+		matInfo.reset();
+		pResourceHandle<pMaterial> mtlH = materialManager->addMaterial("Primitive", new pMaterial("Primitive", createDebugShader(), matInfo));
+		return materialManager->getMaterial(mtlH);
+	}
+}
+
+pShader * pResourceFactory::createDebugShader()
+{
+	pShader* tmpShader = shaderManager->getShader("Primitive");
+	
+	//Shader does not already exist
+	if (tmpShader == nullptr) {
+		attribNameMap atrMap = attribNameMap();
+		uniformNameMap uniMap = uniformNameMap();
+		{
+			atrMap.insert(Attributes::VertexPosition, "vPosition");
+			atrMap.insert(Attributes::VertexCoordinate, "vTexCoord");
+			atrMap.insert(Attributes::VertexNormal, "vNormal");
+			atrMap.insert(Attributes::VertexColor, "vColor");
+
+			uniMap.insert(Uniforms::Camera_View, "cameraView");
+			uniMap.insert(Uniforms::Projection_View, "projectionView");
+			uniMap.insert(Uniforms::Model_View, "modelView");
+
+			uniMap.insert(Uniforms::DiffuseColor, "diffuseColor");
+		}
+		pResourceHandle<pShader> shdrH = shaderManager->addShader("Primitive", new pShader("Primitive", atrMap, uniMap, shader_primitive_vert, shader_primitive_frag));
+		return shaderManager->getShader(shdrH);
+	}
+
+#ifdef _DEBUG
+		std::cout << "Primitive shader already loaded" << std::endl;
+#endif
+	return tmpShader;
+}
+
 pShader * pResourceFactory::createShader(std::string shaderName, attribNameMap attribs, uniformNameMap uniforms, std::string vertShaderPath, std::string fragShaderPath)
 {
 	pResourceHandle<pShader> shdr = pResourceHandle<pShader>(-1);
@@ -94,12 +154,13 @@ pShader * pResourceFactory::createShader(std::string shaderName, attribNameMap a
 	return shaderManager->getShader(shdr);
 }
 
-pModel * pResourceFactory::getModel(std::string name, std::string path)
+pModel * pResourceFactory::loadModel(std::string name, std::string path)
 {
-	pResourceHandle<pShader> mdl = pResourceHandle<pShader>(-1);
-	//mdl = createModel
-	std::cout << "Attempted to read model from file, not yet functional!" << std::endl;
-	return nullptr;
+	pResourceHandle<pModel> mdl = pResourceHandle<pModel>(-1);
+	
+	mdl = modelManager->loadModel(name, path);
+
+	return modelManager->getModel(mdl);
 }
 
 pModel * pResourceFactory::getModel(std::string name)

@@ -27,7 +27,7 @@ PhageEngine::PhageEngine(GameImplement* game)
 	modelManager->setImageManager(imageManager);
 
 	//Create an instance of the factory and give it the managers
-	resourceFactory = new pResourceFactory();
+	resourceFactory = pResourceFactory::instance();
 	resourceFactory->setModelManager(modelManager);
 	resourceFactory->setMaterialManager(materialManager);
 	resourceFactory->setImageManager(imageManager);

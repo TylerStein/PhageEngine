@@ -102,7 +102,10 @@ enum Attributes {
 	VertexPosition = 1 << 1,
 	VertexNormal = 1 << 2,
 	VertexCoordinate = 1 << 3,
-	VertexColor = 1 << 4
+	VertexColor = 1 << 4,
+	VertexTangent = 1 << 5,
+	VertexBiTangent = 1 << 6,
+	VertexIndeces = 1 << 7
 };
 
 //Represents attributes for functions/flags

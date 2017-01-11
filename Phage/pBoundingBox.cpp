@@ -27,13 +27,13 @@ void pBoundingBox::surround(pModel & model)
 
 	for (int i = 1; i < (model.vertCount * increaseAmount); i += increaseAmount)
 	{
-		if (model.vertices[i] < min.x) { min.x = model.vertices[i]; }
-		if (model.vertices[i + 1] < min.y) { min.y = model.vertices[i + 1]; }
-		if (model.vertices[i + 2] < min.z) { min.z = model.vertices[i + 3]; }
+		if (model.vPositions[i] < min.x) { min.x = model.vPositions[i]; }
+		if (model.vPositions[i + 1] < min.y) { min.y = model.vPositions[i + 1]; }
+		if (model.vPositions[i + 2] < min.z) { min.z = model.vPositions[i + 3]; }
 
-		if (model.vertices[i] > max.x) { max.x = model.vertices[i]; }
-		if (model.vertices[i + 1] > max.y) { max.y = model.vertices[i = 1]; }
-		if (model.vertices[i + 2] > max.z) { max.z = model.vertices[i = 2]; }
+		if (model.vPositions[i] > max.x) { max.x = model.vPositions[i]; }
+		if (model.vPositions[i + 1] > max.y) { max.y = model.vPositions[i = 1]; }
+		if (model.vPositions[i + 2] > max.z) { max.z = model.vPositions[i = 2]; }
 	}
 	pBoundingBox(min, max);
 }

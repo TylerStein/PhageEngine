@@ -6,6 +6,7 @@
 #include <glm\glm.hpp>
 #include <vector>
 #include <string>
+#include "pModel.h"
 
 class pModelLoader
 {
@@ -27,13 +28,6 @@ public:
 	pModelLoader();
 	~pModelLoader();
 
-	struct ModelInfo {
-		std::vector<glm::vec3> positions;
-		std::vector<glm::vec3> colors;
-		std::vector<glm::vec3> uvs;
-		std::vector<glm::vec3> normals;
-	};
-
 	/*Function uses provided path to load a model.
 	first it creates an Assimp Importer object,
 	uses it to create a scene containing the model to
@@ -44,13 +38,14 @@ public:
 	stored in their respective vectors which are
 	contained within the ModelInfo struct.
 	The struct is then returned.*/
-	ModelInfo loadModel(std::string path);
+	pModel* loadModel(std::string path);
 private:
 
 	/*contains instance of the pModelLoader object*/
 	static pModelLoader* _instance;
 
-	
-
+	std::vector<GLfloat>* vec3_addToArray(aiVector3D* src, std::vector<GLfloat>* dst);
+	std::vector<GLfloat>* vec3_2_addToArray(aiVector3D* src, std::vector<GLfloat>* dst);
+	std::vector<GLfloat>* vec4_3_addToArray(aiColor4D* src, std::vector<GLfloat>* dst);
 };
 

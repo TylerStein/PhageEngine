@@ -253,7 +253,7 @@ pModel * pPrimitiveMaker::makeCuboid_Tri(std::string name, glm::vec3 scale, glm:
 	pShader* basicShader = makeBasicShader();
 	pMaterial* basicMat = makeBasicMaterial(color, basicShader);
 
-	return new pModel("pCuboid_Tri", basicMat, vPositions, vColors, vCoordinates, vNormals, 36, GL_TRIANGLES);
+	return new pModel("pCuboid_Tri", basicMat, GL_TRIANGLES, 36, vPositions, 0, nullptr, vCoordinates, vNormals, nullptr, nullptr, vColors);
 }
 
 pModel * pPrimitiveMaker::makeCuboid_Quad(std::string name, glm::vec3 scale, glm::vec3 color)
@@ -303,7 +303,7 @@ pModel * pPrimitiveMaker::makePlane_Tri(std::string name, glm::vec2 scale, glm::
 
 	pShader* basicShader = makeBasicShader();
 	pMaterial* basicMat = makeBasicMaterial(color, basicShader);
-	pModel* res = new pModel("pPlane_Tri", basicMat, vPositions, vColors, vCoordinates, vNormals, 6, GL_TRIANGLES);
+	pModel* res = new pModel("pPlane_Tri", basicMat, GL_TRIANGLES, 6, vPositions, 0, nullptr, vCoordinates, vNormals, nullptr, nullptr, vColors);
 	return res;
 }
 

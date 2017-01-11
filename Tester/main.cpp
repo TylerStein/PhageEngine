@@ -5,8 +5,8 @@
 
 TestScene* game;
 PhageEngine* engine;
-int windowWidth = 1600;
-int windowHeight = 1600;
+int windowWidth = 1200;
+int windowHeight = 1200;
 char* windowTitle = "PhageGame";
 
 

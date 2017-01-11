@@ -274,7 +274,7 @@ void TestScene::onStart()
 	//Create the shader attributes and uniforms to link with the shader being used
 	uniformNameMap uniMap = uniformNameMap();
 	attribNameMap atrMap = attribNameMap();
-	//Brackets so this section can be collapsed ;)
+	//Brackets so this section can be collapsed
 	{
 		atrMap.insert(Attributes::VertexPosition, "vPosition");
 		atrMap.insert(Attributes::VertexCoordinate, "vTexCoord");
@@ -300,49 +300,29 @@ void TestScene::onStart()
 		uniMap.insert(Uniforms::Light_Count, "lightCount");
 	}
 	//Create a shader for the shape surfaces
-	pShader* tmpPhongShaderRef = engine->resourceFactory->createShader("Phong_Lighting", atrMap, uniMap, "../Resources/Shaders/phong.vert", "../Resources/Shaders/phong.frag");
-
-	//Recycle the maps for a new shader
-	uniMap = uniformNameMap();
-	atrMap = attribNameMap();
-	{
-		atrMap.insert(Attributes::VertexPosition, "vPosition");
-		atrMap.insert(Attributes::VertexCoordinate, "vTexCoord");
-		atrMap.insert(Attributes::VertexNormal, "vNormal");
-		atrMap.insert(Attributes::VertexColor, "vColor");
-
-		uniMap.insert(Uniforms::Camera_View, "cameraView");
-		uniMap.insert(Uniforms::Projection_View, "projectionView");
-		uniMap.insert(Uniforms::Model_View, "modelView");
-
-		uniMap.insert(Uniforms::DiffuseColor, "diffuseColor");
-	}
-	pShader* tmpPrimShaderRef = engine->resourceFactory->createShader("Primitive_Shader", atrMap, uniMap, "../Resources/Shaders/primitive.vert", "../Resources/Shaders/primitive.frag");
-
+	pShader* tmpPhongShaderRef = engine->resourceFactory->createShader("Phong_Lighting", atrMap, uniMap, "../Resources/Shaders/phong2.vert", "../Resources/Shaders/phong2.frag");
 
 	//Generate an image for the crate diffuse and bump maps
 	engine->resourceFactory->createImage("Crate_Diffuse", "../Resources/Images/Crate/crate1_diffuse.png");
 	engine->resourceFactory->createImage("Crate_Bump", "../Resources/Images/Crate/crate1_bump.png");
 
 	engine->resourceFactory->createImage("Floor_Diffuse", "../Resources/Images/Floor/diffuse.tga");
-	//engine->resourceFactory->createImage("Floor_bump", "../Resources/Images/bricks.png");
 
 	//Manually create some material info for the crate and floor
 	MaterialInfo crateMaterial;
 	crateMaterial.reset();
 	crateMaterial.diffuse = glm::vec3(1);
-	crateMaterial.ambient = glm::vec3(0.15f);
-	crateMaterial.specular = glm::vec3(0.1f);
-	crateMaterial.shininess = 0.7f;
+	crateMaterial.ambient = glm::vec3(0);
+	crateMaterial.specular = glm::vec3(0.6f);
+	crateMaterial.shininess = 1.2f;
 	crateMaterial.diffuseTexture = engine->resourceFactory->getImage("Crate_Diffuse");
-	crateMaterial.useLight = true;
 
 	MaterialInfo floorMaterial;
 	floorMaterial.reset();
 	floorMaterial.diffuse = glm::vec3(1);
-	floorMaterial.ambient = glm::vec3(0.15f);
-	floorMaterial.specular = glm::vec3(0.1f);
-	floorMaterial.shininess = 0.7f;
+	floorMaterial.ambient = glm::vec3(0);
+	floorMaterial.specular = glm::vec3(0.6f);
+	floorMaterial.shininess = 1.2f;
 	floorMaterial.diffuseTexture = engine->resourceFactory->getImage("Floor_Diffuse");
 
 	MaterialInfo lightModelMaterial;
@@ -353,35 +333,53 @@ void TestScene::onStart()
 	//Generate a material for the crate using the shader and material info created
 	pMaterial* tmpCrateMatRef = engine->resourceFactory->createMaterial("Crate_Material", tmpPhongShaderRef, crateMaterial);
 	pMaterial* tmpFloorMatRef = engine->resourceFactory->createMaterial("Floor_Material", tmpPhongShaderRef, floorMaterial);
-	pMaterial* tmpLightMatRef = engine->resourceFactory->createMaterial("LightSrc_Material", tmpPrimShaderRef, lightModelMaterial);
+	pMaterial* tmpLightMatRef = engine->resourceFactory->createMaterial("LightSrc_Material", engine->resourceFactory->createDebugShader(), lightModelMaterial);
 
-	//Generate the crate and floor models
-	crateRef = engine->resourceFactory->createModel("Crate_Model", tmpCrateMatRef, cubeVerts, cubeNormals, cubeColors, cubeTexCoords, cubeVertCount, GL_TRIANGLES);
+	//Create a box and set its material to look like a wooden crate
+	crateRef = engine->resourceFactory->createPrimitiveShape("Crate_Model", pPrimitiveMaker::CUBOID_TRI, glm::vec3(1.0), glm::vec3(1), tmpCrateMatRef);
+	//crateRef = engine->resourceFactory->createModel("Crate_Model", tmpCrateMatRef, cubeVerts, cubeNormals, cubeColors, cubeTexCoords, cubeVertCount, GL_TRIANGLES);
+	//crateRef = engine->resourceFactory->createModel("Crate_Model", tmpCrateMatRef, planeVerts, planeNormals, planeColors, planeUVs, planeVertCount, GL_TRIANGLES);
+
+
+	//Create a plane to act as the floor and give it the floor material
 	floorRef = engine->resourceFactory->createModel("Floor_Model", tmpFloorMatRef, planeVerts, planeNormals, planeColors, planeUVs, planeVertCount, GL_TRIANGLES);
-	lightSourceRef = engine->resourceFactory->createModel("LightSrc_Model", tmpLightMatRef, cubeVerts, cubeNormals, cubeColors, cubeTexCoords, cubeVertCount, GL_TRIANGLES);
+	
+	//Create the light models (for visualisation of their locations)
+	mdl_LightA = engine->resourceFactory->createModel("LightSrc_A_Model", tmpLightMatRef, cubeVerts, cubeNormals, cubeColors, cubeTexCoords, cubeVertCount, GL_TRIANGLES);
+	mdl_LightB = engine->resourceFactory->createModel("LightSrc_B_Model", tmpLightMatRef, cubeVerts, cubeNormals, cubeColors, cubeTexCoords, cubeVertCount, GL_TRIANGLES);
+	mdl_LightC = engine->resourceFactory->createModel("LightSrc_C_Model", tmpLightMatRef, cubeVerts, cubeNormals, cubeColors, cubeTexCoords, cubeVertCount, GL_TRIANGLES);
 
 	//Position and angle the camera view (this should be done in its own class eventually)
 	engine->renderer->setViewMatrix(glm::vec3(0.0f, 5.0f, 13.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 	//This overload of setProjectionMatrix() takes values for FOV
-	engine->renderer->setProjectionMatrix(80, 1200, 1200, 0.2, 120);
+	engine->renderer->setProjectionMatrix(80, 1200, 1200, 0.2f, 120);
 
 	//Move the models around to set up the scene initially
 	crateRef->setPosition(glm::vec3(0.0f, 0.0f, -2.0f));
-	crateRef->rotateAround(glm::vec3(0.0f, 0.0f, 1.0f), 0.0f);
 
 	floorRef->scale(glm::vec3(2.0f, 2.0f, 2.0f));
 	floorRef->setPosition(glm::vec3(0.0f, -2.0f, 0.0f));
 	floorRef->setRotation(glm::vec3(1.0f, 0.0f, 0.0f), 90.0f);
 	floorRef->setScale(glm::vec3(8.0f, 8.0f, 1.0f));
 
-	lightSourceRef->setScale(glm::vec3(0.2f));
+	//Create 3 colored lights in the scene				Type					Position						Range	Color					Intensity		Ambient				Attenuation
+	light_A = engine->lightManager->addLight(new pLight(Light::LightType::POINT, glm::vec3(-4.0f, 2.0f, 0.0f), 42, glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f), glm::vec3(0.1f), 2.0f));
+	light_B = engine->lightManager->addLight(new pLight(Light::LightType::POINT, glm::vec3(4.0f, 2.0f, 0.0f), 42, glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(1.0f), glm::vec3(0.1f), 2.0f));
+	light_C = engine->lightManager->addLight(new pLight(Light::LightType::POINT, glm::vec3(0.0f, 2.0f, 4.0f), 42, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f), glm::vec3(0.1f), 2.0f));
 
+	//Set the light model positions
+	mdl_LightA->setPosition(light_A->getPosition());
+	mdl_LightB->setPosition(light_B->getPosition());
+	mdl_LightC->setPosition(light_C->getPosition());
 
+	//Scale the light models
+	mdl_LightA->setScale(glm::vec3(0.1f));
+	mdl_LightB->setScale(glm::vec3(0.1f));
+	mdl_LightC->setScale(glm::vec3(0.1f));
 
-	//Create 2 colored lights in the scene
-	lightARef = engine->lightManager->addLight(new pLight(glm::vec3(-4.0f, 2.0f, 0.0f), 25.0f, glm::vec3(1.0, 0.0, 0.0), glm::vec3(1.25f), glm::vec3(0.05f), 1.0f));
-	lightBRef = engine->lightManager->addLight(new pLight(glm::vec3(4.0f, 2.0f, 0.0f), 25.0f, glm::vec3(0.0, 0.0, 1.0), glm::vec3(1.25f), glm::vec3(0.05f), 1.0f));
+	lastMouseX = 0;
+	lastMouseY = 0;
 }
 
 void TestScene::onPreRender()
@@ -392,15 +390,15 @@ void TestScene::onPreRender()
 
 void TestScene::onRender()
 {
-	//Render red light cube
-	lightSourceRef->setPosition(lightARef->getPosition());
-	lightSourceRef->getMaterial()->setDiffuseColor(lightARef->getColor(), false);
+	//Render the light models and update them to match their corresponding light
+	mdl_LightA->getMaterial()->setDiffuseColor(light_A->getColor(), false);
+	engine->renderer->renderModel(mdl_LightA);
 
-	engine->renderer->renderModel(lightSourceRef);
-	//Render blue light cube
-	lightSourceRef->setPosition(lightBRef->getPosition());
-	lightSourceRef->getMaterial()->setDiffuseColor(lightBRef->getColor(), false);
-	engine->renderer->renderModel(lightSourceRef);
+	mdl_LightB->getMaterial()->setDiffuseColor(light_B->getColor(), false);
+	engine->renderer->renderModel(mdl_LightB);
+
+	mdl_LightC->getMaterial()->setDiffuseColor(light_C->getColor(), false);
+	engine->renderer->renderModel(mdl_LightC);
 
 	//Render floor and crate
 	engine->renderer->renderModel(floorRef);
@@ -414,21 +412,26 @@ void TestScene::onPostRender()
 
 void TestScene::onUpdate(GLdouble deltaTime)
 {
+	//Light models follow light sources
+	mdl_LightA->setPosition(light_A->getPosition());
+	mdl_LightB->setPosition(light_B->getPosition());
+	mdl_LightC->setPosition(light_C->getPosition());
+
 	if (glfwGetKey(engine->window, GLFW_KEY_R)) {
 		floorRef->getMaterial()->getShader()->compileShader();
 	}
 
 	if (glfwGetKey(engine->window, GLFW_KEY_T)) {
-		lightSourceRef->getMaterial()->getShader()->compileShader();
+		mdl_LightA->getMaterial()->getShader()->compileShader();
 	}
 
 	//Cube movement
 	if (glfwGetKey(engine->window, GLFW_KEY_W)) {
-		crateRef->translate(glm::vec3(0, 1 * deltaTime, 0));
+		crateRef->translate(glm::vec3(0, 0.5f * deltaTime, 0));
 	}
 
 	if (glfwGetKey(engine->window, GLFW_KEY_S)) {
-		crateRef->translate(glm::vec3(0, -1 * deltaTime, 0));
+		crateRef->translate(glm::vec3(0, -0.5f * deltaTime, 0));
 	}
 
 	if (glfwGetKey(engine->window, GLFW_KEY_A)) {
@@ -447,24 +450,17 @@ void TestScene::onUpdate(GLdouble deltaTime)
 		crateRef->translate(glm::vec3(0.0f, 0.0f, -1.0f * deltaTime));
 	}
 
-	if (glfwGetKey(engine->window, GLFW_KEY_UP)) {
-		lightARef->setPosition(lightARef->getPosition() + glm::vec3(0.0f, 0.0f, -1.0f * deltaTime));
-	}
+	double lastX = lastMouseX;
+	double lastY = lastMouseY;
+	glfwGetCursorPos(engine->window, &lastMouseX, &lastMouseY);
 
-	if (glfwGetKey(engine->window, GLFW_KEY_DOWN)) {
-		lightARef->setPosition(lightARef->getPosition() + glm::vec3(0.0f, 0.0f, 1.0f * deltaTime));
-	}
+	double diffX = lastMouseX - lastX;
+	double diffY = lastMouseY - lastY;
 
-	if (glfwGetKey(engine->window, GLFW_KEY_LEFT)) {
-		lightARef->setPosition(lightARef->getPosition() + glm::vec3(-1.0f * deltaTime, 0.0f, 0.0f));
+	if (glfwGetMouseButton(engine->window, GLFW_MOUSE_BUTTON_1)) {
+		crateRef->rotateAround(glm::vec3(0, 1, 0), diffX * deltaTime);
+		crateRef->rotateAround(glm::vec3(1, 0, 0), diffY * deltaTime);
 	}
-
-	if (glfwGetKey(engine->window, GLFW_KEY_RIGHT)) {
-		lightARef->setPosition(lightARef->getPosition() + glm::vec3(1.0f * deltaTime, 0.0f, 0.0f));
-	}
-
-	//Cube rotation
-	crateRef->rotateAround(glm::vec3(0, 1, 1), 5 * deltaTime);
 
 
 	glfwPollEvents();
@@ -480,4 +476,12 @@ void TestScene::onEnd()
 
 	delete floorRef;
 	delete crateRef;
+
+	delete mdl_LightA;
+	delete mdl_LightB;
+	delete mdl_LightC;
+
+	delete light_A;
+	delete light_B;
+	delete light_C;
 }

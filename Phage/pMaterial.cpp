@@ -175,6 +175,11 @@ void pMaterial::setLightSources(std::vector<pLight*> lights)
 	}
 }
 
+void pMaterial::setUseLight(bool use)
+{
+	mat.useLight = true;
+}
+
 GLuint pMaterial::getModelMatrixID()
 {
 	return shader->getUniformID(Uniforms::Model_View);
@@ -229,4 +234,9 @@ void pMaterial::unuseMaterial()
 pShader * pMaterial::getShader()
 {
 	return shader;
+}
+
+void pMaterial::setShader(pShader * newShader)
+{
+	shader = newShader;
 }

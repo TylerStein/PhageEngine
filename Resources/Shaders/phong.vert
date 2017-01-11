@@ -4,6 +4,8 @@
 in vec3 vPosition;
 in vec3 vNormal;
 in vec2 vTexCoord;
+in vec3 vTangent;
+in vec3 vBiTangent;
 
 //View matrix in
 uniform mat4 cameraView;
@@ -19,6 +21,8 @@ out vec3 fPosition;
 out vec3 fNormal;
 out vec2 fTexCoord;
 out vec3 fColor;
+out vec3 fTangent;
+out vec3 fBiTangent;
 
 void main(){
 	mat4 modelViewMatrix = cameraView * modelView;
@@ -27,6 +31,9 @@ void main(){
 
 	fPosition = (modelView * vec4(vPosition, 1)).xyz;
 	fTexCoord = vTexCoord;
+
+	fModelView = modelView;
+	fCameraView = cameraView;
 
 	mat3 normalMatrix = transpose(inverse(mat3(modelView)));
 

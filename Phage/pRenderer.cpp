@@ -20,6 +20,9 @@ pRenderer::~pRenderer()
 void pRenderer::setupGLOptions() {
 	glEnable(GL_DEPTH_TEST); //Enable depth-testing
 	glDepthFunc(GL_LESS); //Interpret smaller values as closer
+
+	glEnable(GL_PROGRAM_POINT_SIZE_EXT);
+	glPointSize(5);
 }
 
 void pRenderer::setWindowRef(GLFWwindow* window)
@@ -45,11 +48,20 @@ void pRenderer::renderModel(pModel* model)
 	//Apply the perspective matrix
 	glUniformMatrix4fv(model->getProjectionMatrixID(), 1, GL_FALSE, &projMatrix[0][0]);
 
-	//Draw the model's points from the currently bound VAO with currently used shader
-	glDrawArrays(model->getDrawMode(), 0, model->getVertCount());
+	if (model->usesIndeces()) {
+		//Bind the buffer of the model's indexed vertices
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model->getElementBufferID());
+		//Draw the model's points from the currently bound EBO with currently used shader
+		glDrawElements(GL_TRIANGLES, model->getNumIndeces(), GL_UNSIGNED_INT, 0);
+	}
+	else {
+		//Draw the model's points from the currently bound VAO with currently used shader
+		glDrawArrays(model->getDrawMode(), 0, model->getVertCount());
+	}
 
 	model->getMaterial()->unuseMaterial();
 
+	glBindVertexArray(0);
 	glUseProgram(0);
 }
 

@@ -8,10 +8,15 @@ public:
 	pModel* crateRef;
 	pModel* floorRef;
 
-	pModel* lightSourceRef;
+	pModel* mdl_LightA;
+	pModel* mdl_LightB;
+	pModel* mdl_LightC;
 
-	pLight* lightARef;
-	pLight* lightBRef;
+	pLight* light_A;
+	pLight* light_B;
+	pLight* light_C;
+
+	double lastMouseX, lastMouseY;
 
 	TestScene();
 	~TestScene();

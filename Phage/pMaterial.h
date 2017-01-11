@@ -80,6 +80,8 @@ public:
 
 	void setLightSources(std::vector<pLight*> lights);
 
+	void setUseLight(bool use);
+
 	GLuint getModelMatrixID();
 	GLuint getViewMatrixID();
 	GLuint getProjectionMatrixID();
@@ -91,6 +93,7 @@ public:
 	void unuseMaterial();
 
 	pShader* getShader();
+	void setShader(pShader* newShader);
 private:
 	MaterialInfo mat;
 	std::string name;

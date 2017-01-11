@@ -20,71 +20,17 @@ pModelManager::~pModelManager()
 }
 
 
-pModelManager::HandleType pModelManager::createModel(std::string modelName, pMaterial* material, std::string filePath)
+pModelManager::HandleType pModelManager::loadModel(std::string modelName, std::string filePath)
 {
 	pModelManager::HandleType result(-1);
 
-	//Load the model info from file
-	pModelLoader::ModelInfo info = pModelLoader::instance()->loadModel(filePath);
-
-	//Placeholder colors
-	const int sz = info.positions.size();
-	GLfloat* vertColors = (GLfloat*)malloc(info.positions.size() * 3 * sizeof(GLfloat));
-	for (int x(0); x < info.positions.size(); ++x) {
-		vertColors[x] = 1.0f;
+	if (filePath == "") {
+		return result;
 	}
 
-	//Get positions
-	GLfloat* vertPositions = (GLfloat*)malloc(info.positions.size() * 3 * sizeof(GLfloat));
-	int y = 0;
-	for (int x(0); x < info.positions.size(); x+=3) {
-		y++;
-		vertPositions[x] = info.positions[y].x;
-		vertPositions[x + 1] = info.positions[y].y;
-		vertPositions[x + 2] = info.positions[y].z;
-	}
+	pModel* resModel = pModelLoader::instance()->loadModel(filePath);
 
-	//Get normals
-	GLfloat* vertNormals = (GLfloat*)malloc(info.normals.size() * 3 * sizeof(GLfloat));
-	y = 0;
-	for (int x(0); x < info.positions.size(); x += 3) {
-		y++;
-		vertNormals[x] = info.normals[y].x;
-		vertNormals[x + 1] = info.normals[y].y;
-		vertNormals[x + 2] = info.normals[y].z;
-	}
-
-	//Get UVs
-	GLfloat* vertUVs = (GLfloat*)malloc(info.uvs.size() * 2 * sizeof(GLfloat));
-	y = 0;
-	for (int x(0); x < info.positions.size(); x += 2) {
-		y++;
-		vertUVs[x] = info.uvs[y].x;
-		vertUVs[x + 1] = info.uvs[y].y;
-	}
-
-	//TODO: Check if there's an associated material and generate it based on that....
-	//Create a unique shader (Bad!) with material info (automatically filled)
-	//Next use manager to load one with certain flags by search?
-	attribNameMap aMap = attribNameMap();
-	uniformNameMap uMap = uniformNameMap();
-
-	pShader* tmpShader = new pShader("TempShader", aMap, uMap, "", "");
-
-	MaterialInfo materialInfo;
-
-	pMaterial* mat = new pMaterial((modelName + "_Material"), tmpShader, materialInfo);
-
-	//Create a model based on that info
-	pModel* mdl = new pModel(modelName, mat, vertPositions, vertColors, vertUVs, vertNormals, info.positions.size(), GL_QUADS);
-
-	result = modelResources.put(modelName, mdl);
-
-	//Delete vert information, the model constructor copies this info
-	delete[] vertPositions;
-	delete[] vertNormals;
-	delete[] vertColors;
-	delete[] vertUVs;
+	result = modelResources.put(modelName, resModel);
 
 	return result;
 }

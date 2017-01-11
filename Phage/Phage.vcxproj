@@ -150,9 +150,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Clock.h" />
+    <ClInclude Include="DefaultPaths.h" />
     <ClInclude Include="GameImplement.h" />
     <ClInclude Include="GLError.h" />
     <ClInclude Include="LogManager.h" />
+    <ClInclude Include="pAudioManager.h" />
     <ClInclude Include="pBoundingBox.h" />
     <ClInclude Include="pBoundingSphere.h" />
     <ClInclude Include="pFrustum.h" />
@@ -182,10 +184,13 @@
     <ClInclude Include="pSceneObject.h" />
     <ClInclude Include="pShader.h" />
     <ClInclude Include="pShaderManager.h" />
+    <ClInclude Include="pSoundSystem.h" />
+    <ClInclude Include="pTransform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Clock.cpp" />
     <ClCompile Include="LogManager.cpp" />
+    <ClCompile Include="pAudioManager.cpp" />
     <ClCompile Include="pBoundingBox.cpp" />
     <ClCompile Include="pBoundingSphere.cpp" />
     <ClCompile Include="pFrustum.cpp" />
@@ -214,10 +219,13 @@
     <ClCompile Include="pSceneObject.cpp" />
     <ClCompile Include="pShader.cpp" />
     <ClCompile Include="pShaderManager.cpp" />
+    <ClCompile Include="pSoundSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resources\Shaders\phong.frag" />
     <None Include="..\Resources\Shaders\phong.vert" />
+    <None Include="..\Resources\Shaders\phong2.frag" />
+    <None Include="..\Resources\Shaders\phong2.vert" />
     <None Include="..\Resources\Shaders\Primitive.frag" />
     <None Include="..\Resources\Shaders\Primitive.vert" />
     <None Include="PhageDiagram.cd" />

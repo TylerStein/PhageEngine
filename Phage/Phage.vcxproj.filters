@@ -85,8 +85,18 @@
     <ClCompile Include="pPlane.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
-    <ClCompile Include="pPrimitiveMaker.cpp" />
-    <ClCompile Include="pLightManager.cpp" />
+    <ClCompile Include="pLightManager.cpp">
+      <Filter>Management</Filter>
+    </ClCompile>
+    <ClCompile Include="pAudioManager.cpp">
+      <Filter>Management</Filter>
+    </ClCompile>
+    <ClCompile Include="pPrimitiveMaker.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="pSoundSystem.cpp">
+      <Filter>Asset</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Clock.h">
@@ -182,8 +192,24 @@
     <ClInclude Include="pPlane.h">
       <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="pPrimitiveMaker.h" />
-    <ClInclude Include="pLightManager.h" />
+    <ClInclude Include="DefaultPaths.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="pTransform.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="pLightManager.h">
+      <Filter>Management</Filter>
+    </ClInclude>
+    <ClInclude Include="pAudioManager.h">
+      <Filter>Management</Filter>
+    </ClInclude>
+    <ClInclude Include="pPrimitiveMaker.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="pSoundSystem.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="PhageDiagram.cd" />
@@ -197,6 +223,12 @@
       <Filter>Resources\Shaders</Filter>
     </None>
     <None Include="..\Resources\Shaders\Primitive.vert">
+      <Filter>Resources\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\phong2.frag">
+      <Filter>Resources\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\phong2.vert">
       <Filter>Resources\Shaders</Filter>
     </None>
   </ItemGroup>
