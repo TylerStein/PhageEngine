@@ -74,7 +74,8 @@ void main(){
 	
 	ambientSum /= lightCount;
 
+
 	vec4 texColor = texture(fTexture, fTexCoord);
 
-	finalColor = vec4(ambientSum + diffuseSum, 1.0) * texColor + vec4(specularSum, 1.0);
+	finalColor = (vec4(ambientSum + diffuseSum, 1.0) + vec4(specularSum, 1.0)) * texColor;
 }

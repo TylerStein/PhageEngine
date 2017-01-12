@@ -304,8 +304,8 @@ void TestScene::onStart()
 
 	//Generate an image for the crate diffuse and bump maps
 	engine->resourceFactory->createImage("Crate_Diffuse", "../Resources/Images/Crate/crate1_diffuse.png");
-	engine->resourceFactory->createImage("Crate_Bump", "../Resources/Images/Crate/crate1_bump.png");
-
+	engine->resourceFactory->createImage("Chair_Diffuse", "../Resources/Models/chair/diffuse.tga");
+	engine->resourceFactory->createImage("Barrel_Diffuse", "../Resources/Models/Oildrum/oildrum_diffuse.jpg");
 	engine->resourceFactory->createImage("Floor_Diffuse", "../Resources/Images/Floor/diffuse.tga");
 
 	//Manually create some material info for the crate and floor
@@ -316,6 +316,14 @@ void TestScene::onStart()
 	crateMaterial.specular = glm::vec3(0.6f);
 	crateMaterial.shininess = 1.2f;
 	crateMaterial.diffuseTexture = engine->resourceFactory->getImage("Crate_Diffuse");
+
+	MaterialInfo chairMaterial;
+	chairMaterial.reset();
+	chairMaterial.diffuseTexture = engine->resourceFactory->getImage("Chair_Diffuse");
+
+	MaterialInfo barrelMaterial;
+	barrelMaterial.reset();
+	barrelMaterial.diffuseTexture = engine->resourceFactory->getImage("Barrel_Diffuse");
 
 	MaterialInfo floorMaterial;
 	floorMaterial.reset();
@@ -332,14 +340,17 @@ void TestScene::onStart()
 
 	//Generate a material for the crate using the shader and material info created
 	pMaterial* tmpCrateMatRef = engine->resourceFactory->createMaterial("Crate_Material", tmpPhongShaderRef, crateMaterial);
+	pMaterial* tmpChairMatRef = engine->resourceFactory->createMaterial("Chair_Material", tmpPhongShaderRef, chairMaterial);
+	pMaterial* tmpBarrelMatRef = engine->resourceFactory->createMaterial("Barrel_Material", tmpPhongShaderRef, barrelMaterial);
 	pMaterial* tmpFloorMatRef = engine->resourceFactory->createMaterial("Floor_Material", tmpPhongShaderRef, floorMaterial);
 	pMaterial* tmpLightMatRef = engine->resourceFactory->createMaterial("LightSrc_Material", engine->resourceFactory->createDebugShader(), lightModelMaterial);
 
 	//Create a box and set its material to look like a wooden crate
-	crateRef = engine->resourceFactory->createPrimitiveShape("Crate_Model", pPrimitiveMaker::CUBOID_TRI, glm::vec3(1.0), glm::vec3(1), tmpCrateMatRef);
+	crateRef = engine->resourceFactory->createPrimitiveShape("Crate_Model", pPrimitiveMaker::CUBOID_TRI, glm::vec3(1), glm::vec3(1), tmpCrateMatRef);
 	//crateRef = engine->resourceFactory->createModel("Crate_Model", tmpCrateMatRef, cubeVerts, cubeNormals, cubeColors, cubeTexCoords, cubeVertCount, GL_TRIANGLES);
 	//crateRef = engine->resourceFactory->createModel("Crate_Model", tmpCrateMatRef, planeVerts, planeNormals, planeColors, planeUVs, planeVertCount, GL_TRIANGLES);
-
+	chairRef = engine->resourceFactory->loadModel("Chair_Model", "../Resources/Models/chair/chair.obj", tmpChairMatRef);
+	barrelRef = engine->resourceFactory->loadModel("Barrel_Model", "../Resources/Models/Oildrum/oildrum.obj", tmpBarrelMatRef);
 
 	//Create a plane to act as the floor and give it the floor material
 	floorRef = engine->resourceFactory->createModel("Floor_Model", tmpFloorMatRef, planeVerts, planeNormals, planeColors, planeUVs, planeVertCount, GL_TRIANGLES);
@@ -356,7 +367,14 @@ void TestScene::onStart()
 	engine->renderer->setProjectionMatrix(80, 1200, 1200, 0.2f, 120);
 
 	//Move the models around to set up the scene initially
-	crateRef->setPosition(glm::vec3(0.0f, 0.0f, -2.0f));
+	crateRef->setPosition(glm::vec3(-2.0f, 1.0f, -2.0f));
+	crateRef->setScale(glm::vec3(0.5f));
+
+	chairRef->setPosition(glm::vec3(0.0f, 1.0f, -2.0f));
+	chairRef->setScale(glm::vec3(0.5f));
+
+	barrelRef->setPosition(glm::vec3(1.75f, 0.75f, 2.0f));
+	barrelRef->setScale(glm::vec3(2.0f));
 
 	floorRef->scale(glm::vec3(2.0f, 2.0f, 2.0f));
 	floorRef->setPosition(glm::vec3(0.0f, -2.0f, 0.0f));
@@ -364,9 +382,9 @@ void TestScene::onStart()
 	floorRef->setScale(glm::vec3(8.0f, 8.0f, 1.0f));
 
 	//Create 3 colored lights in the scene				Type					Position						Range	Color					Intensity		Ambient				Attenuation
-	light_A = engine->lightManager->addLight(new pLight(Light::LightType::POINT, glm::vec3(-4.0f, 2.0f, 0.0f), 42, glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f), glm::vec3(0.1f), 2.0f));
-	light_B = engine->lightManager->addLight(new pLight(Light::LightType::POINT, glm::vec3(4.0f, 2.0f, 0.0f), 42, glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(1.0f), glm::vec3(0.1f), 2.0f));
-	light_C = engine->lightManager->addLight(new pLight(Light::LightType::POINT, glm::vec3(0.0f, 2.0f, 4.0f), 42, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f), glm::vec3(0.1f), 2.0f));
+	light_A = engine->lightManager->addLight(new pLight(Light::LightType::POINT, glm::vec3(-4.0f, 2.0f, 0.0f), 42, glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f), glm::vec3(0.0f), 2.0f));
+	light_B = engine->lightManager->addLight(new pLight(Light::LightType::POINT, glm::vec3(4.0f, 2.0f, 0.0f), 42, glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(1.0f), glm::vec3(0.0f), 2.0f));
+	light_C = engine->lightManager->addLight(new pLight(Light::LightType::POINT, glm::vec3(0.0f, 2.0f, 4.0f), 42, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f), glm::vec3(0.0f), 2.0f));
 
 	//Set the light model positions
 	mdl_LightA->setPosition(light_A->getPosition());
@@ -403,6 +421,8 @@ void TestScene::onRender()
 	//Render floor and crate
 	engine->renderer->renderModel(floorRef);
 	engine->renderer->renderModel(crateRef);
+	engine->renderer->renderModel(chairRef);
+	engine->renderer->renderModel(barrelRef);
 }
 
 void TestScene::onPostRender()
@@ -427,27 +447,27 @@ void TestScene::onUpdate(GLdouble deltaTime)
 
 	//Cube movement
 	if (glfwGetKey(engine->window, GLFW_KEY_W)) {
-		crateRef->translate(glm::vec3(0, 0.5f * deltaTime, 0));
+		chairRef->translate(glm::vec3(0, 0.5f * deltaTime, 0));
 	}
 
 	if (glfwGetKey(engine->window, GLFW_KEY_S)) {
-		crateRef->translate(glm::vec3(0, -0.5f * deltaTime, 0));
+		chairRef->translate(glm::vec3(0, -0.5f * deltaTime, 0));
 	}
 
 	if (glfwGetKey(engine->window, GLFW_KEY_A)) {
-		crateRef->translate(glm::vec3(-1 * deltaTime, 0, 0));
+		chairRef->translate(glm::vec3(-1 * deltaTime, 0, 0));
 	}
 
 	if (glfwGetKey(engine->window, GLFW_KEY_D)) {
-		crateRef->translate(glm::vec3(1 * deltaTime, 0, 0));
+		chairRef->translate(glm::vec3(1 * deltaTime, 0, 0));
 	}
 
 	if (glfwGetKey(engine->window, GLFW_KEY_Q)) {
-		crateRef->translate(glm::vec3(0.0f, 0.0f, 1.0f * deltaTime));
+		chairRef->translate(glm::vec3(0.0f, 0.0f, 1.0f * deltaTime));
 	}
 
 	if (glfwGetKey(engine->window, GLFW_KEY_E)) {
-		crateRef->translate(glm::vec3(0.0f, 0.0f, -1.0f * deltaTime));
+		chairRef->translate(glm::vec3(0.0f, 0.0f, -1.0f * deltaTime));
 	}
 
 	double lastX = lastMouseX;
@@ -458,8 +478,8 @@ void TestScene::onUpdate(GLdouble deltaTime)
 	double diffY = lastMouseY - lastY;
 
 	if (glfwGetMouseButton(engine->window, GLFW_MOUSE_BUTTON_1)) {
-		crateRef->rotateAround(glm::vec3(0, 1, 0), diffX * deltaTime);
-		crateRef->rotateAround(glm::vec3(1, 0, 0), diffY * deltaTime);
+		chairRef->rotateAround(glm::vec3(0, 1, 0), diffX * deltaTime);
+		chairRef->rotateAround(glm::vec3(1, 0, 0), diffY * deltaTime);
 	}
 
 

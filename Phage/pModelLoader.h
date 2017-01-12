@@ -38,7 +38,7 @@ public:
 	stored in their respective vectors which are
 	contained within the ModelInfo struct.
 	The struct is then returned.*/
-	pModel* loadModel(std::string path);
+	pModel* loadModel(std::string path, pMaterial* mat = nullptr);
 private:
 
 	/*contains instance of the pModelLoader object*/

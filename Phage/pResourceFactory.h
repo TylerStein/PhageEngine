@@ -38,7 +38,7 @@ public:
 
 	//Functions to receive assets from cache or file
 	//Retreive a model from file
-	pModel* loadModel(std::string name, std::string path);
+	pModel* loadModel(std::string name, std::string path, pMaterial* mat = nullptr);
 	//Retreive an existing model
 	pModel* getModel(std::string name);
 	//Retreive a material from file

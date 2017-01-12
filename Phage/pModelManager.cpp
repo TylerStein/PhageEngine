@@ -20,7 +20,7 @@ pModelManager::~pModelManager()
 }
 
 
-pModelManager::HandleType pModelManager::loadModel(std::string modelName, std::string filePath)
+pModelManager::HandleType pModelManager::loadModel(std::string modelName, std::string filePath, pMaterial* mat)
 {
 	pModelManager::HandleType result(-1);
 
@@ -28,7 +28,7 @@ pModelManager::HandleType pModelManager::loadModel(std::string modelName, std::s
 		return result;
 	}
 
-	pModel* resModel = pModelLoader::instance()->loadModel(filePath);
+	pModel* resModel = pModelLoader::instance()->loadModel(filePath, mat);
 
 	result = modelResources.put(modelName, resModel);
 

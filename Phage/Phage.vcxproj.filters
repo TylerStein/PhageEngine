@@ -1,0 +1,275 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Clock.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="LogManager.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="pAsset.cpp">
+      <Filter>Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="pBoundingBox.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="pBoundingSphere.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="pFileReader.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="PhageEngine.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="pImage.cpp">
+      <Filter>Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="pLight.cpp">
+      <Filter>Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="pMaterial.cpp">
+      <Filter>Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="pModel.cpp">
+      <Filter>Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="pFrustum.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="pImageManager.cpp">
+      <Filter>Management</Filter>
+    </ClCompile>
+    <ClCompile Include="pMaterialManager.cpp">
+      <Filter>Management</Filter>
+    </ClCompile>
+    <ClCompile Include="pModelManager.cpp">
+      <Filter>Management</Filter>
+    </ClCompile>
+    <ClCompile Include="pImageLoader.cpp">
+      <Filter>Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="pModelLoader.cpp">
+      <Filter>Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="pHashtable.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="pRenderer.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="pMatrixStack.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="pResourceManager.cpp">
+      <Filter>Management</Filter>
+    </ClCompile>
+    <ClCompile Include="pResourceFactory.cpp">
+      <Filter>Management</Filter>
+    </ClCompile>
+    <ClCompile Include="pSceneObject.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="pSceneNode.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="pSceneGraph.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="pShaderManager.cpp">
+      <Filter>Management</Filter>
+    </ClCompile>
+    <ClCompile Include="pPlane.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="pShader.cpp">
+      <Filter>Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="pAudioManager.cpp">
+      <Filter>Management</Filter>
+    </ClCompile>
+    <ClCompile Include="pPrimitiveMaker.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="pLightManager.cpp">
+      <Filter>Management</Filter>
+    </ClCompile>
+    <ClCompile Include="pSoundSystem.cpp">
+      <Filter>Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="pScript.cpp">
+      <Filter>Asset</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Clock.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="GameImplement.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="GLError.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="LogManager.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="pAsset.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="pBoundingBox.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="pBoundingSphere.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="pFileReader.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="pEnums.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="PhageEngine.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="pImage.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="pLight.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="pMaterial.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="pModel.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="pFrustum.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="pImageManager.h">
+      <Filter>Management</Filter>
+    </ClInclude>
+    <ClInclude Include="pMaterialManager.h">
+      <Filter>Management</Filter>
+    </ClInclude>
+    <ClInclude Include="pModelManager.h">
+      <Filter>Management</Filter>
+    </ClInclude>
+    <ClInclude Include="pImageLoader.h">
+      <Filter>Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="pModelLoader.h">
+      <Filter>Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="pHashtable.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="pRenderer.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="pMatrixStack.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="pResourceManager.h">
+      <Filter>Management</Filter>
+    </ClInclude>
+    <ClInclude Include="pResourceFactory.h">
+      <Filter>Management</Filter>
+    </ClInclude>
+    <ClInclude Include="pSceneObject.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="pSceneNode.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="pSceneGraph.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="pShaderManager.h">
+      <Filter>Management</Filter>
+    </ClInclude>
+    <ClInclude Include="pPlane.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="pShader.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="DefaultPaths.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="pAudioManager.h">
+      <Filter>Management</Filter>
+    </ClInclude>
+    <ClInclude Include="pPrimitiveMaker.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="pLightManager.h">
+      <Filter>Management</Filter>
+    </ClInclude>
+    <ClInclude Include="pSoundSystem.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="pScript.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="pTransform.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="PhageDiagram.cd" />
+    <None Include="..\Resources\Shaders\phong.frag">
+      <Filter>Resources\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\phong.vert">
+      <Filter>Resources\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\phong2.frag">
+      <Filter>Resources\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\phong2.vert">
+      <Filter>Resources\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\Primitive.frag">
+      <Filter>Resources\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\Primitive.vert">
+      <Filter>Resources\Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{1cf93174-1289-4ddb-ae9a-b6c1f0cb8795}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Asset">
+      <UniqueIdentifier>{79b3c54c-bc11-4bf0-9711-b23518dd2891}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Management">
+      <UniqueIdentifier>{308a3cf3-8e70-4851-aeee-5ff8fae917b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Loader">
+      <UniqueIdentifier>{b56d343a-ae2a-4493-90fc-c4e88ce3a03a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{41943697-c6c9-4667-ba8a-bf9f575a568c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{c6062981-8e41-4ea6-b2d2-2e2674ed002a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{971be234-0b1c-4a5c-a179-d3d2837622f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{619a4b38-7ed4-4490-8113-acf0b52d8a66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\Shaders">
+      <UniqueIdentifier>{72df31c6-964e-4c4a-a5b3-90fca9036e62}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt">
+      <Filter>Scene</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

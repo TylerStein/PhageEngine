@@ -7,7 +7,7 @@ pModelLoader::pModelLoader(){}
 
 pModelLoader::~pModelLoader(){}
 
-pModel* pModelLoader::loadModel(std::string path)
+pModel* pModelLoader::loadModel(std::string path, pMaterial* mat)
 {
 	pModel* resModel = nullptr;
 
@@ -106,9 +106,9 @@ pModel* pModelLoader::loadModel(std::string path)
 
 	if (meshName == "") { meshName = "LoadedMesh"; }
 
-	pMaterial* mat = nullptr;
-
-	mat = pResourceFactory::instance()->createDebugMaterial();
+	if (mat == nullptr) {
+		mat = pResourceFactory::instance()->createDebugMaterial();
+	}
 
 	resModel = new pModel(meshName, mat, GL_TRIANGLES, vPositions, vIndeces, vCoordinates, vNormals, vTangents, vBiTangents, vColors);
 

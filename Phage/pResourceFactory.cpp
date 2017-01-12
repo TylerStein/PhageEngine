@@ -154,11 +154,11 @@ pShader * pResourceFactory::createShader(std::string shaderName, attribNameMap a
 	return shaderManager->getShader(shdr);
 }
 
-pModel * pResourceFactory::loadModel(std::string name, std::string path)
+pModel * pResourceFactory::loadModel(std::string name, std::string path, pMaterial* mat)
 {
 	pResourceHandle<pModel> mdl = pResourceHandle<pModel>(-1);
 	
-	mdl = modelManager->loadModel(name, path);
+	mdl = modelManager->loadModel(name, path, mat);
 
 	return modelManager->getModel(mdl);
 }

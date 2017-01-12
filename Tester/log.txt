@@ -1,2 +1,1 @@
 Image loaded has a 0 width or height!
-Image loaded has a 0 width or height!

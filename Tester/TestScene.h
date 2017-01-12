@@ -6,6 +6,8 @@ class TestScene : public GameImplement
 {
 public:
 	pModel* crateRef;
+	pModel* chairRef;
+	pModel* barrelRef;
 	pModel* floorRef;
 
 	pModel* mdl_LightA;
