@@ -150,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Clock.h" />
+    <ClInclude Include="DefaultPaths.h" />
     <ClInclude Include="GameImplement.h" />
     <ClInclude Include="GLError.h" />
     <ClInclude Include="LogManager.h" />
@@ -162,6 +163,7 @@
     <ClInclude Include="pImageLoader.h" />
     <ClInclude Include="pImageManager.h" />
     <ClInclude Include="pLight.h" />
+    <ClInclude Include="pLightManager.h" />
     <ClInclude Include="pMaterialManager.h" />
     <ClInclude Include="pMatrixStack.h" />
     <ClInclude Include="pAsset.h" />
@@ -173,6 +175,7 @@
     <ClInclude Include="pModelLoader.h" />
     <ClInclude Include="pModelManager.h" />
     <ClInclude Include="pPlane.h" />
+    <ClInclude Include="pPrimitiveMaker.h" />
     <ClInclude Include="pRenderer.h" />
     <ClInclude Include="pResourceFactory.h" />
     <ClInclude Include="pResourceManager.h" />
@@ -183,6 +186,7 @@
     <ClInclude Include="pShader.h" />
     <ClInclude Include="pShaderManager.h" />
     <ClInclude Include="pSoundSystem.h" />
+    <ClInclude Include="pTransform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Clock.cpp" />
@@ -196,6 +200,7 @@
     <ClCompile Include="pImageLoader.cpp" />
     <ClCompile Include="pImageManager.cpp" />
     <ClCompile Include="pLight.cpp" />
+    <ClCompile Include="pLightManager.cpp" />
     <ClCompile Include="pMaterialManager.cpp" />
     <ClCompile Include="pMatrixStack.cpp" />
     <ClCompile Include="pAsset.cpp" />
@@ -206,6 +211,7 @@
     <ClCompile Include="pModelLoader.cpp" />
     <ClCompile Include="pModelManager.cpp" />
     <ClCompile Include="pPlane.cpp" />
+    <ClCompile Include="pPrimitiveMaker.cpp" />
     <ClCompile Include="pRenderer.cpp" />
     <ClCompile Include="pResourceFactory.cpp" />
     <ClCompile Include="pResourceManager.cpp" />
@@ -218,8 +224,13 @@
     <ClCompile Include="pSoundSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Resources\Shaders\SimpleFragmentShader.frag" />
-    <None Include="..\Resources\Shaders\SimpleVertexShader.vert" />
+    <None Include="..\Resources\Shaders\phong.frag" />
+    <None Include="..\Resources\Shaders\phong.vert" />
+    <None Include="..\Resources\Shaders\phong2.frag" />
+    <None Include="..\Resources\Shaders\phong2.vert" />
+    <None Include="..\Resources\Shaders\Primitive.frag" />
+    <None Include="..\Resources\Shaders\Primitive.vert" />
+    <None Include="PhageDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

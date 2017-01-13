@@ -5,22 +5,26 @@
 class TestScene : public GameImplement
 {
 public:
-	pShader* simpleShader;
-	pImage* testImg;
-	pMaterial* testMat;
-	pModel* testModel;
-<<<<<<< HEAD
-	pModelLoader* modelLoader;
-	pModel* loadedModel;
-=======
+	pModel* crateRef;
+	pModel* chairRef;
+	pModel* barrelRef;
+	pModel* floorRef;
+
+	pModel* mdl_LightA;
+	pModel* mdl_LightB;
+	pModel* mdl_LightC;
+
+	pLight* light_A;
+	pLight* light_B;
+	pLight* light_C;
+
+	double lastMouseX, lastMouseY;
+
 	pSoundSystem *soundSystem;
-<<<<<<< HEAD
->>>>>>> refs/remotes/origin/Development
-=======
+
 	pSceneGraph* sceneGraph;
 	pSceneNode* sceneNode;
 	pSceneObject* sceneObject;
->>>>>>> refs/remotes/origin/Development
 
 	TestScene();
 	~TestScene();

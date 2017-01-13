@@ -1,7 +1,7 @@
 #include "pResourceFactory.h"
+#include "DefaultPaths.h"
 
-
-
+pResourceFactory* pResourceFactory::_instance = 0;
 pResourceFactory::pResourceFactory()
 {
 }
@@ -12,6 +12,15 @@ pResourceFactory::~pResourceFactory()
 	delete modelManager;
 	delete materialManager;
 	delete imageManager;
+	delete shaderManager;
+}
+
+pResourceFactory * pResourceFactory::instance()
+{
+	if (_instance == 0) {
+		_instance = new pResourceFactory();
+	}
+	return _instance;
 	delete soundSystemManager;
 }
 
@@ -43,13 +52,23 @@ void pResourceFactory::setAudioManager(pAudioManager * audioManager)
 pModel * pResourceFactory::createModel(std::string name, pMaterial * mat, GLfloat * vertPositions,  GLfloat * vertNormals, GLfloat * vertColors, GLfloat * vertUVs, GLuint numVerts, GLenum drawMode)
 {
 	//Create the model in memory
-	//pModel* mdl = new pModel(name, mat, vertPositions, vertNormals, vertColors, vertUVs, numVerts);
-	pModel* mdl = new pModel(name, mat, vertPositions, vertColors, vertUVs, vertNormals, numVerts, drawMode);
+	pModel* mdl = new pModel(name, mat, drawMode, numVerts, vertPositions, 0, nullptr, vertUVs, vertNormals, nullptr, nullptr, vertColors);
 	//Add the model to the manager table
 	pResourceHandle<pModel> mdlH = modelManager->addModel(name, mdl);
 	//Return the model from the table
 	return modelManager->getModel(mdlH);
 }
+
+pModel * pResourceFactory::createModel(std::string name, pMaterial * material, GLenum drawMode, std::vector<GLfloat> vPositions, std::vector<GLuint> vIndeces, std::vector<GLfloat> vCoordinates, std::vector<GLfloat> vNormals, std::vector<GLfloat> vTangents, std::vector<GLfloat> vBiTangents, std::vector<GLfloat> vColors)
+{
+	//Create the model in memory
+	pModel* mdl = new pModel(name, material, drawMode, vPositions, vIndeces, vCoordinates, vNormals, vTangents, vBiTangents, vColors);
+	//Add the model to the manager table
+	pResourceHandle<pModel> mdlH = modelManager->addModel(name, mdl);
+	//Return the model from the table
+	return modelManager->getModel(mdlH);
+}
+
 
 pModel * pResourceFactory::createModel(std::string dir, pShader *shader, GLenum drawMode)
 {
@@ -111,6 +130,16 @@ pImage * pResourceFactory::createImage(std::string name, std::string filePath)
 	return imageManager->getImage(imgH);
 }
 
+pModel * pResourceFactory::createPrimitiveShape(std::string name, pPrimitiveMaker::Primitives prim, glm::vec3 scale, glm::vec3 color, pMaterial* customMaterial)
+{
+	pModel* tmpModel = pPrimitiveMaker::instance()->GetPrimitive(name, prim, scale, color);
+	if (customMaterial != nullptr) { tmpModel->setMaterial(customMaterial); }
+	
+	pResourceHandle<pModel> mdlH = modelManager->addModel(name, tmpModel);
+
+	return modelManager->getModel(mdlH);
+}
+
 pImage * pResourceFactory::createDebugImage(std::string name)
 {
 	//Create the image in memory
@@ -121,11 +150,56 @@ pImage * pResourceFactory::createDebugImage(std::string name)
 	return imageManager->getImage(imgH);
 }
 
-pShader * pResourceFactory::createShader(std::string name, std::string vertShaderPath, std::string fragShaderPath, ShaderInfo shaderInfo)
+pMaterial * pResourceFactory::createDebugMaterial()
 {
-	pResourceHandle<pShader> shdr = shaderManager->createShader(name, vertShaderPath, fragShaderPath, shaderInfo);
+	pMaterial* tmpMat = materialManager->getMaterial("Primitive");
+
+	if (tmpMat == nullptr) {
+		MaterialInfo matInfo;
+		matInfo.reset();
+		pResourceHandle<pMaterial> mtlH = materialManager->addMaterial("Primitive", new pMaterial("Primitive", createDebugShader(), matInfo));
+		return materialManager->getMaterial(mtlH);
+	}
+}
+
+pShader * pResourceFactory::createDebugShader()
+{
+	pShader* tmpShader = shaderManager->getShader("Primitive");
+	
+	//Shader does not already exist
+	if (tmpShader == nullptr) {
+		attribNameMap atrMap = attribNameMap();
+		uniformNameMap uniMap = uniformNameMap();
+		{
+			atrMap.insert(Attributes::VertexPosition, "vPosition");
+			atrMap.insert(Attributes::VertexCoordinate, "vTexCoord");
+			atrMap.insert(Attributes::VertexNormal, "vNormal");
+			atrMap.insert(Attributes::VertexColor, "vColor");
+
+			uniMap.insert(Uniforms::Camera_View, "cameraView");
+			uniMap.insert(Uniforms::Projection_View, "projectionView");
+			uniMap.insert(Uniforms::Model_View, "modelView");
+
+			uniMap.insert(Uniforms::DiffuseColor, "diffuseColor");
+		}
+		pResourceHandle<pShader> shdrH = shaderManager->addShader("Primitive", new pShader("Primitive", atrMap, uniMap, shader_primitive_vert, shader_primitive_frag));
+		return shaderManager->getShader(shdrH);
+	}
+
+#ifdef _DEBUG
+		std::cout << "Primitive shader already loaded" << std::endl;
+#endif
+	return tmpShader;
+}
+
+pShader * pResourceFactory::createShader(std::string shaderName, attribNameMap attribs, uniformNameMap uniforms, std::string vertShaderPath, std::string fragShaderPath)
+{
+	pResourceHandle<pShader> shdr = pResourceHandle<pShader>(-1);
+	shdr = shaderManager->createShader(shaderName, attribs, uniforms, vertShaderPath, fragShaderPath);
 	return shaderManager->getShader(shdr);
 }
+
+pModel * pResourceFactory::loadModel(std::string name, std::string path, pMaterial* mat)
 
 pSoundSystem * pResourceFactory::createSoundSystem(std::string soundSystemName, std::string audioFilePath, bool loop)
 {
@@ -135,12 +209,11 @@ pSoundSystem * pResourceFactory::createSoundSystem(std::string soundSystemName, 
 
 pModel * pResourceFactory::getModel(std::string name, std::string path)
 {
-	//Generate a model and get it's handle
-	//pResourceHandle<pModel> mdlHandle = modelManager->createModel(name, path);
-	//Get the model from the hashtable
-	//return modelManager->getModel(mdlHandle);
-	std::cout << "Attempted to read model from file, not yet functional!" << std::endl;
-	return nullptr;
+	pResourceHandle<pModel> mdl = pResourceHandle<pModel>(-1);
+	
+	mdl = modelManager->loadModel(name, path, mat);
+
+	return modelManager->getModel(mdl);
 }
 
 pModel * pResourceFactory::getModel(std::string name)

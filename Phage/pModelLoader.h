@@ -6,6 +6,9 @@
 #include <glm\glm.hpp>
 #include <vector>
 #include <string>
+<<<<<<< HEAD
+#include "pModel.h"
+=======
 #include "pMaterial.h"
 #include "pImage.h"
 #include <iostream>
@@ -40,7 +43,6 @@ public:
 	~pModelLoader();
 
 
-
 	
 
 	/*Function uses provided path to load a model.
@@ -53,13 +55,17 @@ public:
 	stored in their respective vectors which are
 	contained within the ModelInfo struct.
 	The struct is then returned.*/
-	ModelInfo loadModel(std::string path, pShader *shader);
+	pModel* loadModel(std::string path, pMaterial* mat = nullptr);
+
+	//ModelInfo loadModel(std::string path, pShader *shader);
+
 private:
 
 	/*contains instance of the pModelLoader object*/
 	static pModelLoader* _instance;
 
-	
-
+	std::vector<GLfloat>* vec3_addToArray(aiVector3D* src, std::vector<GLfloat>* dst);
+	std::vector<GLfloat>* vec3_2_addToArray(aiVector3D* src, std::vector<GLfloat>* dst);
+	std::vector<GLfloat>* vec4_3_addToArray(aiColor4D* src, std::vector<GLfloat>* dst);
 };
 

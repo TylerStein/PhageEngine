@@ -28,7 +28,9 @@ private:
 	//Uses pImageLoader to get the image data
 	void loadImage();
 
-	void setupTexture();
+	void setupTexture(GLenum texturePlace);
+	void useTexture(GLenum texturePlace);
+	void unuseTexture(GLenum texturePlace);
 	
 	//ID of the openGL texture object
 	GLuint textureID;

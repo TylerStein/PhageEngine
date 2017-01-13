@@ -20,7 +20,9 @@ pRenderer::~pRenderer()
 void pRenderer::setupGLOptions() {
 	glEnable(GL_DEPTH_TEST); //Enable depth-testing
 	glDepthFunc(GL_LESS); //Interpret smaller values as closer
-	glEnable(GL_TEXTURE_2D); //Enable 2d textures
+
+	glEnable(GL_PROGRAM_POINT_SIZE_EXT);
+	glPointSize(5);
 }
 
 void pRenderer::setWindowRef(GLFWwindow* window)
@@ -33,10 +35,11 @@ void pRenderer::renderModel(pModel* model)
 	//Bind the model's vertex array id
 	glBindVertexArray(model->getVertexArrayID());
 
-	//Link the shader program ID
-	glLinkProgram(model->getShaderProgramID());
-	//Use the shader program!
+	//Use the shader program
 	glUseProgram(model->getShaderProgramID());
+
+	//Apply the model's mateiral
+	model->UseMaterial();
 
 	//Apply the model position matrix
 	glUniformMatrix4fv(model->getModelMatrixID(), 1, GL_FALSE, &model->getModelMatrix()[0][0]);
@@ -45,8 +48,21 @@ void pRenderer::renderModel(pModel* model)
 	//Apply the perspective matrix
 	glUniformMatrix4fv(model->getProjectionMatrixID(), 1, GL_FALSE, &projMatrix[0][0]);
 
-	//Draw the model's points from the currently bound VAO with currently used shader
-	glDrawArrays(model->getDrawMode(), 0, model->getVertCount());
+	if (model->usesIndeces()) {
+		//Bind the buffer of the model's indexed vertices
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model->getElementBufferID());
+		//Draw the model's points from the currently bound EBO with currently used shader
+		glDrawElements(GL_TRIANGLES, model->getNumIndeces(), GL_UNSIGNED_INT, 0);
+	}
+	else {
+		//Draw the model's points from the currently bound VAO with currently used shader
+		glDrawArrays(model->getDrawMode(), 0, model->getVertCount());
+	}
+
+	model->getMaterial()->unuseMaterial();
+
+	glBindVertexArray(0);
+	glUseProgram(0);
 }
 
 void pRenderer::setViewMatrix(glm::vec3 cameraLocation, glm::vec3 cameraTarget, glm::vec3 cameraUp)
@@ -60,6 +76,18 @@ void pRenderer::setViewMatrix(glm::vec3 cameraLocation, glm::vec3 cameraTarget, 
 void pRenderer::setProjectionMatrix(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat nearPlane, GLfloat farPlane)
 {
 	projMatrix = glm::frustum(left, right, bottom, top, nearPlane, farPlane);
+}
+
+void pRenderer::setProjectionMatrix(GLfloat fov, GLfloat windowWidth, GLfloat windowHeight, GLfloat near, GLfloat far)
+{
+	float w = windowWidth;
+	float h = windowHeight;
+	float ratio = w / h;
+	float top = tan(fov * glm::pi<float>() / 360.0f) * near;
+	float bottom = -top;
+	float left = ratio * bottom;
+	float right = ratio * top;
+	setProjectionMatrix(left, right, bottom, top, near, far);
 }
 
 void pRenderer::initDefaultView()

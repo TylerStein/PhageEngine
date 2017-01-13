@@ -11,14 +11,13 @@ public:
 	pRenderer(GLFWwindow* window);
 	~pRenderer();
 
-	pLight* sceneLight;
-
 	void setupGLOptions();
 	void setWindowRef(GLFWwindow* window);
 	void renderModel(pModel* model);
 
 	void setViewMatrix(glm::vec3 cameraLocation, glm::vec3 cameraTarget, glm::vec3 cameraUp);
 	void setProjectionMatrix(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat nearPlane, GLfloat farPlane);
+	void setProjectionMatrix(GLfloat fov, GLfloat windowWidth, GLfloat windowHeight, GLfloat near, GLfloat far);
 private:
 	void initDefaultView();
 

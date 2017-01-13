@@ -11,7 +11,9 @@ class pModel : public pAsset
 	friend class pBoundingBox;
 
 public:
-	pModel(std::string name, pMaterial* material, GLfloat* verts, GLfloat* vertColors, GLfloat* vertUVs, GLfloat* vertNorms, GLuint numVertices, GLenum drawMode);
+	//pModel(std::string name, pMaterial* material, GLfloat* verts, GLfloat* vertColors, GLfloat* vertUVs, GLfloat* vertNorms, GLuint numVertices, GLenum drawMode);
+	pModel(std::string name, pMaterial* material, GLenum drawMode, GLuint numVerts, GLfloat* vPositions, GLuint numIndeces = 0, GLuint* vIndeces = nullptr, GLfloat* vCoordinates = nullptr, GLfloat* vNormals = nullptr, GLfloat* vTangents = nullptr, GLfloat* vBiTangents = nullptr, GLfloat* vColors = nullptr);
+	pModel(std::string name, pMaterial* material, GLenum drawMode, std::vector<GLfloat> vPositions, std::vector<GLuint> vIndeces, std::vector<GLfloat> vCoordinates, std::vector<GLfloat> vNormals, std::vector<GLfloat> vTangents, std::vector<GLfloat> vBiTangents, std::vector<GLfloat> vColors);
 	~pModel();
 
 	std::string getName() override;
@@ -22,12 +24,16 @@ public:
 	GLuint getVertexBufferID(GLuint index);
 	GLuint getModelMatrixID();
 	GLuint getViewMatrixID();
+	GLuint getElementBufferID();
 	GLuint getProjectionMatrixID();
 
 	glm::mat4 getModelMatrix();
 	pMaterial* getMaterial();
+	void setMaterial(pMaterial* newMaterial);
 
 	GLenum getDrawMode();
+
+	void UseMaterial();
 
 	//Adds rotation relative to current around a provided axis by <amount> degrees
 	void rotateAround(glm::vec3 rot, GLfloat amount);
@@ -42,6 +48,9 @@ public:
 	//Set the rotation relative to 0
 	void setRotation(glm::vec3 rot, GLfloat amount);
 
+	bool usesIndeces();
+	GLuint getNumIndeces();
+
 	pType type;
 
 private:
@@ -49,17 +58,31 @@ private:
 	void setupModel();
 	void initDefaultMatrix();
 
+	bool useVertices;
+	bool useNormals;
+	bool useTexCoords;
+	bool useColors;
+	bool useTangents;
+	bool useBiTangents;
+	bool useIndeces;
+
+	std::vector<GLuint> vIndeces;
+
+	std::vector<GLfloat> vPositions;
+	std::vector<GLfloat> vNormals;
+	std::vector<GLfloat> vCoordinates;
+	std::vector<GLfloat> vColors;
+	std::vector<GLfloat> vTangents;
+	std::vector<GLfloat> vBiTangents;
+
 	pMaterial* material;
+
 	GLuint vertCount;
-	GLfloat* vertices;
-	GLfloat* vertexColors;
-	GLfloat* vertexUVs;
-	GLfloat* vertexNormals;
-	GLuint VBOID[3]; //3 vertex buffer objects, for points, colors, and UVs
+
+	GLuint numIndeces;
+	GLuint VBOID[6]; //6 possible vertex buffer objects (points, normals, coords, colors, tangents, bitangents)
 	GLuint VAOID; //One vertex array object to hold the vertex buffer objects
-	GLuint modelMatrixLocation;
-	GLuint viewMatrixLocation;
-	GLuint projectionMatrixLocation;
+	GLuint EBO; //Potentially uses an element buffer (for indexed vertices)
 
 	GLenum drawMode;
 

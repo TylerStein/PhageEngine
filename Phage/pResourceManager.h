@@ -94,7 +94,7 @@ private:
 	Hashtable<std::string, pResourceHandle<ResourceType>> *nameTable;
 public:
 	//Create an empty ResourceManager with a default pHashtable size
-	pResourceManager(void)
+	pResourceManager()
 	{
 		nameTable = new Hashtable<std::string, pResourceHandle<ResourceType>>(111);
 	}
@@ -106,13 +106,13 @@ public:
 	}
 
 	//Destructor.This will not delete any of the resources stored in the ResourceManager.
-	~pResourceManager(void)
+	~pResourceManager()
 	{
-		if (nameTable != NULL)
-		{
-			delete nameTable;
-			nameTable = NULL;
-		}
+		//if (nameTable != NULL)
+		//{
+			//delete nameTable;
+			//nameTable = NULL;
+		//}
 	}
 
 	//Trys to add a new resource to ResourceManager, if its not new then it does nothing
@@ -179,39 +179,42 @@ public:
 	//Remove all keys and values from the manager, deleting them.
 	void clearKeysAndValues()
 	{
-		std::vector<int>	deleteKeyList;
-		Hashtable<std::string, pResourceHandle<ResourceType> >::iterator iter = nameTable->begin();
-
-		// First, we traverse the hashtable and delete the models.
+		/*
+			std::vector<int>	deleteKeyList;
+			Hashtable<std::string, pResourceHandle<ResourceType> >::iterator iter = nameTable->begin();
 		
-		// We save the string keys to be deleted and delete these on a second pass so we do not mess with the iterator.
-		while (iter != nameTable->end())
-		{
-			HashItem<std::string, pResourceHandle<ResourceType> > item = *iter;
-			pResourceHandle<ResourceType> handle = item.getValue();
-			if (!handle.isNull())
-			{
-				ResourceType *res = resourceList[handle.getIndex()];
-				if (res != NULL)
-				{
-					delete res;
-					resourceList[handle.getIndex()] = NULL;
-				}
-				deleteKeyList.push_back(item.getKey());
-			}
-			iter++;
-		}
 
-		std::vector<int>::iterator viter = deleteKeyList.begin();
-		while (viter != deleteKeyList.end())
-		{
-			int ke = *viter;
-			nameTable->remove(ke);
-			viter++;
-		}
+			// First, we traverse the hashtable and delete the models.
+		
+			// We save the string keys to be deleted and delete these on a second pass so we do not mess with the iterator.
+			while (iter != nameTable->end())
+			{
+				HashItem<std::string, pResourceHandle<ResourceType> > item = *iter;
+				pResourceHandle<ResourceType> handle = item.getValue();
+				if (!handle.isNull())
+				{
+					ResourceType *res = resourceList[handle.getIndex()];
+					if (res != NULL)
+					{
+						delete res;
+						resourceList[handle.getIndex()] = NULL;
+					}
+					deleteKeyList.push_back(item.getKey());
+				}
+				iter++;
+			}
+
+			std::vector<int>::iterator viter = deleteKeyList.begin();
+			while (viter != deleteKeyList.end())
+			{
+				int ke = *viter;
+				nameTable->remove(ke);
+				viter++;
+			}
+*/
 
 		// Now, clear the resource list so it does not grow forever
-		resourceList.clear();
+		//resourceList.clear();
 	}
 
 	//check for errors by using nametables method but with a fed message
