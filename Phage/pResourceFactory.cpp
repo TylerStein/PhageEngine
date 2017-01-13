@@ -21,6 +21,7 @@ pResourceFactory * pResourceFactory::instance()
 		_instance = new pResourceFactory();
 	}
 	return _instance;
+	delete soundSystemManager;
 }
 
 void pResourceFactory::setModelManager(pModelManager* modelManager)
@@ -43,6 +44,11 @@ void pResourceFactory::setShaderManager(pShaderManager * shaderManager)
 	this->shaderManager = shaderManager;
 }
 
+void pResourceFactory::setAudioManager(pAudioManager * audioManager)
+{
+	this->soundSystemManager = audioManager;
+}
+
 pModel * pResourceFactory::createModel(std::string name, pMaterial * mat, GLfloat * vertPositions,  GLfloat * vertNormals, GLfloat * vertColors, GLfloat * vertUVs, GLuint numVerts, GLenum drawMode)
 {
 	//Create the model in memory
@@ -63,6 +69,45 @@ pModel * pResourceFactory::createModel(std::string name, pMaterial * material, G
 	return modelManager->getModel(mdlH);
 }
 
+
+pModel * pResourceFactory::createModel(std::string dir, pShader *shader, GLenum drawMode)
+{
+	ModelInfo info = pModelLoader::instance()->loadModel(dir, shader);
+
+	std::string name = "name";
+	GLfloat *tVerts;
+	GLfloat *tCVerts;
+	GLfloat *tNormals;
+	GLfloat *uvVerts;
+
+	tVerts = (GLfloat*)malloc(sizeof(GLfloat) * info.positions.size());
+	tCVerts = (GLfloat*)malloc(sizeof(GLfloat) * info.colors.size());
+	tNormals = (GLfloat*)malloc(sizeof(GLfloat) * info.normals.size());
+	uvVerts = (GLfloat*)malloc(sizeof(GLfloat) * info.uvs.size());
+	
+	
+	for (int i = 0; i < info.positions.size(); i++) {
+		tVerts[i] = info.positions[i];
+		tNormals[i] = info.normals[i];
+	}
+	for (int i = 0; i < info.colors.size(); i++)
+	{
+		tCVerts[i] = info.colors[i];
+	}
+	for (int i = 0; i < info.uvs.size(); i++) {
+		uvVerts[i] = info.uvs[i];
+	}
+
+	pModel* mdl = new pModel((char*)name.c_str(), info.mat, tVerts, tCVerts, uvVerts, tNormals, info.numVerts, drawMode);
+
+	free(tVerts);
+	free(tCVerts);
+	free(tNormals);
+	free(uvVerts);
+	pResourceHandle<pModel> mdlH = modelManager->addModel(name, mdl);
+
+	return modelManager->getModel(mdlH);
+}
 
 pMaterial * pResourceFactory::createMaterial(std::string name, pShader* shader, MaterialInfo info)
 {
@@ -155,6 +200,14 @@ pShader * pResourceFactory::createShader(std::string shaderName, attribNameMap a
 }
 
 pModel * pResourceFactory::loadModel(std::string name, std::string path, pMaterial* mat)
+
+pSoundSystem * pResourceFactory::createSoundSystem(std::string soundSystemName, std::string audioFilePath, bool loop)
+{
+	pResourceHandle<pSoundSystem> sndSystm = soundSystemManager->createSoundSystem(soundSystemName, audioFilePath, loop);
+	return soundSystemManager->getSoundSystem(sndSystm);
+}
+
+pModel * pResourceFactory::getModel(std::string name, std::string path)
 {
 	pResourceHandle<pModel> mdl = pResourceHandle<pModel>(-1);
 	
@@ -196,3 +249,10 @@ pShader * pResourceFactory::getShader(std::string name)
 {
 	return shaderManager->getShader(name);
 }
+
+pSoundSystem * pResourceFactory::getSoundSystem(std::string name)
+{
+	return soundSystemManager->getSoundSystem(name);
+}
+
+

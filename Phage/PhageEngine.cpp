@@ -21,6 +21,7 @@ PhageEngine::PhageEngine(GameImplement* game)
 	imageManager = new pImageManager();
 	shaderManager = new pShaderManager();
 	lightManager = pLightManager::instance();
+	audioManager = new pAudioManager();
 
 	//Give the modelmanager the other managers
 	modelManager->setMaterialManager(materialManager);
@@ -32,6 +33,7 @@ PhageEngine::PhageEngine(GameImplement* game)
 	resourceFactory->setMaterialManager(materialManager);
 	resourceFactory->setImageManager(imageManager);
 	resourceFactory->setShaderManager(shaderManager);
+	resourceFactory->setAudioManager(audioManager);
 }
 
 

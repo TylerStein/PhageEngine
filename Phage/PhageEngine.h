@@ -6,6 +6,10 @@
 #include "pResourceFactory.h"
 #include "GameImplement.h"
 #include "pLightManager.h"
+#include "pSoundSystem.h"
+#include "pSceneGraph.h"
+#include "pSceneNode.h"
+#include "pSceneObject.h"
 
 class PhageEngine
 {
@@ -43,5 +47,7 @@ private:
 	pMaterialManager* materialManager;
 	pImageManager* imageManager;
 	pShaderManager* shaderManager;
+	pAudioManager* audioManager;
+	pSceneGraph* sceneGraph;
 };
 

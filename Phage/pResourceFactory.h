@@ -6,6 +6,8 @@
 #include "pModelManager.h"
 #include "pPrimitiveMaker.h"
 #include "pShaderManager.h"
+#include <array>
+#include "pAudioManager.h"
 
 class pResourceFactory
 {
@@ -17,10 +19,12 @@ public:
 	void setMaterialManager(pMaterialManager* materialManager);
 	void setImageManager(pImageManager* imageManager);
 	void setShaderManager(pShaderManager* shaderManager);
+	void setAudioManager(pAudioManager* audioManager);
 
 	//Functions to create assets
 	//Create a model
 	pModel* createModel(std::string name, pMaterial* mat, GLfloat* vertPositions, GLfloat* vertNormals, GLfloat* vertColors, GLfloat* vertUVs, GLuint numVerts, GLenum drawMode);
+	
 	pModel* createModel(std::string name, pMaterial * material, GLenum drawMode, std::vector<GLfloat> vPositions,
 		std::vector<GLuint> vIndeces = std::vector<GLuint>(),
 		std::vector<GLfloat> vCoordinates = std::vector<GLfloat>(),
@@ -28,13 +32,17 @@ public:
 		std::vector<GLfloat> vTangents = std::vector<GLfloat>(),
 		std::vector<GLfloat> vBiTangents = std::vector<GLfloat>(),
 		std::vector<GLfloat> vColors = std::vector<GLfloat>());
-	
+	pModel* createModel(std::string dir, pShader *shader, GLenum drawMode);
+
 	//Create a material
 	pMaterial* createMaterial(std::string name, pShader* shader, MaterialInfo info);
 	//Create an image
 	pImage* createImage(std::string name, std::string filePath);
 	//Create a shader
 	pShader* createShader(std::string shaderName, attribNameMap attribs, uniformNameMap uniforms, std::string vertShaderPath, std::string fragShaderPath);
+
+	//create a soundSystem
+	pSoundSystem* createSoundSystem(std::string soundSystemName, std::string audioFilePath, bool loop);
 
 	//Functions to receive assets from cache or file
 	//Retreive a model from file
@@ -51,6 +59,8 @@ public:
 	pImage* getImage(std::string name);
 	//Retreive existing shader
 	pShader* getShader(std::string name);
+	//retrieve existing sound
+	pSoundSystem* getSoundSystem(std::string name);
 
 	
 	//Primitive/Debug accessors
@@ -79,5 +89,6 @@ private:
 	pMaterialManager* materialManager;
 	pImageManager* imageManager;
 	pShaderManager* shaderManager;
+	pAudioManager* soundSystemManager;
 };
 

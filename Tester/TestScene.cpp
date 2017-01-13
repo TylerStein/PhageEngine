@@ -268,6 +268,7 @@ void TestScene::onStart()
 		0, -1, 0,
 	};
 
+
 	//Print controls
 	std::cout << "Controls:\nMove cube with WASD, Q/E for Z movement\nMove light with IJKL, U/O for Z movement\n\n";
 
@@ -398,6 +399,16 @@ void TestScene::onStart()
 
 	lastMouseX = 0;
 	lastMouseY = 0;
+
+	LogManager::instance()->warning("Here be the log manager.");
+
+	//play the sound
+	soundSystem->playSound();
+
+	sceneNode = new pSceneNode();
+	sceneGraph = new pSceneGraph();
+	sceneObject = new pSceneObject("testObject");
+	sceneGraph->renderSceneGraph(sceneNode, engine->renderer);
 }
 
 void TestScene::onPreRender()
@@ -482,6 +493,10 @@ void TestScene::onUpdate(GLdouble deltaTime)
 		chairRef->rotateAround(glm::vec3(1, 0, 0), diffY * deltaTime);
 	}
 
+	testModel->rotateAround(glm::vec3(0, 1, 0), 5 * deltaTime);
+
+	//sound update method required to run
+	soundSystem->update();
 
 	glfwPollEvents();
 }
@@ -504,4 +519,5 @@ void TestScene::onEnd()
 	delete light_A;
 	delete light_B;
 	delete light_C;
+
 }
