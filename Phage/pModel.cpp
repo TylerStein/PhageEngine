@@ -275,11 +275,8 @@ void pModel::setupModel()
 	
 	GLError::printError(__FILE__, __LINE__);
 
-	useVertices = shader->hasAttribute(Attributes::VertexPosition);
-	useColors = shader->hasAttribute(Attributes::VertexColor);
-	useNormals = shader->hasAttribute(Attributes::VertexNormal);
-	useTexCoords = shader->hasAttribute(Attributes::VertexCoordinate);
 
+	//Create the vertex array object to hold our VBOs and bind it
 	glGenVertexArrays(1, &VAOID);
 
 	glBindVertexArray(VAOID);
@@ -384,15 +381,8 @@ void pModel::setupModel()
 		currentBuffer++;
 	}
 
-
-	modelMatrixLocation = glGetUniformLocation(getShaderProgramID(), material->getShaderInfo().modelViewAttribute);
-	viewMatrixLocation = glGetUniformLocation(getShaderProgramID(), material->getShaderInfo().viewAttribute);
-	projectionMatrixLocation = glGetUniformLocation(getShaderProgramID(), material->getShaderInfo().projectionAttribute);
-
-	if (material != NULL)
-	{
-		material->setupTexture();
-	}
+	
+	//GLError::printError(__FILE__, __LINE__);
 }
 
 void pModel::initDefaultMatrix()

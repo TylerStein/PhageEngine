@@ -103,7 +103,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)\ThirdParty\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32.lib;glew32s.lib;FreeImage.lib;assimp.lib;opengl32.lib;fmod64_vc.lib;glfw3.lib</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;glew32s.lib;FreeImage.lib;assimp.lib;opengl32.lib;glfw3.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -142,7 +142,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)\ThirdParty\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32.lib;glew32s.lib;FreeImage.lib;assimp.lib;opengl32.lib;fmod64_vc.lib;glfw3.lib</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;glew32s.lib;FreeImage.lib;assimp.lib;opengl32.lib;glfw3.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>

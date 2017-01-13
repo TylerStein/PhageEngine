@@ -20,12 +20,6 @@ public:
 
 	double lastMouseX, lastMouseY;
 
-	pSoundSystem *soundSystem;
-
-	pSceneGraph* sceneGraph;
-	pSceneNode* sceneNode;
-	pSceneObject* sceneObject;
-
 	TestScene();
 	~TestScene();
 
