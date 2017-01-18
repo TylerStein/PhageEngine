@@ -224,10 +224,12 @@
     <ClCompile Include="pSoundSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Resources\Shaders\phong.frag" />
-    <None Include="..\Resources\Shaders\phong.vert" />
+    <None Include="..\Resources\Shaders\BlinnPhong.frag" />
+    <None Include="..\Resources\Shaders\BlinnPhong.vert" />
     <None Include="..\Resources\Shaders\phong2.frag" />
     <None Include="..\Resources\Shaders\phong2.vert" />
+    <None Include="..\Resources\Shaders\PhongMaterial.frag" />
+    <None Include="..\Resources\Shaders\PhongMaterial.vert" />
     <None Include="..\Resources\Shaders\Primitive.frag" />
     <None Include="..\Resources\Shaders\Primitive.vert" />
     <None Include="PhageDiagram.cd" />

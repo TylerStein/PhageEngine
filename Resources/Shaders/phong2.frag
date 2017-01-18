@@ -35,19 +35,29 @@ out vec4 finalColor;
 //Gamma const
 const float screenGamma = 2.0;
 
+void falloff(int idx, float dist, out float percentOut){
+	float dst = (lRange[idx] - dist) / lRange[idx];
+	percentOut = clamp(dst, 0, 1);
+}
+
 void light(int idx, vec3 pos, vec3 norm, out vec3 ambientOut, out vec3 diffuseOut, out vec3 specularOut){
 	vec3 n = normalize(norm);
-	vec3 s = normalize(lPosition[idx] - pos);
+	vec3 diff = lPosition[idx] - pos;
+	float dist = length(diff);
+	vec3 s = normalize(diff);
 	vec3 v = normalize(-pos);
 	vec3 r = reflect(-s, n);
 
-	ambientOut = lAmbient[idx] * fAmbient;
+	float rangeMult = 1;
+	falloff(idx, dist, rangeMult);
+
+	ambientOut = lAmbient[idx] * fAmbient * rangeMult;
 
 	float sDotN = max(dot(s, n), 0.0);
 
-	diffuseOut = lColor[idx] * fDiffuse * sDotN;
+	diffuseOut = lColor[idx] * fDiffuse * sDotN * rangeMult;
 
-	specularOut = lPower[idx] * fSpecular * pow(max(dot(r,v), 0.0), fShininess);
+	specularOut = lPower[idx] * fSpecular * pow(max(dot(r,v), 0.0), fShininess) * rangeMult;
 }
 
 void main(){
@@ -74,8 +84,14 @@ void main(){
 	
 	ambientSum /= lightCount;
 
+	//Clamp the ambient value to be material's ambient at minimum
+	float aX = clamp(ambientSum.x, fAmbient.x, 1.0);
+	float aY = clamp(ambientSum.y, fAmbient.y, 1.0);
+	float aZ = clamp(ambientSum.z, fAmbient.z, 1.0);
+
+	vec3 finalAmb = vec3(aX, aY, aZ);
 
 	vec4 texColor = texture(fTexture, fTexCoord);
 
-	finalColor = (vec4(ambientSum + diffuseSum, 1.0) + vec4(specularSum, 1.0)) * texColor;
+	finalColor = (vec4(finalAmb + diffuseSum, 1.0) + vec4(specularSum, 1.0)) * texColor;
 }

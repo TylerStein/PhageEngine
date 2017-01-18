@@ -11,6 +11,7 @@ class pModel : public pAsset
 	friend class pBoundingBox;
 
 public:
+	enum Buffers {POSITIONS, NORMALS, TEXCOORDS, INDECES, COLORS, TANGENTS, BITANGENTS };
 	//pModel(std::string name, pMaterial* material, GLfloat* verts, GLfloat* vertColors, GLfloat* vertUVs, GLfloat* vertNorms, GLuint numVertices, GLenum drawMode);
 	pModel(std::string name, pMaterial* material, GLenum drawMode, GLuint numVerts, GLfloat* vPositions, GLuint numIndeces = 0, GLuint* vIndeces = nullptr, GLfloat* vCoordinates = nullptr, GLfloat* vNormals = nullptr, GLfloat* vTangents = nullptr, GLfloat* vBiTangents = nullptr, GLfloat* vColors = nullptr);
 	pModel(std::string name, pMaterial* material, GLenum drawMode, std::vector<GLfloat> vPositions, std::vector<GLuint> vIndeces, std::vector<GLfloat> vCoordinates, std::vector<GLfloat> vNormals, std::vector<GLfloat> vTangents, std::vector<GLfloat> vBiTangents, std::vector<GLfloat> vColors);
@@ -21,13 +22,15 @@ public:
 	GLuint getShaderProgramID();
 	GLuint getVertCount();
 	GLuint getVertexArrayID();
-	GLuint getVertexBufferID(GLuint index);
 	GLuint getModelMatrixID();
 	GLuint getViewMatrixID();
 	GLuint getElementBufferID();
 	GLuint getProjectionMatrixID();
+	GLuint getNormalMatrixID();
 
 	glm::mat4 getModelMatrix();
+	glm::mat3 getNormalMatrix();
+
 	pMaterial* getMaterial();
 	void setMaterial(pMaterial* newMaterial);
 
@@ -47,6 +50,12 @@ public:
 	void setPosition(glm::vec3 pos);
 	//Set the rotation relative to 0
 	void setRotation(glm::vec3 rot, GLfloat amount);
+	//Set the draw mode
+	void setDrawMode(GLenum drawMode);
+	//Scale the UV
+	void scaleTextureCoordinates(glm::vec2 scale);
+
+	void deleteBuffers();
 
 	bool usesIndeces();
 	GLuint getNumIndeces();
@@ -80,9 +89,16 @@ private:
 	GLuint vertCount;
 
 	GLuint numIndeces;
-	GLuint VBOID[6]; //6 possible vertex buffer objects (points, normals, coords, colors, tangents, bitangents)
 	GLuint VAOID; //One vertex array object to hold the vertex buffer objects
-	GLuint EBO; //Potentially uses an element buffer (for indexed vertices)
+	GLuint ElementBufferID; //Potentially uses an element buffer (for indexed vertices)
+
+	GLuint BufferID_Positions;
+	GLuint BufferID_Normals;
+	GLuint BufferID_Coordinates;
+	GLuint BufferID_Colors;
+	GLuint BufferID_Indeces;
+	GLuint BufferID_Tangents;
+	GLuint BufferID_BiTangents;
 
 	GLenum drawMode;
 
@@ -91,6 +107,7 @@ private:
 	glm::mat4 scaleMatrix;
 
 	glm::mat4 modelMatrix;
+	glm::mat3 normalMatrix;
 
 	std::string name;
 };

@@ -41,18 +41,36 @@ void pRenderer::renderModel(pModel* model)
 	//Apply the model's mateiral
 	model->UseMaterial();
 
+	pShader* shdr = model->getMaterial()->getShader();
+
 	//Apply the model position matrix
-	glUniformMatrix4fv(model->getModelMatrixID(), 1, GL_FALSE, &model->getModelMatrix()[0][0]);
+	if (shdr->hasUniform(Uniforms::Model_View)) {
+		glUniformMatrix4fv(model->getModelMatrixID(), 1, GL_FALSE, &model->getModelMatrix()[0][0]);
+	}
 	//Apply the view matrix
-	glUniformMatrix4fv(model->getViewMatrixID(), 1, GL_FALSE, &cameraView[0][0]);
+	if (shdr->hasUniform(Uniforms::Camera_View)) {
+		glUniformMatrix4fv(model->getViewMatrixID(), 1, GL_FALSE, &cameraView[0][0]);
+	}
 	//Apply the perspective matrix
-	glUniformMatrix4fv(model->getProjectionMatrixID(), 1, GL_FALSE, &projMatrix[0][0]);
+	if (shdr->hasUniform(Uniforms::Projection_View)) {
+		glUniformMatrix4fv(model->getProjectionMatrixID(), 1, GL_FALSE, &projMatrix[0][0]);
+	}
+	//Apply the normal matrix
+	if (shdr->hasUniform(Uniforms::Normal_View)) {
+		glUniformMatrix3fv(model->getNormalMatrixID(), 1, GL_FALSE, &model->getNormalMatrix()[0][0]);
+	}
+
+	//Feed the model the camera position
+	if (shdr->hasUniform(Uniforms::Camera_Position)) {
+		glUniform3f(shdr->getUniformID(Uniforms::Camera_Position), camLoc.x, camLoc.y, camLoc.z);
+	}
 
 	if (model->usesIndeces()) {
 		//Bind the buffer of the model's indexed vertices
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model->getElementBufferID());
 		//Draw the model's points from the currently bound EBO with currently used shader
-		glDrawElements(GL_TRIANGLES, model->getNumIndeces(), GL_UNSIGNED_INT, 0);
+		glDrawElements(model->getDrawMode(), model->getNumIndeces(), GL_UNSIGNED_INT, nullptr);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 	else {
 		//Draw the model's points from the currently bound VAO with currently used shader

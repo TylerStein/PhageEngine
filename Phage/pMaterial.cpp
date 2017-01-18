@@ -195,6 +195,11 @@ GLuint pMaterial::getProjectionMatrixID()
 	return shader->getUniformID(Uniforms::Projection_View);
 }
 
+GLuint pMaterial::getNormalMatrixID()
+{
+	return shader->getUniformID(Uniforms::Normal_View);
+}
+
 
 GLuint pMaterial::getShaderProgramID()
 {

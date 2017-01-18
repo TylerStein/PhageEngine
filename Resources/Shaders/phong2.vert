@@ -11,6 +11,7 @@ in vec3 vBiTangent;
 uniform mat4 cameraView;
 uniform mat4 modelView;
 uniform mat4 projView;
+uniform mat3 normalView;
 
 //Camera position out
 out mat4 fCameraView;
@@ -24,14 +25,14 @@ out vec3 fTangent;
 out vec3 fBiTangent;
 
 void main(){
-	mat3 normalMatrix = transpose(inverse(mat3(modelView)));
+	fNormal = normalize(normalView * vNormal);
 
-	fNormal = normalize(normalMatrix * vNormal);
 	fPosition = vec3(modelView * vec4(vPosition, 1));
 
 	fTexCoord = vTexCoord;
 	fTangent = vTangent;
 	fBiTangent = vBiTangent;
+
 
 	gl_Position =  projView * cameraView * modelView * vec4(vPosition, 1);
 }

@@ -219,12 +219,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="PhageDiagram.cd" />
-    <None Include="..\Resources\Shaders\phong.frag">
-      <Filter>Resources\Shaders</Filter>
-    </None>
-    <None Include="..\Resources\Shaders\phong.vert">
-      <Filter>Resources\Shaders</Filter>
-    </None>
     <None Include="..\Resources\Shaders\phong2.frag">
       <Filter>Resources\Shaders</Filter>
     </None>
@@ -235,6 +229,18 @@
       <Filter>Resources\Shaders</Filter>
     </None>
     <None Include="..\Resources\Shaders\Primitive.vert">
+      <Filter>Resources\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\PhongMaterial.frag">
+      <Filter>Resources\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\PhongMaterial.vert">
+      <Filter>Resources\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\BlinnPhong.frag">
+      <Filter>Resources\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\BlinnPhong.vert">
       <Filter>Resources\Shaders</Filter>
     </None>
   </ItemGroup>

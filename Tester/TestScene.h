@@ -5,18 +5,16 @@
 class TestScene : public GameImplement
 {
 public:
-	pModel* crateRef;
 	pModel* chairRef;
-	pModel* barrelRef;
+
+	pModel* sphereRef;
+
 	pModel* floorRef;
+	pModel* wallRef;
 
 	pModel* mdl_LightA;
-	pModel* mdl_LightB;
-	pModel* mdl_LightC;
-
+	
 	pLight* light_A;
-	pLight* light_B;
-	pLight* light_C;
 
 	double lastMouseX, lastMouseY;
 

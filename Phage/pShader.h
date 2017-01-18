@@ -126,15 +126,22 @@ enum Uniforms {
 	Camera_View = 1 << 9, //The camera view matrix
 	Projection_View = 1 << 10, //The projection matrix
 	Model_View = 1 << 11, //The model movement matrix
+	Normal_View = 1 << 12, //The model normal matrix
 
 	//Light Properties
-	Light_Position = 1 << 12,
-	Light_Color = 1 << 13,
-	Light_Power = 1 << 14,
-	Light_Attenuation = 1 << 15,
-	Light_Ambient = 1 << 16,
-	Light_Range = 1 << 17,
-	Light_Count = 1 << 18
+	Light_Position = 1 << 13,
+	Light_Color = 1 << 14,
+	Light_Power = 1 << 15,
+	Light_Attenuation = 1 << 16,
+	Light_Ambient = 1 << 17,
+	Light_Range = 1 << 18,
+	Light_Count = 1 << 19,
+	Light_Angle = 1 << 20,
+	Light_ConeMin = 1 << 21,
+	Light_ConeMax = 1 << 22,
+
+	//Misc
+	Camera_Position = 1 << 23
 };
 
 typedef SimpleKeyValue<Attributes, GLuint> attribLocMap;

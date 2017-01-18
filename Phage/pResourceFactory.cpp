@@ -92,8 +92,7 @@ pImage * pResourceFactory::createImage(std::string name, std::string filePath)
 
 pModel * pResourceFactory::createPrimitiveShape(std::string name, pPrimitiveMaker::Primitives prim, glm::vec3 scale, glm::vec3 color, pMaterial* customMaterial)
 {
-	pModel* tmpModel = pPrimitiveMaker::instance()->GetPrimitive(name, prim, scale, color);
-	if (customMaterial != nullptr) { tmpModel->setMaterial(customMaterial); }
+	pModel* tmpModel = pPrimitiveMaker::instance()->GetPrimitive(name, prim, scale, customMaterial, color);
 	
 	pResourceHandle<pModel> mdlH = modelManager->addModel(name, tmpModel);
 
