@@ -118,9 +118,9 @@ void TestScene::onStart()
 	engine->renderer->setProjectionMatrix(80, 1200, 1200, 0.2f, 240);
 
 	//Move the models around to set up the scene initially
-	chairRef->setPosition(glm::vec3(-6.0f, -6.0f, -8.0f));
-	chairRef->setRotation(glm::vec3(0, 1, 0), 45);
-	chairRef->setScale(glm::vec3(0.5f));
+	//chairRef->setPosition(glm::vec3(-6.0f, -6.0f, -8.0f));
+	//chairRef->setRotation(glm::vec3(0, 1, 0), 45);
+	//chairRef->setScale(glm::vec3(0.5f));
 
 	//Create 1 light in the scene						Type						Position				Range	Color		Intensity		Ambient		Attenuation
 	light_A = engine->lightManager->addLight(new pLight(Light::LightType::POINT, glm::vec3(0.0f, 6.0f, 0.0), 24, glm::vec3(1), glm::vec3(1), glm::vec3(0.0f), 1.0f));
@@ -135,6 +135,17 @@ void TestScene::onStart()
 
 	lastMouseX = 0;
 	lastMouseY = 0;
+
+	scene = new pScene();
+	//						Model	 Script	  SoundSystem		position					rotation   rot amount	scale					name			  parent
+	scene->createNewObject(chairRef, nullptr, nullptr, glm::vec3(-6.0f, -6.0f, -8.0f), glm::vec3(0, 1, 0), 45, glm::vec3(0.5), std::string("chairObject"), nullptr);
+
+	for (int i = 0; i < scene->sceneGraph->getRootSceneNode()->attachedSceneNodeList.size(); ++i)
+	{
+		std::cout << scene->sceneGraph->getRootSceneNode()->attachedSceneNodeList[i]->getName() << std::endl;
+	}
+
+	std::cout << "Finding name of chair object...: " << scene->sceneGraph->findSceneNode(std::string("chairObject"), scene->sceneGraph->getRootSceneNode())->getName() << std::endl;
 }
 
 void TestScene::onPreRender()
@@ -148,7 +159,10 @@ void TestScene::onRender()
 	engine->renderer->renderModel(mdl_LightA);
 
 	//Render geometry and chair
-	engine->renderer->renderModel(chairRef);
+	//engine->renderer->renderModel(chairRef);
+	
+	//render the scene
+	scene->sceneGraph->renderSceneGraph(engine->renderer, scene->sceneGraph->getRootSceneNode());
 
 	engine->renderer->renderModel(sphereRef);
 

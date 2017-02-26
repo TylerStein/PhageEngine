@@ -179,7 +179,9 @@
     <ClInclude Include="pRenderer.h" />
     <ClInclude Include="pResourceFactory.h" />
     <ClInclude Include="pResourceManager.h" />
+    <ClInclude Include="pScene.h" />
     <ClInclude Include="pSceneGraph.h" />
+    <ClInclude Include="pSceneManager.h" />
     <ClInclude Include="pSceneNode.h" />
     <ClInclude Include="pSceneObject.h" />
     <ClInclude Include="pScript.h" />
@@ -215,7 +217,9 @@
     <ClCompile Include="pRenderer.cpp" />
     <ClCompile Include="pResourceFactory.cpp" />
     <ClCompile Include="pResourceManager.cpp" />
+    <ClCompile Include="pScene.cpp" />
     <ClCompile Include="pSceneGraph.cpp" />
+    <ClCompile Include="pSceneManager.cpp" />
     <ClCompile Include="pSceneNode.cpp" />
     <ClCompile Include="pSceneObject.cpp" />
     <ClCompile Include="pScript.cpp" />

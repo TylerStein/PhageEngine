@@ -2,56 +2,71 @@
 #include <algorithm>
 #include "LogManager.h"
 
+#include "glm\glm.hpp"
+#include "glm\gtx\transform.hpp"
+
 pSceneNode::pSceneNode()
 {
-	firstChild = lastChild = previousSibling = nextSibling = parentNode = NULL;
-	rotation = glm::quat(0.0, 0.0, 1.0, 0.0);
-	scale = glm::vec3(1.0f, 1.0f, 1.0f);
-	position = glm::vec3(0.0f, 0.0f, 0.0f);
-	userData = NULL;
+	setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+	setRotation(glm::vec3(0.0f, 0.0f, 0.0f), 0);
+	setScale(glm::vec3(1.0f, 1.0f, 1.0f));
+	name = "rootNode";
+	attachedSceneObject = new pSceneObject();
+	parentNode = nullptr;
+	initDefaultMatrix();
 }
 
 
 pSceneNode::~pSceneNode()
 {
-	if (userData)
-	{
-		delete userData;
-		userData = NULL;
-	}
 }
 
-pSceneNode::pSceneNode(glm::vec3 & pos, glm::quat & rot, glm::vec3 & scaling)
+pSceneNode::pSceneNode(glm::vec3 & pos, glm::vec3 & rot, GLfloat amount, glm::vec3 & scaling, std::string & objName, pSceneObject* attachedObject, pSceneNode* parent)
 {
-	position = pos;
-	rotation = rot;
-	scale = scaling;
-	firstChild = lastChild = previousSibling = nextSibling = parentNode = NULL;
-	userData = NULL;
+	setPosition(pos);
+	setRotation(rot, amount);
+	setScale(scaling);
+	name = objName;
+	attachedSceneObject = attachedObject;
+	parentNode = parent;
+	parentNode->appendChild(this);
+
+	getModelMatrix();
 }
 
-void pSceneNode::setPosition(glm::vec3 & pos)
+int pSceneNode::numAttachedSceneNode() const
 {
-	position = pos;
+	return attachedSceneNodeList.size();
 }
 
-int pSceneNode::numAttachedSceneOnjects() const
+void pSceneNode::translate(glm::vec3 pos)
 {
-	return sceneObjectList.size();
+	translationMatrix = glm::translate(translationMatrix, pos);
+	//getAttachedSceneObject()->getAttachedModel()->getTranslationMatrix() = glm::translate(getAttachedSceneObject()->getAttachedModel()->getTranslationMatrix(), pos);
 }
 
-glm::vec3 pSceneNode::getLocation()
+void pSceneNode::setPosition(glm::vec3 pos)
+{
+	translationMatrix = glm::translate(glm::mat4(1.0f), pos);
+}
+
+/*glm::vec3 pSceneNode::getLocation()
 {
 	glm::vec3 result = position;
 	return result;
-}
+}*/
 
-void pSceneNode::setRotation(glm::quat &rot)
+void pSceneNode::rotateAround(glm::vec3 rot, GLfloat amount)
 {
-	rotation = rot;
+	rotationMatrix *= glm::rotate(glm::radians(amount), rot);
 }
 
-void pSceneNode::setRotateAbout(const glm::vec3 & point, const glm::quat & rot)
+void pSceneNode::setRotation(glm::vec3 rot, GLfloat amount)
+{
+	rotationMatrix = glm::rotate(glm::radians(amount), rot);
+}
+
+/*void pSceneNode::setRotateAbout(const glm::vec3 & point, const glm::quat & rot)
 {
 	rotateAboutPoint = point;
 	rotateAboutOrientation = rot;
@@ -67,99 +82,100 @@ glm::quat pSceneNode::getRotation() const
 {
 	glm::quat result = rotation;
 	return result;
-}
+}*/
 
-void pSceneNode::setScale(const glm::vec3 &scaling)
+void pSceneNode::scale(glm::vec3 scl)
 {
-	scale = scaling;
+	scaleMatrix = glm::scale(scaleMatrix, scl);
+	//call same method on model
 }
 
-glm::vec3 pSceneNode::getScale() const
+void pSceneNode::setScale(const glm::vec3 scaling)
+{
+	scaleMatrix = glm::scale(glm::mat4(1.0f), scaling);
+}
+
+/*glm::vec3 pSceneNode::getScale() const
 {
 	glm::vec3 result = scale;
 	return result;
+}*/
+
+glm::mat4 pSceneNode::getModelMatrix()
+{
+	modelMatrix = translationMatrix * rotationMatrix * scaleMatrix;
+	return modelMatrix;
+}
+
+void pSceneNode::setName(std::string objName)
+{
+	name = objName;
+}
+
+std::string pSceneNode::getName() const
+{
+	return name;
 }
 
 void pSceneNode::appendChild(pSceneNode * node)
 {
-	if(lastChild == NULL)
-	{
-		firstChild = node;
-	}
-	else
-	{
-		lastChild->nextSibling = node;
-		node->previousSibling = lastChild;
-	}
-	lastChild = node;
-	node->parentNode = this;
+	attachedSceneNodeList.push_back(node);
 }
 
 void pSceneNode::removeChild(pSceneNode * node)
 {
 	pSceneNode *current;
 
-	for (current = firstChild; current != NULL; current = current->nextSibling)
+}
+
+pSceneNode::sceneNode_list_iterator pSceneNode::sceneNodeBegin()
+{
+	return attachedSceneNodeList.begin();
+}
+
+pSceneNode::sceneNode_list_iterator pSceneNode::sceneNodeEnd()
+{
+	return attachedSceneNodeList.end();
+}
+
+pSceneObject * pSceneNode::getAttachedSceneObject()
+{
+	return attachedSceneObject;
+}
+
+glm::vec3 pSceneNode::getForwardVector()
+{
+	return glm::vec3();
+}
+
+glm::vec3 pSceneNode::getRightVector()
+{
+	return glm::vec3();
+}
+
+void pSceneNode::addSceneNode(pSceneNode * sceneObject)
+{
+	attachedSceneNodeList.push_back(sceneObject);
+}
+
+void pSceneNode::removeSceneNode(pSceneNode * sceneObject)
+{
+	sceneNode_list_iterator iter = std::find(attachedSceneNodeList.begin(), attachedSceneNodeList.end(), sceneObject);
+	if (iter != attachedSceneNodeList.end())
 	{
-		if (current == node)
-		{
-			if (node->previousSibling)
-			{
-				node->previousSibling->nextSibling = node->nextSibling;
-			}
-			else
-			{
-				firstChild = node->nextSibling;
-			}
-			if (node->nextSibling)
-			{
-				node->nextSibling->previousSibling = node->previousSibling;
-			}
-			else
-			{
-				lastChild = node->previousSibling;
-			}
-			node->parentNode = NULL;
-			return;
-		}
-	}
-}
-
-pSceneNode * pSceneNode::getFirstChild() const
-{
-	return firstChild;
-}
-
-pSceneNode * pSceneNode::getNextSibling() const
-{
-	return nextSibling;
-}
-
-pSceneNode::sceneObject_list_iterator pSceneNode::sceneObjectBegin()
-{
-	return sceneObjectList.begin();
-}
-
-pSceneNode::sceneObject_list_iterator pSceneNode::sceneObjectEnd()
-{
-	return sceneObjectList.end();
-}
-
-void pSceneNode::addSceneObject(pSceneObject * sceneObject)
-{
-	sceneObjectList.push_back(sceneObject);
-}
-
-void pSceneNode::removeSceneObject(pSceneObject * sceneObject)
-{
-	sceneObject_list_iterator iter = std::find(sceneObjectList.begin(), sceneObjectList.end(), sceneObject);
-	if (iter != sceneObjectList.end())
-	{
-		sceneObjectList.erase(iter);
+		attachedSceneNodeList.erase(iter);
 	}
 }
 
 int pSceneNode::getNumberSceneObjects() const
 {
-	return sceneObjectList.size();
+	return attachedSceneNodeList.size();
+}
+
+void pSceneNode::initDefaultMatrix()
+{
+	rotationMatrix = glm::mat4(1.0f);
+	translationMatrix = glm::mat4(1.0f);
+	scaleMatrix = glm::mat4(1.0f);
+	modelMatrix = glm::mat4(1.0f);
 }

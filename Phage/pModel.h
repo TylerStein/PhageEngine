@@ -60,6 +60,21 @@ public:
 	bool usesIndeces();
 	GLuint getNumIndeces();
 
+	inline glm::mat4 getTranslationMatrix()
+	{
+		return translationMatrix;
+	}
+
+	inline glm::mat4 getRotationMatrix()
+	{
+		return rotationMatrix;
+	}
+
+	inline glm::mat4 getScaleMatrix()
+	{
+		return scaleMatrix;
+	}
+
 	pType type;
 
 private:
