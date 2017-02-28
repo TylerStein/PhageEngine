@@ -34,5 +34,7 @@ public:
 private:
 	PhageEngine* engine;
 	bool isLinkedToEngine;
+
+	pScene* scene;
 };
 

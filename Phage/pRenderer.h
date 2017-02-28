@@ -4,6 +4,7 @@
 #include "GLFW\glfw3.h"
 #include "glm\vec3.hpp"
 #include "glm\gtc\matrix_transform.hpp"
+#include "pSceneNode.h"
 
 class pRenderer
 {
@@ -14,6 +15,7 @@ public:
 	void setupGLOptions();
 	void setWindowRef(GLFWwindow* window);
 	void renderModel(pModel* model);
+	void renderSceneNode(pSceneNode* node);
 
 	void setViewMatrix(glm::vec3 cameraLocation, glm::vec3 cameraTarget, glm::vec3 cameraUp);
 	void setProjectionMatrix(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat nearPlane, GLfloat farPlane);

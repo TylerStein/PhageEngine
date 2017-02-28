@@ -34,6 +34,9 @@ PhageEngine::PhageEngine(GameImplement* game)
 	resourceFactory->setImageManager(imageManager);
 	resourceFactory->setShaderManager(shaderManager);
 	resourceFactory->setAudioManager(audioManager);
+
+	//create an instance of the sceneManager
+	sceneManager = pSceneManager::instance();
 }
 
 
