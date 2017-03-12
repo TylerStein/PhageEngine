@@ -1,74 +1,24 @@
 #include "pSceneObject.h"
 
-pSceneObject::pSceneObject(std::string  name)
+pSceneObject::pSceneObject()
 {
-	objectName = name;
-	sceneNode = nullptr;
 	attachedModel = nullptr;
+	attachedScript = nullptr;
+	attachedSoundSystem = nullptr;
+	attachedCamera = nullptr;
 }
 
-pSceneObject::pSceneObject(std::string & name, pModel * model, pScript * script)
+pSceneObject::pSceneObject(pModel * model, pScript * script, pSoundSystem* soundSystem, pCamera* camera)
 {
-	objectName = name;
-	sceneNode = new pSceneNode();
-	sceneNode->addSceneObject(this);
 	attachModel(model);
 	attachScript(script);
-}
-
-pSceneObject::pSceneObject(std::string & name, pSceneObject * parent, pModel * model, pScript * script)
-{
-	objectName = name;
-	parent->attachChild(this);
-	attachModel(model);
-	attachScript(script);
-}
-
-std::string pSceneObject::getName() const
-{
-	return objectName;
-}
-
-void pSceneObject::attachToSceneNode(pSceneNode * node)
-{
-	if (isAttached())
-	{
-		detachFromSceneNode();
-	}
-	sceneNode = node;
-	sceneNode->addSceneObject(this);
-}
-
-void pSceneObject::detachFromSceneNode()
-{
-	if (isAttached())
-	{
-		sceneNode->removeSceneObject(this);
-		sceneNode = nullptr;
-	}
-}
-
-bool pSceneObject::isAttached() const
-{
-	return sceneNode != nullptr;
+	attachSoundSystem(soundSystem);
+	attachCamera(camera);
 }
 
 void pSceneObject::attachModel(pModel * model)
 {
 	attachedModel = model;
-	std::string modelMat = model->getName();
-	if (modelMat.length() > 0)
-	{
-		materialName = modelMat;
-	}
-	else
-	{
-		if (materialName.length() > 0)
-		{
-			//TODO::define set material name method for pMaterial class
-			//model->setMaterialName(materialName);
-		}
-	}
 }
 
 void pSceneObject::detachModel()
@@ -98,6 +48,12 @@ void pSceneObject::attachSoundSystem(pSoundSystem * soundSystem)
 	attachedSoundSystem = soundSystem;
 }
 
+void pSceneObject::attachCamera(pCamera * camera)
+{
+	detachCamera();
+	attachedCamera = camera;
+}
+
 void pSceneObject::detachScript()
 {
 	attachedScript = nullptr;
@@ -106,6 +62,11 @@ void pSceneObject::detachScript()
 void pSceneObject::detachSoundSystem()
 {
 	attachedSoundSystem = nullptr;
+}
+
+void pSceneObject::detachCamera()
+{
+	attachedCamera = nullptr;
 }
 
 bool pSceneObject::hasScript() const
@@ -118,33 +79,12 @@ bool pSceneObject::hasSoundSystem() const
 	return attachedSoundSystem != nullptr;
 }
 
-void pSceneObject::attachChild(pSceneObject * child)
+bool pSceneObject::hasCamera() const
 {
-	pSceneNode* tmp = new pSceneNode();
-	sceneNode->appendChild(tmp);
-	tmp->addSceneObject(child);
+	return attachedSoundSystem != nullptr;
 }
 
-void pSceneObject::detachChild(pSceneObject * child)
+pSceneNode * pSceneObject::getSceneNode() const
 {
-	pSceneNode* childPtr = sceneNode->getFirstChild();
-	while (childPtr != nullptr)
-	{
-		pSceneNode::sceneObject_list_iterator iter;
-		for (iter = childPtr->sceneObjectBegin(); iter != childPtr->sceneObjectEnd(); iter++)
-		{
-			int location = std::distance(childPtr->sceneObjectBegin(), iter);
-			if (childPtr->sceneObjectList[location] == child)
-			{
-				childPtr->removeSceneObject(child);
-				if (childPtr->getNumberSceneObjects() == 0)
-				{
-					sceneNode->removeChild(childPtr);
-				}
-				return;
-			}
-		}
-
-		childPtr = childPtr->getNextSibling();
-	}
+	return node;
 }

@@ -6,6 +6,7 @@ class TestScene : public GameImplement
 {
 public:
 	pModel* chairRef;
+	pModel* chairRef2;
 
 	pModel* sphereRef;
 
@@ -34,5 +35,7 @@ public:
 private:
 	PhageEngine* engine;
 	bool isLinkedToEngine;
+
+	pScene* scene;
 };
 

@@ -5,27 +5,76 @@ void pSceneGraph::initialize()
 	rootSceneNode = new pSceneNode();
 }
 
-void pSceneGraph::renderSceneGraph(pSceneNode * sceneRoot, pRenderer * renderer)
+void pSceneGraph::renderSceneGraph(pRenderer * renderer, pSceneNode* node)
 {
-	renderSceneNode(rootSceneNode, renderer);
-	pSceneNode* nodeToRender = rootSceneNode->getFirstChild();
-	while (nodeToRender != nullptr)
+	for (int i = 0; i < node->attachedSceneNodeList.size(); ++i)
 	{
-		renderSceneNode(nodeToRender, renderer);
-		nodeToRender = nodeToRender->getNextSibling();
+		matrixStack.push_back(node->getModelMatrix());
+		renderSceneGraph(renderer, node->attachedSceneNodeList[i]);
+	}
+	if (node != rootSceneNode)
+	{
+		renderSceneNode(node, renderer);
+	}
+	if (!matrixStack.empty())
+	{
+		matrixStack.pop_back();
+	}
+}
+
+pSceneNode * pSceneGraph::findSceneNode(std::string objName, pSceneNode* node)
+{
+	if (node == nullptr)
+	{
+		node = rootSceneNode;
+	}
+
+	if (node->getName() == objName) { return node; }
+
+	pSceneNode* res = nullptr;
+
+	for (int i = 0; i < node->attachedSceneNodeList.size(); ++i)
+	{
+		res = findSceneNode(objName, node->attachedSceneNodeList[i]);
+		if (res)
+		{
+			if (res->getName() == objName) { return res; }
+		}
+	}
+
+	return res;
+
+}
+
+void pSceneGraph::attachToRootNode(pSceneNode * node)
+{
+	rootSceneNode->appendChild(node);
+}
+
+void pSceneGraph::applyTransform(pSceneNode * node, glm::vec3 & pos, glm::quat & rot, glm::vec3 & scaling)
+{
+	node->setPosition(pos);
+	node->setScale(scaling);
+	for (int i = 0; i < node->attachedSceneNodeList.size(); ++i)
+	{
+		applyTransform(node->attachedSceneNodeList[i], pos, rot, scaling);
 	}
 }
 
 
 void pSceneGraph::renderSceneNode(pSceneNode * node, pRenderer * renderer)
 {
-	for (int i = 0; i < node->sceneObjectList.size(); i++)
+	if (node != nullptr)
 	{
-		pSceneObject* sceneObject = node->sceneObjectList[i];
-		pModel* modelToRender = sceneObject->getAttachedModel();
-		if (modelToRender != nullptr)
+		glm::mat4x4 tmp = node->getModelMatrix();
+
+		//for (int i = 0; i < matrixStack.size(); ++i)
+		for(int i = matrixStack.size() - 1; i >= 0; --i)
 		{
-			renderer->renderModel(modelToRender);
+			tmp = matrixStack[i] * tmp;
 		}
+
+		renderer->renderSceneNode(node, tmp);
 	}
+
 }

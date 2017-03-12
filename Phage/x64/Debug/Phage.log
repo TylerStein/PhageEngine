@@ -1,1 +1,2 @@
-﻿
+﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppClean.targets(76,5): warning : The process cannot access the file 'c:\users\luigi\desktop\phageengine\phage\x64\debug\pmodelmanager.obj' because it is being used by another process.
+C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppClean.targets(76,5): warning : The process cannot access the file 'c:\users\luigi\desktop\phageengine\phage\x64\debug\pprimitivemaker.obj' because it is being used by another process.

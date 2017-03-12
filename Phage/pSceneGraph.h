@@ -21,12 +21,21 @@ public:
 	}
 
 	//render the scene graph using the renderer. 
-	void renderSceneGraph (pSceneNode * sceneRoot, pRenderer * renderer);
+	void renderSceneGraph (pRenderer * renderer, pSceneNode* node);
+
+	//find a specific object by name and return a reference to it
+	pSceneNode* findSceneNode(std::string objName, pSceneNode* node = nullptr);
+
+	void attachToRootNode(pSceneNode* node);
+
+	//apply transformations to all objects in scene
+	void applyTransform(pSceneNode * node, glm::vec3 & pos, glm::quat & rot, glm::vec3 & scaling);
 
 private:
-	pSceneNode *rootSceneNode;
-	glm::vec3 renderOffset;
-	pRenderer *rndr;
+	pSceneNode* rootSceneNode;
+	pRenderer* rndr;
+
+	std::vector<glm::mat4x4> matrixStack;
 
 	void initialize();
 

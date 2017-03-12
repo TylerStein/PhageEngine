@@ -101,6 +101,7 @@ void TestScene::onStart()
 	
 	//Create a box and set its material to look like a wooden crate
 	chairRef = engine->resourceFactory->loadModel("Chair_Model", "../Resources/Models/chair/chair.obj", tmpChairMatRef);
+	//chairRef2 = engine->resourceFactory->loadModel("Chair_Model2", "../Resources/Models/chair/chair.obj", tmpChairMatRef);
 
 	//Create the light models (for visualisation of their locations)
 	mdl_LightA = engine->resourceFactory->loadModel("LightSrc_A_Model", "../Resources/Models/uvsphere.obj", tmpLightMatRef);
@@ -118,9 +119,9 @@ void TestScene::onStart()
 	engine->renderer->setProjectionMatrix(80, 1200, 1200, 0.2f, 240);
 
 	//Move the models around to set up the scene initially
-	chairRef->setPosition(glm::vec3(-6.0f, -6.0f, -8.0f));
-	chairRef->setRotation(glm::vec3(0, 1, 0), 45);
-	chairRef->setScale(glm::vec3(0.5f));
+	//chairRef->setPosition(glm::vec3(-6.0f, -6.0f, -8.0f));
+	//chairRef->setRotation(glm::vec3(0, 1, 0), 45);
+	//chairRef->setScale(glm::vec3(0.5f));
 
 	//Create 1 light in the scene						Type						Position				Range	Color		Intensity		Ambient		Attenuation
 	light_A = engine->lightManager->addLight(new pLight(Light::LightType::POINT, glm::vec3(0.0f, 6.0f, 0.0), 24, glm::vec3(1), glm::vec3(1), glm::vec3(0.0f), 1.0f));
@@ -135,6 +136,29 @@ void TestScene::onStart()
 
 	lastMouseX = 0;
 	lastMouseY = 0;
+
+	scene = new pScene();
+
+	pSceneObject* tmp = scene->createNewObject(chairRef, nullptr, nullptr, nullptr, glm::vec3(0, 0, 0), glm::vec3(0), glm::vec3(0.5), std::string("Bunny"), nullptr);
+
+
+	//						Model	 Script	  SoundSystem  camera				position		rotation				scale					name			  parent
+	tmp = scene->createNewObject(chairRef, nullptr, nullptr, nullptr, glm::vec3(4, 0, 0), glm::vec3(0), glm::vec3(1.0), std::string("chairObject"), tmp->getSceneNode());
+	
+	int offset = 4;
+	for (int i = 0; i < 12; ++i) {
+		tmp = scene->createNewObject(chairRef, nullptr, nullptr, nullptr, glm::vec3(offset, 0, 0), glm::vec3(offset * offset * 0.1, offset * offset * 0.6, offset * offset * 0.2), glm::vec3(1.2), std::string("chairObject"), tmp->getSceneNode());
+		offset++;
+	}
+
+
+	for (int i = 0; i < scene->sceneGraph->getRootSceneNode()->attachedSceneNodeList.size(); ++i)
+	{
+		//std::cout << scene->sceneGraph->getRootSceneNode()->attachedSceneNodeList[i]->getName() << std::endl;
+		//printf("Objects #: %i", i);
+	}
+
+	//std::cout << "Finding name of chair object...: " << scene->sceneGraph->findSceneNode(std::string("chairObject"), scene->sceneGraph->getRootSceneNode())->getName() << std::endl;
 }
 
 void TestScene::onPreRender()
@@ -148,9 +172,12 @@ void TestScene::onRender()
 	engine->renderer->renderModel(mdl_LightA);
 
 	//Render geometry and chair
-	engine->renderer->renderModel(chairRef);
+	//engine->renderer->renderModel(chairRef);
+	
+	//render the scene
+	scene->sceneGraph->renderSceneGraph(engine->renderer, scene->sceneGraph->getRootSceneNode());
 
-	engine->renderer->renderModel(sphereRef);
+	//engine->renderer->renderModel(sphereRef);
 
 	//floor
 	floorRef->setPosition(glm::vec3(0, -12, 0));
@@ -185,40 +212,56 @@ void TestScene::onPostRender()
 
 void TestScene::onUpdate(GLdouble deltaTime)
 {
+	//printf("deltaTime is: ", std::to_string(deltaTime));
+
+	pSceneNode* bunn = scene->sceneGraph->findSceneNode(std::string("Bunny"));
+	pSceneNode* tmpNode = scene->sceneGraph->findSceneNode(std::string("chairObject"));
+
+	glm::quat lookAtBunny = tmpNode->quaternionSlerp(tmpNode->getRotationQuat(), tmpNode->getLookAtPoint(bunn->getPosition()), deltaTime);
+
+
+
+	//bunn->scaling(glm::vec3(1.001, 1.001, 1.001));
+
+	//tmpNode->setRotation(lookAtBunny);
+
 	//Light models follow light sources
 	mdl_LightA->setPosition(light_A->getPosition());
 
+	const float rotSpeed = 0.5;
+	const float movSpeed = 0.6;
+
 	if (glfwGetKey(engine->window, GLFW_KEY_R)) {
-		sphereRef->getMaterial()->getShader()->compileShader();
+		bunn->rotateAround(glm::vec3(0, 1, 0), deltaTime * rotSpeed);
 	}
 
 	if (glfwGetKey(engine->window, GLFW_KEY_T)) {
-		mdl_LightA->getMaterial()->getShader()->compileShader();
+		bunn->rotateAround(glm::vec3(0, 1, 0), deltaTime * -rotSpeed);
 	}
 
-	//Cube movement
+	//Bunny movement
 	if (glfwGetKey(engine->window, GLFW_KEY_W)) {
-		sphereRef->translate(glm::vec3(0, 0.5f * deltaTime, 0));
+		bunn->translate(glm::vec3(0, movSpeed * deltaTime, 0));
 	}
 
 	if (glfwGetKey(engine->window, GLFW_KEY_S)) {
-		sphereRef->translate(glm::vec3(0, -0.5f * deltaTime, 0));
+		bunn->translate(glm::vec3(0, -movSpeed * deltaTime, 0));
 	}
 
 	if (glfwGetKey(engine->window, GLFW_KEY_A)) {
-		sphereRef->translate(glm::vec3(-1 * deltaTime, 0, 0));
+		bunn->translate(glm::vec3(-movSpeed * deltaTime, 0, 0));
 	}
 
 	if (glfwGetKey(engine->window, GLFW_KEY_D)) {
-		sphereRef->translate(glm::vec3(1 * deltaTime, 0, 0));
+		bunn->translate(glm::vec3(movSpeed * deltaTime, 0, 0));
 	}
 
 	if (glfwGetKey(engine->window, GLFW_KEY_Q)) {
-		sphereRef->translate(glm::vec3(0.0f, 0.0f, 1.0f * deltaTime));
+		bunn->translate(glm::vec3(0.0f, 0.0f, movSpeed * deltaTime));
 	}
 
 	if (glfwGetKey(engine->window, GLFW_KEY_E)) {
-		sphereRef->translate(glm::vec3(0.0f, 0.0f, -1.0f * deltaTime));
+		bunn->translate(glm::vec3(0.0f, 0.0f, -movSpeed * deltaTime));
 	}
 
 	double lastX = lastMouseX;
@@ -229,8 +272,8 @@ void TestScene::onUpdate(GLdouble deltaTime)
 	double diffY = lastMouseY - lastY;
 
 	if (glfwGetMouseButton(engine->window, GLFW_MOUSE_BUTTON_1)) {
-		sphereRef->rotateAround(glm::vec3(0, 1, 0), diffX * deltaTime);
-		sphereRef->rotateAround(glm::vec3(1, 0, 0), diffY * deltaTime);
+		bunn->rotateAround(glm::vec3(0, 1, 0), diffX * rotSpeed * deltaTime);
+		bunn->rotateAround(glm::vec3(1, 0, 0), diffY * rotSpeed * deltaTime);
 	}
 
 

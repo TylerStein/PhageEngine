@@ -5,37 +5,22 @@
 #include "pModel.h"
 #include <map>
 #include "pScript.h"
-#include "pRenderer.h"
-#include "pSceneNode.h"
 #include "pSoundSystem.h"
+#include "pCamera.h"
+
+class pScript;
+class pSceneNode;
+
 
 class pSceneObject
 {
-
+	friend class pScene;
 public:
-	//Create an empty game object with a given name
-	pSceneObject(std::string name);
+	//Create an empty game object
+	pSceneObject();
 
-	/**
-	* This creates a game object and attaches it to the root of the scene graph. Either or both of the
-	* model and script can be null and can be set later, or left as null if they are not required
-	*/
-	pSceneObject(std::string& name, pModel* model, pScript* script);
-
-	/**
-	* This creates a game object and attaches it as a child of the indicated parent game object. Either or both of the
-	* model and script can be null and can be set later, or left as null if they are not required
-	*/
-	pSceneObject(std::string& name, pSceneObject* parent, pModel* model, pScript* script);
-
-	std::string getName() const;
-
-	void attachToSceneNode(pSceneNode* node);
-
-	void detachFromSceneNode();
-
-	//Determine if this object is attached to the scene graph or not
-	bool isAttached() const;
+	//Constructor for sceneObject where you can supply a model, script, or sound system. set to null if you do not want to attach a component
+	pSceneObject(pModel* model, pScript* script, pSoundSystem* soundSystem, pCamera* camera);
 
 	//This attaches a model to the game object. A game object without a model will render nothing
 	void attachModel(pModel* model);
@@ -52,28 +37,48 @@ public:
 	//if one is already attached it will be removed and replaced with the new one
 	void attachScript(pScript* script);
 
+	inline pScript* getAttachedScript()
+	{
+		return attachedScript;
+	}
+
 	//attaches a sound System to this game object
 	//if one is already attached it will be removed and replaced with the new one
 	void attachSoundSystem(pSoundSystem* soundSystem);
+
+	inline pSoundSystem* getAttachedSoundSystem()
+	{
+		return attachedSoundSystem;
+	}
+
+	//attaches a camera to the sceneObject
+	void attachCamera(pCamera* camera);
+
+	inline pCamera* getAttachedCamera()
+	{
+		return attachedCamera;
+	}
 
 	void detachScript();
 
 	//detaches a script from this game object
 	void detachSoundSystem();
 
+	void detachCamera();
+
 	bool hasScript() const;
 
 	bool hasSoundSystem() const;
 
-	void attachChild(pSceneObject* child);
+	bool hasCamera() const;
 
-	void detachChild(pSceneObject* child);
+	pSceneNode* getSceneNode() const;
 
 private:
-		std::string objectName;
-		pSceneNode* sceneNode;
-		pModel* attachedModel;
-		std::string materialName;
-		pScript* attachedScript = nullptr;
-		pSoundSystem* attachedSoundSystem = nullptr;
+	pModel* attachedModel = nullptr;
+	pScript* attachedScript = nullptr;
+	pSoundSystem* attachedSoundSystem = nullptr;
+	pCamera* attachedCamera = nullptr;
+
+	pSceneNode* node;
 };
