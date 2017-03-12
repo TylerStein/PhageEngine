@@ -83,7 +83,7 @@ void pRenderer::renderModel(pModel* model)
 	glUseProgram(0);
 }
 
-void pRenderer::renderSceneNode(pSceneNode * node)
+void pRenderer::renderSceneNode(pSceneNode * node, glm::mat4x4 mat)
 {
 	pModel* model = node->getAttachedSceneObject()->getAttachedModel();
 
@@ -102,7 +102,7 @@ void pRenderer::renderSceneNode(pSceneNode * node)
 
 		//Apply the model position matrix
 		if (shdr->hasUniform(Uniforms::Model_View)) {
-			glUniformMatrix4fv(model->getModelMatrixID(), 1, GL_FALSE, &node->getModelMatrix()[0][0]);
+			glUniformMatrix4fv(model->getModelMatrixID(), 1, GL_FALSE, &mat[0][0]);
 		}
 
 		//Apply the view matrix
@@ -137,14 +137,6 @@ void pRenderer::renderSceneNode(pSceneNode * node)
 
 		model->getMaterial()->unuseMaterial();
 	}
-
-	else
-	{
-		glUniformMatrix4fv(0, 1, GL_FALSE, &node->getModelMatrix()[0][0]);
-	}
-
-	glBindVertexArray(0);
-	glUseProgram(0);
 }
 
 void pRenderer::setViewMatrix(glm::vec3 cameraLocation, glm::vec3 cameraTarget, glm::vec3 cameraUp)

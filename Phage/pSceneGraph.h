@@ -24,7 +24,7 @@ public:
 	void renderSceneGraph (pRenderer * renderer, pSceneNode* node);
 
 	//find a specific object by name and return a reference to it
-	pSceneNode* findSceneNode(std::string objName, pSceneNode* node);
+	pSceneNode* findSceneNode(std::string objName, pSceneNode* node = nullptr);
 
 	void attachToRootNode(pSceneNode* node);
 
@@ -34,6 +34,8 @@ public:
 private:
 	pSceneNode* rootSceneNode;
 	pRenderer* rndr;
+
+	std::vector<glm::mat4x4> matrixStack;
 
 	void initialize();
 

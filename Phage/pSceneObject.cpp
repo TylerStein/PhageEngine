@@ -83,3 +83,8 @@ bool pSceneObject::hasCamera() const
 {
 	return attachedSoundSystem != nullptr;
 }
+
+pSceneNode * pSceneObject::getSceneNode() const
+{
+	return node;
+}

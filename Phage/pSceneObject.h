@@ -8,9 +8,13 @@
 #include "pSoundSystem.h"
 #include "pCamera.h"
 
+class pScript;
+class pSceneNode;
+
+
 class pSceneObject
 {
-
+	friend class pScene;
 public:
 	//Create an empty game object
 	pSceneObject();
@@ -68,9 +72,13 @@ public:
 
 	bool hasCamera() const;
 
+	pSceneNode* getSceneNode() const;
+
 private:
 	pModel* attachedModel = nullptr;
 	pScript* attachedScript = nullptr;
 	pSoundSystem* attachedSoundSystem = nullptr;
 	pCamera* attachedCamera = nullptr;
+
+	pSceneNode* node;
 };

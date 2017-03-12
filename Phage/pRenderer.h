@@ -15,7 +15,7 @@ public:
 	void setupGLOptions();
 	void setWindowRef(GLFWwindow* window);
 	void renderModel(pModel* model);
-	void renderSceneNode(pSceneNode* node);
+	void renderSceneNode(pSceneNode* node, glm::mat4x4 mat);
 
 	void setViewMatrix(glm::vec3 cameraLocation, glm::vec3 cameraTarget, glm::vec3 cameraUp);
 	void setProjectionMatrix(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat nearPlane, GLfloat farPlane);

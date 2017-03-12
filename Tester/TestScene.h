@@ -6,6 +6,7 @@ class TestScene : public GameImplement
 {
 public:
 	pModel* chairRef;
+	pModel* chairRef2;
 
 	pModel* sphereRef;
 
