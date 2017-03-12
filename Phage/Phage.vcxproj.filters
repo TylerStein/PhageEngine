@@ -100,6 +100,10 @@
     <ClCompile Include="pScript.cpp">
       <Filter>Asset</Filter>
     </ClCompile>
+    <ClCompile Include="pScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="pSceneManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Clock.h">
@@ -216,6 +220,10 @@
     <ClInclude Include="pTransform.h">
       <Filter>Asset</Filter>
     </ClInclude>
+    <ClInclude Include="pScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="pSceneManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PhageDiagram.cd" />

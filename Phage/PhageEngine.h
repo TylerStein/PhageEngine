@@ -7,9 +7,8 @@
 #include "GameImplement.h"
 #include "pLightManager.h"
 #include "pSoundSystem.h"
-#include "pSceneGraph.h"
-#include "pSceneNode.h"
-#include "pSceneObject.h"
+#include "pSceneManager.h"
+#include "pScene.h"
 
 class PhageEngine
 {
@@ -30,6 +29,7 @@ public:
 
 	pRenderer* renderer;
 	pResourceFactory* resourceFactory;
+	pSceneManager* sceneManager;
 	pLightManager* lightManager;
 
 	std::vector<pModel*> modelList;
