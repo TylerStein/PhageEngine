@@ -21,10 +21,11 @@ public:
 	}
 
 	//render the scene graph using the renderer. 
-	void renderSceneGraph (pRenderer * renderer, pSceneNode* node);
+	void renderSceneGraph(pRenderer * renderer, pSceneNode* node = nullptr);
+	void updateSceneGraph(double deltaTime, pSceneNode* node = nullptr);
 
 	//find a specific object by name and return a reference to it
-	pSceneNode* findSceneNode(std::string objName, pSceneNode* node);
+	pSceneNode* findSceneNode(std::string objName, pSceneNode* node = nullptr);
 
 	void attachToRootNode(pSceneNode* node);
 
@@ -35,8 +36,11 @@ private:
 	pSceneNode* rootSceneNode;
 	pRenderer* rndr;
 
+	std::vector<glm::mat4x4> matrixStack;
+
 	void initialize();
 
-	void renderSceneNode(pSceneNode *sceneRoot, pRenderer *renderer);
+	void renderSceneNode(pSceneNode *node, pRenderer *renderer);
+	void updateSceneNode(pSceneNode *node, double deltaTime);
 };
 

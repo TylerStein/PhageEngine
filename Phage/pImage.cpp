@@ -1,5 +1,6 @@
 #include "pImage.h"
 #include "pImageLoader.h"
+#include "DefaultPaths.h"
 
 #include <iostream>
 #include "GLError.h"
@@ -11,6 +12,7 @@ pImage::pImage(std::string name, std::string imageDir, GLuint minFilterType, GLu
 	this->minFilterType = minFilterType;
 	this->magFilterType = magFilterType;
 	this->wrapMode = wrapMode;
+
 	loadImage();
 
 }
@@ -37,10 +39,10 @@ void pImage::generateCheckerboard()
 
 	//Create some checkerboard texture data
 	GLfloat textureData[unitCount] = {
-		1.0f, 0.0f, 0.0f,
 		1.0f, 1.0f, 1.0f,
 		1.0f, 1.0f, 1.0f,
-		1.0f, 0.0f, 0.0f
+		1.0f, 1.0f, 1.0f,
+		1.0f, 1.0f, 1.0f
 	};
 
 	//Allocate memory for image data
@@ -57,7 +59,7 @@ void pImage::generateCheckerboard()
 	height = 2;
 	minFilterType = GL_NEAREST;
 	magFilterType = GL_NEAREST;
-	wrapMode = GL_REPEAT;
+	wrapMode = GL_CLAMP_TO_EDGE;
 
 	//Set texture parameters
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilterType);
@@ -72,24 +74,20 @@ GLuint pImage::getTextureID()
 	return textureID;
 }
 
-
-std::string pImage::getName()
-{
-	return name;
-}
-
 void pImage::loadImage()
 {
 	if (imageDirectory == "") {
-		generateCheckerboard();
+		//generateCheckerboard();
+		imageDirectory = image_white;
+		loadImage();
 	}
 	else {
-		pImageLoader loader = pImageLoader();
-
 		//Load the image and store its width and height
-		imageData = loader.loadImage((char*)imageDirectory.c_str());
-		width = loader.getWidth();
-		height = loader.getHeight();
+		ImageData tmpData = pImageLoader::loadImage((char*)imageDirectory.c_str());
+
+		imageData = tmpData._data;
+		width = tmpData._width;
+		height = tmpData._height;
 	}
 }
 
@@ -148,4 +146,6 @@ void pImage::unuseTexture(GLenum texturePlace)
 
 	//Bind no texture
 	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glActiveTexture(0);
 }

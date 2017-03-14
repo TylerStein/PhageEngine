@@ -19,30 +19,30 @@ public:
 	~pMatrixStack();
 
 	/*Sets the projection matrix to be orthographic.
-	  Components: 
-	  xMin is the minimum x coord
-	  xMax is the max x coord
-	  yMin is the minimum y coord
-	  yMax is the max y coord
-	  zMin is the minimum Z coord
-	  zMax is the max z coord*/
+	Components:
+	xMin is the minimum x coord
+	xMax is the max x coord
+	yMin is the minimum y coord
+	yMax is the max y coord
+	zMin is the minimum Z coord
+	zMax is the max z coord*/
 	void orthographic(float xMin, float xMax, float yMin, float yMax, float zMin, float zMax);
 
 	/*Sets the projection matrix to be a perspective matrix
-	  focy is the FOV vertically in degrees
-	  aspect is the ratio of the scene defined as width/height
-	  nearZ is the near Z clip pane
-	  farZ is the far Z clip pane*/
+	focy is the FOV vertically in degrees
+	aspect is the ratio of the scene defined as width/height
+	nearZ is the near Z clip pane
+	farZ is the far Z clip pane*/
 	void perspective(float fovy, float aspect, float nearZ, float farZ);
 
 	/*Model-view matrix is made to look at a given position.
-	  posn is the camera's position
-	  at is the position the camera must look at
-	  up is the camera's up vector*/
+	posn is the camera's position
+	at is the position the camera must look at
+	up is the camera's up vector*/
 	void lookAt(const glm::vec3& posn, const glm::vec3& at, const glm::vec3& up);
 
 	/*Same as previous lookAt function, except that it takes in
-	  the coordinates of posn, at, and up instead of glm::vec3s
+	the coordinates of posn, at, and up instead of glm::vec3s
 	*/
 	void lookAt(float camX, float camY, float camZ, float atX, float atY, float atZ, float upX, float upY, float upZ);
 
@@ -65,7 +65,7 @@ public:
 	void getModelMatrixValue(float *values) const;
 
 	/*Pushes copy of the current model matrix on the stack.
-	  Places a clone of it at the top of the stack.*/
+	Places a clone of it at the top of the stack.*/
 	void pushModelView();
 
 	/*This pops the top-most matrix off the model matrix stack, discards it.*/
@@ -73,7 +73,7 @@ public:
 
 	/**
 	* Pushes copy of the current model matrix onto the stack.
-	  Places a clone of it at the top of the stack.
+	Places a clone of it at the top of the stack.
 	*/
 	void pushProjection();
 
@@ -84,10 +84,10 @@ public:
 	void rotateBy(const glm::quat &quat);
 
 	/*Rotate current model matrix by an angle around a vector.
-	 angle is the angle by which to rotate
-	 vx is the x vector component
-	 vy is the y vector component
-	 vz is the z vector component
+	angle is the angle by which to rotate
+	vx is the x vector component
+	vy is the y vector component
+	vz is the z vector component
 	*/
 	void rotateBy(float angle, float vx, float vy, float vz);
 

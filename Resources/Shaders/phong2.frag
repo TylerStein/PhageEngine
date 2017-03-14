@@ -2,96 +2,75 @@
 
 //Material info in
 uniform sampler2D fTexture;
+uniform sampler2D fNormalMap;
+uniform sampler2D fSpecularMap;
 uniform vec3 fDiffuse;
 uniform vec3 fAmbient;
 uniform vec3 fSpecular;
 uniform float fShininess;
-uniform vec3 fEmit;
 
 //Max 12 lights
 //Light info in
-uniform int lightCount;
-uniform vec3 lPosition[12];
+uniform int lType[12];
+//uniform vec3 lPosition[12];
+uniform vec3 lAngle[12];
 uniform vec3 lColor[12];
 uniform vec3 lPower[12];
 uniform vec3 lAmbient[12];
-uniform float lAttenuation[12];
 uniform float lRange[12];
+uniform float lCone[12];
 
 //In from vertex shader
-in vec3 fPosition;
-in vec3 fNormal;
 in vec2 fTexCoord;
+in vec3 fNormal;
 in vec3 fTangent;
-in vec3 fBiTangent;
 
-//Get camera and model view matrices
-in mat4 fCameraView;
-in mat4 fModelView;
+in vec3 fToCamera;
 
-//Final color out
+flat in int fLightCount;
+in vec3 fToLight[12];
+in float fLightDistance[12];
+
 out vec4 finalColor;
 
-//Gamma const
-const float screenGamma = 2.0;
-
-void falloff(int idx, float dist, out float percentOut){
-	float dst = (lRange[idx] - dist) / lRange[idx];
-	percentOut = clamp(dst, 0, 1);
-}
-
-void light(int idx, vec3 pos, vec3 norm, out vec3 ambientOut, out vec3 diffuseOut, out vec3 specularOut){
-	vec3 n = normalize(norm);
-	vec3 diff = lPosition[idx] - pos;
-	float dist = length(diff);
-	vec3 s = normalize(diff);
-	vec3 v = normalize(-pos);
-	vec3 r = reflect(-s, n);
-
-	float rangeMult = 1;
-	falloff(idx, dist, rangeMult);
-
-	ambientOut = lAmbient[idx] * fAmbient * rangeMult;
-
-	float sDotN = max(dot(s, n), 0.0);
-
-	diffuseOut = lColor[idx] * fDiffuse * sDotN * rangeMult;
-
-	specularOut = lPower[idx] * fSpecular * pow(max(dot(r,v), 0.0), fShininess) * rangeMult;
-}
-
 void main(){
-	vec3 ambientSum = vec3(0.0);
-	vec3 diffuseSum = vec3(0.0);
-	vec3 specularSum = vec3(0.0);
-	vec3 ambient, diffuse, specular;
+	vec3 unitNormal = normalize(fNormal);
+	vec3 unitToCamera = normalize(fToCamera);
 
-	if(gl_FrontFacing){
-		for(int i = 0; i < lightCount; ++i){
-			light(i, fPosition, fNormal, ambient, diffuse, specular);
-			ambientSum += ambient;
-			diffuseSum += diffuse;
-			specularSum += specular;
-		}
-	}else{
-		for(int i = 0; i < lightCount; ++i){
-			light(i, fPosition, -fNormal, ambient, diffuse, specular);
-			ambientSum += ambient;
-			diffuseSum += diffuse;
-			specularSum += specular;
-		}
-	}
+	vec3 totalDiffuse = vec3(0.0);
+	vec3 totalAmbient = vec3(0.0);
+	vec3 totalSpecular = vec3(0.0);
+
+	for(int i = 0; i < fLightCount; ++i){
+		float attenuation = clamp(pow(1.0 - fLightDistance[i] / lRange[i], 2.0), 0.0, 1.0);
 	
-	ambientSum /= lightCount;
+		vec3 unitToLight = normalize(fToLight[i]);
+		float nDotl = dot(unitNormal, unitToLight);
 
-	//Clamp the ambient value to be material's ambient at minimum
-	float aX = clamp(ambientSum.x, fAmbient.x, 1.0);
-	float aY = clamp(ambientSum.y, fAmbient.y, 1.0);
-	float aZ = clamp(ambientSum.z, fAmbient.z, 1.0);
+		float brightness = max(nDotl, 0.0);
 
-	vec3 finalAmb = vec3(aX, aY, aZ);
+		vec3 lightDir = -unitToLight;
+		vec3 reflectedLightDir = reflect(lightDir, unitNormal);
 
-	vec4 texColor = texture(fTexture, fTexCoord);
+		float specularFactor = dot(reflectedLightDir, unitToCamera);
+		specularFactor = max(specularFactor, 0.0);
 
-	finalColor = (vec4(finalAmb + diffuseSum, 1.0) + vec4(specularSum, 1.0)) * texColor;
+		float dampenedFactor = pow(specularFactor, fShininess);
+
+		totalDiffuse = totalDiffuse + (lColor[i] * brightness * attenuation);
+		totalAmbient = totalAmbient + (lAmbient[i]);
+		totalSpecular = totalSpecular + (lPower[i] * fSpecular[i] * specularFactor * dampenedFactor);
+	}
+
+	totalDiffuse = totalDiffuse / fLightCount;
+	totalAmbient = totalAmbient / fLightCount;
+	totalAmbient = clamp(totalAmbient, fAmbient, vec3(0.0));
+	totalSpecular = totalSpecular / fLightCount;
+	
+	vec3 diffuseTex = texture(fTexture, fTexCoord).xyz;
+	vec3 normalTex = texture(fNormalMap, fTexCoord).xyz;
+	
+	finalColor = vec4(totalAmbient + totalDiffuse * diffuseTex, 1.0);
+
+	//finalColor = vec4(((ambient + diffuse) * diffuseTex) + specular, 1.0); 
 }

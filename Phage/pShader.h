@@ -127,21 +127,24 @@ enum Uniforms {
 	Projection_View = 1 << 10, //The projection matrix
 	Model_View = 1 << 11, //The model movement matrix
 	Normal_View = 1 << 12, //The model normal matrix
+	ModelViewProjection = 1 << 13, //The MVP matrix
 
 	//Light Properties
-	Light_Position = 1 << 13,
-	Light_Color = 1 << 14,
-	Light_Power = 1 << 15,
-	Light_Attenuation = 1 << 16,
+	Light_Position = 1 << 14,
+	Light_Color = 1 << 15,
+	Light_Power = 1 << 16,
 	Light_Ambient = 1 << 17,
 	Light_Range = 1 << 18,
 	Light_Count = 1 << 19,
 	Light_Angle = 1 << 20,
-	Light_ConeMin = 1 << 21,
-	Light_ConeMax = 1 << 22,
+	Light_Cone = 1 << 21,
+	Light_Type = 1 << 22,
 
 	//Misc
-	Camera_Position = 1 << 23
+	Camera_Position = 1 << 23,
+	Time_Elapsed = 1 << 24,
+	Time_Delta = 1 << 25,
+	Cube_Map_Texture = 1 << 26
 };
 
 typedef SimpleKeyValue<Attributes, GLuint> attribLocMap;
@@ -165,6 +168,7 @@ public:
 
 	void setUniformVec3(GLuint attributeID, std::vector<glm::vec3> data);
 	void setUniformFloat(GLuint attributeID, std::vector<GLfloat> data);
+	void setUniformInt(GLuint attributeID, std::vector<GLint> data);
 
 	//Check attribute/uniform existance (fast check via bitwise flags)
 	bool hasAttribute(Attributes attrib);

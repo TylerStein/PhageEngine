@@ -2,13 +2,16 @@
 #include <vector>
 #include "GL\glew.h"
 #include "GLFW\glfw3.h"
+
+#include "GameImplement.h"
 #include "pRenderer.h"
 #include "pResourceFactory.h"
-#include "GameImplement.h"
-#include "pLightManager.h"
-#include "pSoundSystem.h"
 #include "pSceneManager.h"
-#include "pScene.h"
+#include "pSoundSystem.h"
+#include "pLightManager.h"
+#include "pScriptManager.h"
+#include "pInputManager.h"
+
 
 class PhageEngine
 {
@@ -21,6 +24,14 @@ public:
 		return instance;
 	}
 
+	static PhageEngine* GetInstance() {
+		if (instance == nullptr) {
+			LogManager::instance()->error("Attempted to get engine instance without a game implement!");
+			instance = new PhageEngine(nullptr);
+		}
+		return instance;
+	}
+
 	PhageEngine(GameImplement* game);
 	~PhageEngine();
 	//Placeholder window creation method
@@ -29,16 +40,18 @@ public:
 
 	pRenderer* renderer;
 	pResourceFactory* resourceFactory;
-	pSceneManager* sceneManager;
 	pLightManager* lightManager;
-
-	std::vector<pModel*> modelList;
+	pSceneManager* sceneManager;
+	pInputManager* inputManager;
 
 	float windowWidth;
 	float windowHeight;
 	GLFWwindow* window;
 private:
 	static PhageEngine* instance;
+
+	//Input requires being set up AFTER the window is ready
+	void SetupInput();
 
 	void doLoop();
 
@@ -49,5 +62,8 @@ private:
 	pShaderManager* shaderManager;
 	pAudioManager* audioManager;
 	pSceneGraph* sceneGraph;
+	pScriptManager* scriptManager;
+
+	pInputHandler* inputHandler;
 };
 

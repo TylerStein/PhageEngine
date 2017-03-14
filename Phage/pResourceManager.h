@@ -161,6 +161,21 @@ public:
 		return (*iter).getValue();
 	}
 
+	std::vector<pResourceHandle<ResourceType>> getAll() const
+	{
+		Hashtable<std::string, pResourceHandle<ResourceType>>::iterator	iter;
+		
+		std::vector<pResourceHandle<ResourceType>> lst = std::vector<pResourceHandle<ResourceType>>();
+
+		iter = nameTable->begin();
+		while (iter != nameTable->end()) {
+			lst.push_back((*iter).getValue());
+			iter++;
+		}
+
+		return lst;
+	}
+
 	//Remove a resource by name from the manager
 	void remove(std::string &name)
 	{

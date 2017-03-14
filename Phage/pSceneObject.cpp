@@ -5,13 +5,15 @@ pSceneObject::pSceneObject()
 	attachedModel = nullptr;
 	attachedScript = nullptr;
 	attachedSoundSystem = nullptr;
+	attachedCamera = nullptr;
 }
 
-pSceneObject::pSceneObject(pModel * model, pScript * script, pSoundSystem* soundSystem)
+pSceneObject::pSceneObject(pModel * model, pScript * script, pSoundSystem* soundSystem, pCamera* camera)
 {
 	attachModel(model);
 	attachScript(script);
 	attachSoundSystem(soundSystem);
+	attachCamera(camera);
 }
 
 void pSceneObject::attachModel(pModel * model)
@@ -46,6 +48,12 @@ void pSceneObject::attachSoundSystem(pSoundSystem * soundSystem)
 	attachedSoundSystem = soundSystem;
 }
 
+void pSceneObject::attachCamera(pCamera * camera)
+{
+	detachCamera();
+	attachedCamera = camera;
+}
+
 void pSceneObject::detachScript()
 {
 	attachedScript = nullptr;
@@ -56,6 +64,11 @@ void pSceneObject::detachSoundSystem()
 	attachedSoundSystem = nullptr;
 }
 
+void pSceneObject::detachCamera()
+{
+	attachedCamera = nullptr;
+}
+
 bool pSceneObject::hasScript() const
 {
 	return attachedScript != nullptr;
@@ -64,4 +77,14 @@ bool pSceneObject::hasScript() const
 bool pSceneObject::hasSoundSystem() const
 {
 	return attachedSoundSystem != nullptr;
+}
+
+bool pSceneObject::hasCamera() const
+{
+	return attachedSoundSystem != nullptr;
+}
+
+pSceneNode * pSceneObject::getSceneNode() const
+{
+	return node;
 }

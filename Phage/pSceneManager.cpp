@@ -21,18 +21,39 @@ pSceneManager * pSceneManager::instance()
 	return _instance;
 }
 
+void pSceneManager::startScene()
+{
+	if (hasCurrentScene()) {
+	
+	}
+}
+
 void pSceneManager::updateScene(double deltaTime)
 {
-
+	if (hasCurrentScene()) {
+		currentScene->sceneGraph->updateSceneGraph(deltaTime, currentScene->sceneGraph->getRootSceneNode());
+	}
 }
 
 void pSceneManager::renderScene(pRenderer * renderer)
 {
-	currentScene->sceneGraph->renderSceneGraph(renderer, currentScene->sceneGraph->getRootSceneNode());
+	if (hasCurrentScene()) {
+		currentScene->sceneGraph->renderSceneGraph(renderer, currentScene->sceneGraph->getRootSceneNode());
+	}
+}
+
+void pSceneManager::endScene()
+{
+	if (hasCurrentScene()) {
+
+	}
 }
 
 void pSceneManager::addScene()
 {
 	pScene* scene = new pScene();
 	sceneList.push_back(scene);
+	if (currentScene == nullptr) {
+		currentScene = scene;
+	}
 }

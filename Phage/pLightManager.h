@@ -8,6 +8,7 @@ public:
 	static pLightManager* instance();
 
 	std::vector<pLight*> getAllLights();
+
 	void clearLights();
 	pLight* addLight(pLight* light);
 private:

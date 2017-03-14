@@ -1,5 +1,6 @@
 #include "pResourceFactory.h"
 #include "DefaultPaths.h"
+#include "pScene.h"
 
 pResourceFactory* pResourceFactory::_instance = 0;
 pResourceFactory::pResourceFactory()
@@ -46,6 +47,11 @@ void pResourceFactory::setShaderManager(pShaderManager * shaderManager)
 void pResourceFactory::setAudioManager(pAudioManager * audioManager)
 {
 	this->soundSystemManager = audioManager;
+}
+
+void pResourceFactory::setScriptManager(pScriptManager * scriptManager)
+{
+	this->scriptManager = scriptManager;
 }
 
 pModel * pResourceFactory::createModel(std::string name, pMaterial * mat, GLfloat * vertPositions,  GLfloat * vertNormals, GLfloat * vertColors, GLfloat * vertUVs, GLuint numVerts, GLenum drawMode)
@@ -99,14 +105,19 @@ pModel * pResourceFactory::createPrimitiveShape(std::string name, pPrimitiveMake
 	return modelManager->getModel(mdlH);
 }
 
-pImage * pResourceFactory::createDebugImage(std::string name)
+pImage * pResourceFactory::createDebugImage()
 {
-	//Create the image in memory
-	pImage* img = new pImage(name);
-	//Add the image to the manager table
-	pResourceHandle<pImage> imgH = imageManager->addImage(name, img);
-	//Return the image from the table
-	return imageManager->getImage(imgH);
+	//Check for the image already existing
+	pImage* tmpImg = imageManager->getImage("DEBUG_IMAGE");
+
+	//If it doesn't exist, make a new one
+	if (tmpImg == nullptr) {
+		tmpImg = new pImage("DEBUG_IMAGE");
+		pResourceHandle<pImage> imgH = imageManager->addImage("DEBUG_IMAGE", tmpImg);
+	}
+
+	//Return the image
+	return tmpImg;
 }
 
 pMaterial * pResourceFactory::createDebugMaterial()
@@ -127,6 +138,9 @@ pShader * pResourceFactory::createDebugShader()
 	
 	//Shader does not already exist
 	if (tmpShader == nullptr) {
+#ifdef _DEBUG
+		std::cout << "Primitive shader loaded for first time" << std::endl;
+#endif
 		attribNameMap atrMap = attribNameMap();
 		uniformNameMap uniMap = uniformNameMap();
 		{
@@ -147,6 +161,82 @@ pShader * pResourceFactory::createDebugShader()
 
 #ifdef _DEBUG
 		std::cout << "Primitive shader already loaded" << std::endl;
+#endif
+	return tmpShader;
+}
+
+pShader * pResourceFactory::createSkyboxShader()
+{
+	pShader* tmpShader = shaderManager->getShader("Skybox");
+
+	//Shader does not already exist
+	if (tmpShader == nullptr) {
+#ifdef _DEBUG
+		std::cout << "Skybox shader loaded for first time" << std::endl;
+#endif
+		attribNameMap atrMap = attribNameMap();
+		uniformNameMap uniMap = uniformNameMap();
+		{
+			atrMap.insert(Attributes::VertexPosition, "vPosition");
+			uniMap.insert(Uniforms::ModelViewProjection, "transformMatrix");
+			uniMap.insert(Uniforms::Cube_Map_Texture, "fCubeMapTexture");
+		}
+		pResourceHandle<pShader> shdrH = shaderManager->addShader("Skybox", new pShader("Skybox", atrMap, uniMap, shader_skybox_vert, shader_skybox_frag));
+		return shaderManager->getShader(shdrH);
+	}
+
+#ifdef _DEBUG
+	std::cout << "Skybox shader already loaded" << std::endl;
+#endif
+	return tmpShader;
+}
+
+pShader * pResourceFactory::createPhongShader()
+{
+	pShader* tmpShader = shaderManager->getShader("DEFAULT_PHONG");
+
+	//Shader does not already exist
+	if (tmpShader == nullptr) {
+#ifdef _DEBUG
+		std::cout << "Phong shader loaded for first time" << std::endl;
+#endif
+		attribNameMap atrMap = attribNameMap();
+		uniformNameMap uniMap = uniformNameMap();
+		{
+			atrMap.insert(Attributes::VertexPosition, "vPosition");
+			atrMap.insert(Attributes::VertexCoordinate, "vTexCoord");
+			atrMap.insert(Attributes::VertexNormal, "vNormal");
+
+			uniMap.insert(Uniforms::Projection_View, "projView");
+			uniMap.insert(Uniforms::Model_View, "modelView");
+			uniMap.insert(Uniforms::Camera_View, "cameraView");
+			uniMap.insert(Uniforms::Normal_View, "normalView");
+
+			uniMap.insert(Uniforms::Camera_Position, "cameraLocation");
+
+			uniMap.insert(Uniforms::DiffuseColor, "fDiffuse");
+			uniMap.insert(Uniforms::AmbientColor, "fAmbient");
+			uniMap.insert(Uniforms::DiffuseTexture, "fTexture");
+			uniMap.insert(Uniforms::SpecularTexture, "fSpecularMap");
+			uniMap.insert(Uniforms::SpecularColor, "fSpecular");
+			uniMap.insert(Uniforms::Shininess, "fShininess");
+
+			uniMap.insert(Uniforms::Light_Count, "lightCount");
+			uniMap.insert(Uniforms::Light_Type, "lType");
+			uniMap.insert(Uniforms::Light_Range, "lRange");
+			uniMap.insert(Uniforms::Light_Position, "lPosition");
+			uniMap.insert(Uniforms::Light_Angle, "lAngle");
+			uniMap.insert(Uniforms::Light_Cone, "lCone");
+			uniMap.insert(Uniforms::Light_Color, "lColor");
+			uniMap.insert(Uniforms::Light_Power, "lPower");
+			uniMap.insert(Uniforms::Light_Ambient, "lAmbient");
+		}
+		pResourceHandle<pShader> shdrH = shaderManager->addShader("DEFAULT_PHONG", new pShader("DEFAULT_PHONG", atrMap, uniMap, shader_phong_vert, shader_phong_frag));
+		return shaderManager->getShader(shdrH);
+	}
+
+#ifdef _DEBUG
+	std::cout << "Phong shader already loaded" << std::endl;
 #endif
 	return tmpShader;
 }
@@ -176,6 +266,15 @@ pModel * pResourceFactory::loadModel(std::string name, std::string path, pMateri
 	mdl = modelManager->loadModel(name, path, mat);
 
 	return modelManager->getModel(mdl);
+}
+
+pSceneNode * pResourceFactory::loadModelToScene(std::string name, std::string path, pScene & scene, pSceneNode * parent, pMaterial * mat)
+{
+	pSceneNode* resNode = pModelLoader::instance()->loadModelToSceneObjects(path, mat);
+
+	scene.addExistingNodes(resNode, parent);
+
+	return resNode;
 }
 
 pModel * pResourceFactory::getModel(std::string name)
@@ -210,4 +309,40 @@ pImage * pResourceFactory::getImage(std::string name)
 pShader * pResourceFactory::getShader(std::string name)
 {
 	return shaderManager->getShader(name);
+}
+
+pScript * pResourceFactory::getScript(std::string name)
+{
+	return scriptManager->getScript(name);
+}
+
+pScript* pResourceFactory::addScript(std::string name, pScript * script)
+{
+	script->OnCreate();
+	return scriptManager->addScript(name, script);
+}
+
+std::vector<pShader*> pResourceFactory::getAllShaders()
+{
+	return shaderManager->getAllShaders();
+}
+
+std::vector<pModel*> pResourceFactory::getAllModels()
+{
+	return modelManager->getAllModels();
+}
+
+std::vector<pMaterial*> pResourceFactory::getAllMaterials()
+{
+	return materialManager->getAllMaterials();
+}
+
+std::vector<pImage*> pResourceFactory::getAllImages()
+{
+	return imageManager->getAllImages();
+}
+
+std::vector<pScript*> pResourceFactory::getAllScripts()
+{
+	return std::vector<pScript*>();
 }

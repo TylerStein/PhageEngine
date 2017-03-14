@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include "pModel.h"
+#include "pScene.h"
 
 class pModelLoader
 {
@@ -39,10 +40,28 @@ public:
 	contained within the ModelInfo struct.
 	The struct is then returned.*/
 	pModel* loadModel(std::string path, pMaterial* mat = nullptr);
+
+	//Loads in resources and returns a tree of scene nodes without a root, meant to be attached to a scene!
+	pSceneNode* loadModelToSceneObjects(std::string path, pMaterial* mat = nullptr);
+
+	//TODO: Loads in resources for later access
+	void loadModelToResources(std::string path, pMaterial* mat = nullptr);
+
 private:
+
+	//Adds material to the resource manager
+	pMaterial* processMaterial(const aiMaterial& material, pShader* shader, std::string backupName = "");
+
+	//Adds model to the resource manager
+	pModel* processMesh(const aiMesh& mesh, pMaterial* mat, std::string backupName = "");
+
+	//Creates node tree to put in the pScene
+	pSceneNode* processNodes(const aiScene& scene, const std::vector<pModel*> indexedMeshes, const aiNode* root = nullptr);
 
 	/*contains instance of the pModelLoader object*/
 	static pModelLoader* _instance;
+
+	glm::quat aiQuat_to_glmQuat(aiQuaternion aiQuat);
 
 	std::vector<GLfloat>* vec3_addToArray(aiVector3D* src, std::vector<GLfloat>* dst);
 	std::vector<GLfloat>* vec3_2_addToArray(aiVector3D* src, std::vector<GLfloat>* dst);

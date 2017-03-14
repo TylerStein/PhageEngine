@@ -37,15 +37,6 @@
     <ClCompile Include="pFrustum.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="pImageManager.cpp">
-      <Filter>Management</Filter>
-    </ClCompile>
-    <ClCompile Include="pMaterialManager.cpp">
-      <Filter>Management</Filter>
-    </ClCompile>
-    <ClCompile Include="pModelManager.cpp">
-      <Filter>Management</Filter>
-    </ClCompile>
     <ClCompile Include="pImageLoader.cpp">
       <Filter>Loader</Filter>
     </ClCompile>
@@ -76,34 +67,60 @@
     <ClCompile Include="pSceneGraph.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="pShaderManager.cpp">
-      <Filter>Management</Filter>
-    </ClCompile>
     <ClCompile Include="pPlane.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
     <ClCompile Include="pShader.cpp">
       <Filter>Asset</Filter>
     </ClCompile>
-    <ClCompile Include="pAudioManager.cpp">
-      <Filter>Management</Filter>
-    </ClCompile>
     <ClCompile Include="pPrimitiveMaker.cpp">
       <Filter>Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="pLightManager.cpp">
-      <Filter>Management</Filter>
     </ClCompile>
     <ClCompile Include="pSoundSystem.cpp">
       <Filter>Asset</Filter>
     </ClCompile>
-    <ClCompile Include="pScript.cpp">
+    <ClCompile Include="pCubeMap.cpp">
       <Filter>Asset</Filter>
     </ClCompile>
     <ClCompile Include="pScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="pSceneManager.cpp" />
+    <ClCompile Include="pCamera.cpp">
+      <Filter>Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="pMaterialManager.cpp">
+      <Filter>Management\AssetManagers</Filter>
+    </ClCompile>
+    <ClCompile Include="pModelManager.cpp">
+      <Filter>Management\AssetManagers</Filter>
+    </ClCompile>
+    <ClCompile Include="pImageManager.cpp">
+      <Filter>Management\AssetManagers</Filter>
+    </ClCompile>
+    <ClCompile Include="pAudioManager.cpp">
+      <Filter>Management\AssetManagers</Filter>
+    </ClCompile>
+    <ClCompile Include="pScriptManager.cpp">
+      <Filter>Management\AssetManagers</Filter>
+    </ClCompile>
+    <ClCompile Include="pShaderManager.cpp">
+      <Filter>Management\AssetManagers</Filter>
+    </ClCompile>
+    <ClCompile Include="pSceneManager.cpp">
+      <Filter>Management</Filter>
+    </ClCompile>
+    <ClCompile Include="pLightManager.cpp">
+      <Filter>Management\RenderingManagers</Filter>
+    </ClCompile>
+    <ClCompile Include="pCameraManager.cpp">
+      <Filter>Management\RenderingManagers</Filter>
+    </ClCompile>
+    <ClCompile Include="pInputHandler.cpp">
+      <Filter>Management</Filter>
+    </ClCompile>
+    <ClCompile Include="pInputManager.cpp">
+      <Filter>Management</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Clock.h">
@@ -151,15 +168,6 @@
     <ClInclude Include="pFrustum.h">
       <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="pImageManager.h">
-      <Filter>Management</Filter>
-    </ClInclude>
-    <ClInclude Include="pMaterialManager.h">
-      <Filter>Management</Filter>
-    </ClInclude>
-    <ClInclude Include="pModelManager.h">
-      <Filter>Management</Filter>
-    </ClInclude>
     <ClInclude Include="pImageLoader.h">
       <Filter>Loader</Filter>
     </ClInclude>
@@ -190,9 +198,6 @@
     <ClInclude Include="pSceneGraph.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="pShaderManager.h">
-      <Filter>Management</Filter>
-    </ClInclude>
     <ClInclude Include="pPlane.h">
       <Filter>Utility</Filter>
     </ClInclude>
@@ -202,41 +207,76 @@
     <ClInclude Include="DefaultPaths.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="pAudioManager.h">
-      <Filter>Management</Filter>
-    </ClInclude>
     <ClInclude Include="pPrimitiveMaker.h">
       <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="pLightManager.h">
-      <Filter>Management</Filter>
-    </ClInclude>
     <ClInclude Include="pSoundSystem.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="pCubeMap.h">
       <Filter>Asset</Filter>
     </ClInclude>
     <ClInclude Include="pScript.h">
       <Filter>Asset</Filter>
     </ClInclude>
-    <ClInclude Include="pTransform.h">
-      <Filter>Asset</Filter>
-    </ClInclude>
     <ClInclude Include="pScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="pSceneManager.h" />
+    <ClInclude Include="pCamera.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="pModelManager.h">
+      <Filter>Management\AssetManagers</Filter>
+    </ClInclude>
+    <ClInclude Include="pMaterialManager.h">
+      <Filter>Management\AssetManagers</Filter>
+    </ClInclude>
+    <ClInclude Include="pImageManager.h">
+      <Filter>Management\AssetManagers</Filter>
+    </ClInclude>
+    <ClInclude Include="pAudioManager.h">
+      <Filter>Management\AssetManagers</Filter>
+    </ClInclude>
+    <ClInclude Include="pScriptManager.h">
+      <Filter>Management\AssetManagers</Filter>
+    </ClInclude>
+    <ClInclude Include="pShaderManager.h">
+      <Filter>Management\AssetManagers</Filter>
+    </ClInclude>
+    <ClInclude Include="pSceneManager.h">
+      <Filter>Management</Filter>
+    </ClInclude>
+    <ClInclude Include="pLightManager.h">
+      <Filter>Management\RenderingManagers</Filter>
+    </ClInclude>
+    <ClInclude Include="pCameraManager.h">
+      <Filter>Management\RenderingManagers</Filter>
+    </ClInclude>
+    <ClInclude Include="pInputHandler.h">
+      <Filter>Management</Filter>
+    </ClInclude>
+    <ClInclude Include="pInputManager.h">
+      <Filter>Management</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="PhageDiagram.cd" />
+    <None Include="..\Resources\Shaders\BlinnPhong.frag">
+      <Filter>Resources\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\BlinnPhong.vert">
+      <Filter>Resources\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\BlinnPhong_Advanced.frag">
+      <Filter>Resources\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\BlinnPhong_Advanced.vert">
+      <Filter>Resources\Shaders</Filter>
+    </None>
     <None Include="..\Resources\Shaders\phong2.frag">
       <Filter>Resources\Shaders</Filter>
     </None>
     <None Include="..\Resources\Shaders\phong2.vert">
-      <Filter>Resources\Shaders</Filter>
-    </None>
-    <None Include="..\Resources\Shaders\Primitive.frag">
-      <Filter>Resources\Shaders</Filter>
-    </None>
-    <None Include="..\Resources\Shaders\Primitive.vert">
       <Filter>Resources\Shaders</Filter>
     </None>
     <None Include="..\Resources\Shaders\PhongMaterial.frag">
@@ -245,11 +285,41 @@
     <None Include="..\Resources\Shaders\PhongMaterial.vert">
       <Filter>Resources\Shaders</Filter>
     </None>
-    <None Include="..\Resources\Shaders\BlinnPhong.frag">
+    <None Include="..\Resources\Shaders\Primitive.frag">
       <Filter>Resources\Shaders</Filter>
     </None>
-    <None Include="..\Resources\Shaders\BlinnPhong.vert">
+    <None Include="..\Resources\Shaders\Primitive.vert">
       <Filter>Resources\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\shadowmap.frag">
+      <Filter>Resources\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\shadowmap.vert">
+      <Filter>Resources\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\Skybox.frag">
+      <Filter>Resources\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\Skybox.vert">
+      <Filter>Resources\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\Default\Flat.frag">
+      <Filter>Resources\Shaders\Default</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\Default\Flat.vert">
+      <Filter>Resources\Shaders\Default</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\Default\Phong.frag">
+      <Filter>Resources\Shaders\Default</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\Default\Phong.vert">
+      <Filter>Resources\Shaders\Default</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\Default\Primitive.frag">
+      <Filter>Resources\Shaders\Default</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\Default\Primitive.vert">
+      <Filter>Resources\Shaders\Default</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -279,6 +349,15 @@
     </Filter>
     <Filter Include="Resources\Shaders">
       <UniqueIdentifier>{72df31c6-964e-4c4a-a5b3-90fca9036e62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Management\AssetManagers">
+      <UniqueIdentifier>{0e48eafd-b9ce-46bf-bd9e-1e06430d97f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Management\RenderingManagers">
+      <UniqueIdentifier>{1af18514-f514-480e-beea-b0e14f918391}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\Shaders\Default">
+      <UniqueIdentifier>{09633ec1-6b63-4a87-9756-a0ade4b7d5ef}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

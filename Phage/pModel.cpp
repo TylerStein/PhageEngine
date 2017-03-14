@@ -5,7 +5,7 @@
 #include "GLError.h"
 #include <iostream>
 #include <vector>
-
+#include "GLFW\glfw3.h"
 
 pModel::pModel(std::string name, pMaterial * material, GLenum drawMode, GLuint numVerts, GLfloat * vPositions, GLuint numIndeces, GLuint* vIndeces, GLfloat * vCoordinates, GLfloat * vNormals, GLfloat * vTangents, GLfloat * vBiTangents, GLfloat * vColors)
 {
@@ -155,11 +155,6 @@ pModel::~pModel()
 	deleteBuffers();
 }
 
-std::string pModel::getName()
-{
-	return name;
-}
-
 GLuint pModel::getShaderProgramID()
 {
 	return material->getShaderProgramID();
@@ -198,6 +193,11 @@ GLuint pModel::getProjectionMatrixID()
 GLuint pModel::getNormalMatrixID()
 {
 	return material->getNormalMatrixID();
+}
+
+GLuint pModel::getMVPMatrixID()
+{
+	return material->getMVPMatrixID();
 }
 
 glm::mat4 pModel::getModelMatrix()
@@ -273,18 +273,20 @@ void pModel::scaleTextureCoordinates(glm::vec2 scale)
 	//Ensure coordinates even exist
 	if (&vCoordinates != nullptr) {
 		//Scale each coordinate float
-		for (int i(0); i < vertCount; i+=2) {
+		for (int i(0); i < vertCount; i += 2) {
 			vCoordinates[i] *= scale.x;
 			vCoordinates[i + 1] *= scale.y;
 		}
 
 		//Overwrite the original coordinate buffer data
+		//glDeleteBuffers(1, &BufferID_Coordinates);
+		//BufferID_Coordinates = 0;
+		//glGenBuffers(1, &BufferID_Coordinates);
 		glBindBuffer(GL_ARRAY_BUFFER, BufferID_Coordinates);
 		glBufferData(GL_ARRAY_BUFFER, vertCount * 2 * sizeof(GLfloat), &vCoordinates[0], GL_STATIC_DRAW);
 	}
 
 }
-
 void pModel::deleteBuffers()
 {
 	//Deletes buffers from the GPU
@@ -313,9 +315,14 @@ void pModel::setupModel()
 	int currentBuffer = 0;
 
 	pShader* shader = material->getShader();
-	
-	GLError::printError(__FILE__, __LINE__);
 
+	if (glfwGetCurrentContext() == nullptr) {
+#ifdef _DEBUG
+		printf("Attempted to send data to GPU without an active OpenGL context!");
+#endif
+		LogManager::instance()->error("Attempting to send data to GPU without an active OpenGL context!");
+		return;
+	}
 
 	//Create the vertex array object to hold our VBOs and bind it
 	glGenVertexArrays(1, &VAOID);
@@ -333,13 +340,16 @@ void pModel::setupModel()
 	if (useVertices && (shader->hasAttribute(Attributes::VertexPosition))) {
 		//Generate the points VBO, bind it and copy the points onto the buffer
 		BufferID_Positions = 0;
+
+		GLuint attribID = shader->getAttributeID(Attributes::VertexPosition);
+
 		glGenBuffers(1, &BufferID_Positions);
 		glBindBuffer(GL_ARRAY_BUFFER, BufferID_Positions);
 		glBufferData(GL_ARRAY_BUFFER, vertCount * 3 * sizeof(GLfloat), &vPositions[0], GL_STATIC_DRAW);
 
-		//Attirbute pointer to the 0th index, 3 of type, type is float, not normalized, 0 stride, no pointer
-		GLuint attribID = shader->getAttributeID(Attributes::VertexPosition);
 		glEnableVertexAttribArray(attribID);
+
+		//Attirbute pointer to the 0th index, 3 of type, type is float, not normalized, 0 stride, no pointer
 		glVertexAttribPointer(attribID, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 	}
 

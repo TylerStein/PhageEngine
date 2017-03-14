@@ -5,21 +5,12 @@
 class TestScene : public GameImplement
 {
 public:
-	pModel* chairRef;
-
-	pModel* sphereRef;
-
-	pModel* floorRef;
-	pModel* wallRef;
-
-	pModel* mdl_LightA;
-	
-	pLight* light_A;
-
-	double lastMouseX, lastMouseY;
 
 	TestScene();
 	~TestScene();
+
+	pSceneObject* chairObject;
+	pSceneObject* cameraObject;
 
 	void giveEngineReference(PhageEngine* engine);
 
@@ -34,7 +25,5 @@ public:
 private:
 	PhageEngine* engine;
 	bool isLinkedToEngine;
-
-	pScene* scene;
 };
 

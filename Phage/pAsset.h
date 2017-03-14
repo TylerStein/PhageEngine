@@ -6,6 +6,11 @@
 class pAsset
 {
 public:
-	virtual std::string getName() = 0;
+	virtual std::string getName() const {
+		return name;
+	}
+
+protected:
+	std::string name;
 };
 

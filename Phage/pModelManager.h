@@ -27,6 +27,8 @@ public:
 	pModel* getModel(HandleType &handle);
 	pModel* getModel(std::string modelName);
 
+	std::vector<pModel*> getAllModels();
+
 	//Delete a model from the manager
 	void deleteModel(std::string modelName);
 

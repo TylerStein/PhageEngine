@@ -1,46 +1,44 @@
-#version 330
+#version 400
 
-// attributes
-in vec3	i_position;	// xyz - position
-in vec3	i_normal;	// xyz - normal
-in vec2	i_texcoord0;	// xy - texture coords
+in vec3 vPosition;
+in vec2 vTexCoord;
+in vec3 vNormal;
+in vec3 vTangent;
 
-// matrices
-uniform mat4 u_modelMat;
-uniform mat4 u_viewMat;
-uniform mat4 u_projMat;
-uniform mat3 u_normalMat;
+uniform mat4 MVPMatrix;
+uniform mat4 modelMatrix;
+uniform mat3 normalMatrix;
 
-// position of light and camera
-uniform vec3 u_lightPosition;
-uniform vec3 u_cameraPosition;
+uniform int lightCount;
+uniform vec3 lPosition[12];
 
-// data for fragment shader
-out vec3 o_normal;
-out vec3 o_toLight;
-out vec3 o_toCamera;
-out vec2 o_texcoords;
+out vec2 fTexCoord;
+out vec3 fPosition_world;
+flat out int fLightCount;
+out vec3 lightVector_tangent[12];
+out float lightDist_world[12];
+out mat3 TBNMatrix;
 
-///////////////////////////////////////////////////////////////////
+void main(){
+	//Pass texture coordinates
+	fTexCoord = vTexCoord;
 
-void main(void)
-{
-   // position in world space
-   vec4 worldPosition = u_modelMat * vec4(i_position, 1);
-   
+	//Pass light count
+	fLightCount = lightCount;
 
-   // normal in world space
-   o_normal	= normalize(u_normalMat * i_normal);
+	//Calculate and pass world-space surface position
+	fPosition_world = (modelMatrix * vec4(vPosition, 1.0)).xyz;
 
-   // direction to light
-   o_toLight	= normalize(u_lightPosition - worldPosition.xyz);
+	//Calculate BiTanent and tangent-space matrix
+	vec3 biNormal = cross(normalMatrix * vNormal, vTangent);
+	TBNMatrix = mat3(vTangent, biNormal, vNormal);
 
-   // direction to camera
-   o_toCamera	= normalize(u_cameraPosition - worldPosition.xyz);
+	//Calculate tangent-space light vectors
+	for(int i = 0; i < lightCount; ++i){
+		lightVector_tangent[i] = lPosition[i] - fPosition_world;
+		lightDist_world[i] = length(lightVector_tangent[i]);
+		lightVector_tangent[i] *= TBNMatrix;
+	}
 
-   // texture coordinates to fragment shader
-   o_texcoords	= i_texcoord0;
-
-   // screen space coordinates of the vertex
-   gl_Position	= u_projMat * u_viewMat * worldPosition;
+	gl_Position = MVPMatrix * vec4(vPosition, 1.0);
 }

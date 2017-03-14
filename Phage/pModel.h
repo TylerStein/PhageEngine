@@ -17,8 +17,6 @@ public:
 	pModel(std::string name, pMaterial* material, GLenum drawMode, std::vector<GLfloat> vPositions, std::vector<GLuint> vIndeces, std::vector<GLfloat> vCoordinates, std::vector<GLfloat> vNormals, std::vector<GLfloat> vTangents, std::vector<GLfloat> vBiTangents, std::vector<GLfloat> vColors);
 	~pModel();
 
-	std::string getName() override;
-
 	GLuint getShaderProgramID();
 	GLuint getVertCount();
 	GLuint getVertexArrayID();
@@ -27,6 +25,7 @@ public:
 	GLuint getElementBufferID();
 	GLuint getProjectionMatrixID();
 	GLuint getNormalMatrixID();
+	GLuint getMVPMatrixID();
 
 	glm::mat4 getModelMatrix();
 	glm::mat3 getNormalMatrix();
@@ -59,21 +58,6 @@ public:
 
 	bool usesIndeces();
 	GLuint getNumIndeces();
-
-	inline glm::mat4 getTranslationMatrix()
-	{
-		return translationMatrix;
-	}
-
-	inline glm::mat4 getRotationMatrix()
-	{
-		return rotationMatrix;
-	}
-
-	inline glm::mat4 getScaleMatrix()
-	{
-		return scaleMatrix;
-	}
 
 	pType type;
 
@@ -123,7 +107,5 @@ private:
 
 	glm::mat4 modelMatrix;
 	glm::mat3 normalMatrix;
-
-	std::string name;
 };
 

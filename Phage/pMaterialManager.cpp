@@ -47,6 +47,20 @@ void pMaterialManager::deleteMaterial(std::string materialName)
 	materialResources.remove(materialName);
 }
 
+std::vector<pMaterial*> pMaterialManager::getAllMaterials()
+{
+	auto inList = materialResources.getAll();
+	std::vector<pMaterial*> outList = std::vector<pMaterial*>();
+	for (int i = 0; i < inList.size(); ++i) {
+		outList.push_back(
+			materialResources.get(
+				inList.at(i)
+			));
+	}
+
+	return outList;
+}
+
 void pMaterialManager::clear()
 {
 	materialResources.clearKeysAndValues();

@@ -118,6 +118,18 @@ void pShader::setUniformFloat(GLuint attributeID, std::vector<GLfloat> data)
 	glUniform1fv(attributeID, data.size(), &arr[0]);
 }
 
+void pShader::setUniformInt(GLuint attributeID, std::vector<GLint> data)
+{
+	//Make sure the shader is being used
+	glUseProgram(shaderID);
+
+	//Create a float array pointer from the incoming data
+	const GLint* arr = data.data();
+
+	//Pass in the array
+	glUniform1iv(attributeID, data.size(), &arr[0]);
+}
+
 bool pShader::hasAttribute(Attributes attrib)
 {
 	bool ans = (attributeFlags & attrib);

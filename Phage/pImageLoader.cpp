@@ -2,16 +2,7 @@
 #include "FreeImage.h"
 #include "LogManager.h"
 
-pImageLoader::pImageLoader()
-{
-}
-
-
-pImageLoader::~pImageLoader()
-{
-}
-
-GLubyte * pImageLoader::loadImage(char * filePath)
+ImageData pImageLoader::loadImage(char * filePath)
 {
 	//Detect the image format
 	FREE_IMAGE_FORMAT format = FreeImage_GetFileType(filePath, 0);
@@ -21,9 +12,9 @@ GLubyte * pImageLoader::loadImage(char * filePath)
 	//image = FreeImage_ConvertTo32Bits(image);
 	image = FreeImage_ConvertTo24Bits(image);
 	//Get the image width
-	width = FreeImage_GetWidth(image);
+	GLuint width = FreeImage_GetWidth(image);
 	//Get the image height
-	height = FreeImage_GetHeight(image);
+	GLuint height = FreeImage_GetHeight(image);
 
 	//Check if the width and height is a power of  (can handle this in some way later)
 	if ((width != 0 && height != 0)) {
@@ -37,18 +28,8 @@ GLubyte * pImageLoader::loadImage(char * filePath)
 	}
 
 	//Return the image data bits
-	imageData = (GLubyte*)malloc(width * height * 3 * sizeof(GLfloat));
+	GLubyte* imageData = (GLubyte*)malloc(width * height * 3 * sizeof(GLfloat));
 	imageData = FreeImage_GetBits(image);
 
-	return imageData;
-}
-
-GLuint pImageLoader::getWidth()
-{
-	return width;
-}
-
-GLuint pImageLoader::getHeight()
-{
-	return height;
+	return ImageData(imageData, width, height);
 }

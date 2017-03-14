@@ -28,11 +28,6 @@ pMaterial::~pMaterial()
 }
 
 
-std::string pMaterial::getName()
-{
-	return name.c_str();
-}
-
 void pMaterial::setViewMatrices(glm::mat4 modelMatrix, glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
 {
 	shader->setUniformMat4(shader->getUniformID(Uniforms::Model_View), modelMatrix);
@@ -131,12 +126,12 @@ void pMaterial::setBumpTexture(pImage * tex, bool sendToShader)
 {
 	if (sendToShader) {
 	if (shader->hasUniform(Uniforms::BumpTexture)) {
-		tex->setupTexture(GL_TEXTURE2);
 		shader->setUniformTextureID(shader->getUniformID(Uniforms::BumpTexture), tex->textureID);
 	}
 	}
 	else {
 		mat.bumpTexture = tex;
+		tex->setupTexture(GL_TEXTURE2);
 	}
 }
 
@@ -151,7 +146,9 @@ void pMaterial::setLightSources(std::vector<pLight*> lights)
 		std::vector<glm::vec3> aAmb = std::vector<glm::vec3>();
 		std::vector<glm::vec3> aPow = std::vector<glm::vec3>();
 		std::vector<GLfloat> aRange = std::vector<GLfloat>();
-		std::vector<GLfloat> aAtten = std::vector<GLfloat>();
+		std::vector<glm::vec3> aAng = std::vector<glm::vec3>();
+		std::vector<GLint> aType = std::vector<GLint>();
+		std::vector<GLfloat> aCone = std::vector<GLfloat>();
 
 		for (int i = 0; i < lights.size(); ++i) {
 			pLight* cl = lights.at(i);
@@ -161,23 +158,43 @@ void pMaterial::setLightSources(std::vector<pLight*> lights)
 			aAmb.push_back(cl->getAmbient());
 			aPow.push_back(cl->getIntensity());
 			aRange.push_back(cl->getRange());
-			aAtten.push_back(cl->getAttenuation());
+			aType.push_back(cl->getType());
+			aAng.push_back(cl->getAngle());
+			aCone.push_back(cl->getCone());
 		}
 
 		//Set all light properties
 		shader->setUniformInt(shader->getUniformID(Uniforms::Light_Count), lights.size());
 		shader->setUniformVec3(shader->getUniformID(Uniforms::Light_Position), aPos);
 		shader->setUniformVec3(shader->getUniformID(Uniforms::Light_Color), aColor);
-		shader->setUniformVec3(shader->getUniformID(Uniforms::Light_Power), aAmb);
-		shader->setUniformVec3(shader->getUniformID(Uniforms::Light_Ambient), aPow);
+		shader->setUniformVec3(shader->getUniformID(Uniforms::Light_Power), aPow);
+		shader->setUniformVec3(shader->getUniformID(Uniforms::Light_Ambient), aAmb);
 		shader->setUniformFloat(shader->getUniformID(Uniforms::Light_Range), aRange);
-		shader->setUniformFloat(shader->getUniformID(Uniforms::Light_Attenuation), aAtten);
+		shader->setUniformInt(shader->getUniformID(Uniforms::Light_Type), aType);
+		shader->setUniformVec3(shader->getUniformID(Uniforms::Light_Angle), aAng);
+		shader->setUniformFloat(shader->getUniformID(Uniforms::Light_Cone), aCone);
+
+
 	}
 }
 
 void pMaterial::setUseLight(bool use)
 {
 	mat.useLight = true;
+}
+
+void pMaterial::updateDeltaTime(float dT)
+{
+	if (shader->hasUniform(Uniforms::Time_Delta)) {
+		shader->setUniformFloat(shader->getUniformID(Uniforms::Time_Delta), dT);
+	}
+}
+
+void pMaterial::updateTotalTime(float tT)
+{
+	if (shader->hasUniform(Uniforms::Time_Elapsed)) {
+		shader->setUniformFloat(shader->getUniformID(Uniforms::Time_Elapsed), tT);
+	}
 }
 
 GLuint pMaterial::getModelMatrixID()
@@ -200,6 +217,11 @@ GLuint pMaterial::getNormalMatrixID()
 	return shader->getUniformID(Uniforms::Normal_View);
 }
 
+GLuint pMaterial::getMVPMatrixID()
+{
+	return shader->getUniformID(Uniforms::ModelViewProjection);
+}
+
 
 GLuint pMaterial::getShaderProgramID()
 {
@@ -208,8 +230,6 @@ GLuint pMaterial::getShaderProgramID()
 
 void pMaterial::useMaterial()
 {
-	
-
 	//Send incoming data to the shader
 	if (&mat.diffuse != NULL || shader->hasUniform(Uniforms::DiffuseColor)) { setDiffuseColor(mat.diffuse, true); }
 	if (&mat.ambient != NULL || shader->hasUniform(Uniforms::AmbientColor)) { setAmbientColor(mat.ambient, true); }
@@ -222,9 +242,9 @@ void pMaterial::useMaterial()
 	if (mat.specularTexture != NULL) { mat.specularTexture->useTexture(GL_TEXTURE1); }
 	if (mat.bumpTexture != NULL) { mat.bumpTexture->useTexture(GL_TEXTURE2); }
 
+	//Apply scene light sources
 	if(mat.useLight == true){
-		std::vector<pLight*> lights = pLightManager::instance()->getAllLights();
-		setLightSources(lights);
+		setLightSources(pLightManager::instance()->getAllLights());
 	}
 }
 

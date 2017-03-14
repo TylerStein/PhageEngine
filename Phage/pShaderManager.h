@@ -20,6 +20,8 @@ public:
 	pShader* getShader(HandleType &handle);
 	pShader* getShader(std::string shaderName);
 
+	std::vector<pShader*> getAllShaders();
+
 	//Delete a shader from the manager
 	void deleteShader(std::string shaderName);
 

@@ -1,5 +1,6 @@
 #include "pPrimitiveMaker.h"
 #include "pResourceFactory.h"
+#include "DefaultPaths.h"
 
 pPrimitiveMaker* pPrimitiveMaker::_instance = 0;
 
@@ -31,23 +32,19 @@ pModel* pPrimitiveMaker::GetPrimitive(std::string name, Primitives type, glm::ve
 	}
 
 	switch (type) {
-	case Primitives::CUBOID_QUAD:
-		return pPrimitiveMaker::instance()->makeCuboid_Quad(name, scale, finalMat, color);
 	case Primitives::CUBOID_TRI:
 		return pPrimitiveMaker::instance()->makeCuboid_Tri(name, scale, finalMat, color);
-	case Primitives::PLANE_QUAD:
-		return pPrimitiveMaker::instance()->makePlane_Quad(name, glm::vec2(scale.x, scale.y), finalMat, color);
+	case Primitives::SPHERE_UV:
+		return pPrimitiveMaker::instance()->makeSphere_UV(name, scale, finalMat, color);
 	case Primitives::PLANE_TRI:
 		return pPrimitiveMaker::instance()->makePlane_Tri(name, glm::vec2(scale.x, scale.y), finalMat, color);
+	case Primitives::TEAPOT:
+		return pPrimitiveMaker::instance()->makeTeapot(name, scale, finalMat, color);
 	}
 }
 
 pModel * pPrimitiveMaker::makeCuboid_Tri(std::string name, glm::vec3 scale, pMaterial* material, glm::vec3 color)
 {
-	if (scale.length() == 0) { scale = glm::vec3(1); }
-
-
-
 	GLfloat vPositions[] = {
 		//Front plane verts
 		-scale.x, -scale.y, scale.z, //0
@@ -120,16 +117,16 @@ pModel * pPrimitiveMaker::makeCuboid_Tri(std::string name, glm::vec3 scale, pMat
 		0, 0, 1,
 
 		//Right plane verts
-		-1, 0, 0,
-		-1, 0, 0,
-		-1, 0, 0,
-		-1, 0, 0,
+		1, 0, 0,
+		1, 0, 0,
+		1, 0, 0,
+		1, 0, 0,
 
 		//Back plane verts
-		0, 0, 1,
-		0, 0, 1,
-		0, 0, 1,
-		0, 0, 1,
+		0, 0, -1,
+		0, 0, -1,
+		0, 0, -1,
+		0, 0, -1,
 
 		//Left plane verts
 		-1, 0, 0,
@@ -138,16 +135,54 @@ pModel * pPrimitiveMaker::makeCuboid_Tri(std::string name, glm::vec3 scale, pMat
 		-1, 0, 0,
 
 		//Top plane verts
-		0, -1, 0,
-		0, -1, 0,
-		0, -1, 0,
-		0, -1, 0,
+		0, 1, 0,
+		0, 1, 0,
+		0, 1, 0,
+		0, 1, 0,
 
 		//Bottom plane verts
 		0, -1, 0,
 		0, -1, 0,
 		0, -1, 0,
+		0, -1, 0
+	};
+
+	GLfloat vTangents[] = {
+		//Front plane verts
+		0, 1, 0,
+		0, 1, 0,
+		0, 1, 0,
+		0, 1, 0,
+
+		//Right plane verts
+		1, 0, 0,
+		1, 0, 0,
+		1, 0, 0,
+		1, 0, 0,
+
+		//Back plane verts
 		0, -1, 0,
+		0, -1, 0,
+		0, -1, 0,
+		0, -1, 0,
+
+		//Left plane verts
+		-1, 0, 0,
+		-1, 0, 0,
+		-1, 0, 0,
+		-1, 0, 0,
+
+		//Top plane verts
+		0, 0, 1,
+		0, 0, 1,
+		0, 0, 1,
+		0, 0, 1,
+
+		//Bottom plane verts
+		0, 0, -1,
+		0, 0, -1,
+		0, 0, -1,
+		0, 0, -1
 	};
 
 	GLfloat vCoordinates[] = {
@@ -222,18 +257,11 @@ pModel * pPrimitiveMaker::makeCuboid_Tri(std::string name, glm::vec3 scale, pMat
 
 	};
 
-	return new pModel("pCuboid_Tri", material, GL_TRIANGLES, 24, vPositions, 36, vIndeces, vCoordinates, vNormals, nullptr, nullptr, vColors);
-}
-
-pModel * pPrimitiveMaker::makeCuboid_Quad(std::string name, glm::vec3 scale, pMaterial* material, glm::vec3 color)
-{
-	return nullptr;
+	return new pModel("pCuboid_Tri", material, GL_TRIANGLES, 24, vPositions, 36, vIndeces, vCoordinates, vNormals, vTangents, nullptr, vColors);
 }
 
 pModel * pPrimitiveMaker::makePlane_Tri(std::string name, glm::vec2 scale, pMaterial* material, glm::vec3 color)
 {
-	if (scale.length() == 0) { scale = glm::vec2(1); }
-
 	GLfloat vPositions[] = {
 		-scale.x, -scale.y, 0,
 		-scale.x, scale.y, 0,
@@ -242,12 +270,22 @@ pModel * pPrimitiveMaker::makePlane_Tri(std::string name, glm::vec2 scale, pMate
 	};
 
 	GLfloat vNormals[] = {
-		0, 0, -1,
-		0, 0, -1,
-		0, 0, -1,
-		0, 0, -1,
-		0, 0, -1,
-		0, 0, -1
+		0, 0, 1,
+		0, 0, 1,
+		0, 0, 1,
+		0, 0, 1,
+		0, 0, 1,
+		0, 0, 1
+	};
+
+	GLfloat vTangents[] = 
+	{
+		0, 1, 0,
+		0, 1, 0,
+		0, 1, 0,
+		0, 1, 0, 
+		0, 1, 0,
+		0, 1, 0
 	};
 
 	GLfloat vCoordinates[] = {
@@ -265,17 +303,32 @@ pModel * pPrimitiveMaker::makePlane_Tri(std::string name, glm::vec2 scale, pMate
 	};
 
 	
-	pModel* res = new pModel("pPlane_Tri", material, GL_TRIANGLE_STRIP, 4, vPositions, 0, nullptr, vCoordinates, vNormals, nullptr, nullptr, vColors);
+	pModel* res = new pModel("pPlane_Tri", material, GL_TRIANGLE_STRIP, 4, vPositions, 0, nullptr, vCoordinates, vNormals, vTangents, nullptr, vColors);
 	return res;
 }
 
-pModel * pPrimitiveMaker::makePlane_Quad(std::string name, glm::vec2 scale, pMaterial* material, glm::vec3 color)
+pModel * pPrimitiveMaker::makeSphere_UV(std::string name, glm::vec3 scale, pMaterial * material, glm::vec3 color)
 {
-	return nullptr;
+	pModel* res = pModelLoader::instance()->loadModel(model_primitive_uvsphere, material);
+	res->setScale(scale);
+	return res;
+}
+
+pModel * pPrimitiveMaker::makeTeapot(std::string name, glm::vec3 scale, pMaterial * material, glm::vec3 color)
+{
+	pModel* res = pModelLoader::instance()->loadModel(model_primitive_teapot, material);
+	res->setScale(scale);
+	return res;
 }
 
 pMaterial * pPrimitiveMaker::makeBasicMaterial(glm::vec3 color, pShader* shader)
 {
+	pMaterial* res = pResourceFactory::instance()->getMaterial("Default_Primitive_Material");
+
+	if (res != nullptr) {
+		return res;
+	}
+
 	MaterialInfo basicMatInfo;
 	basicMatInfo.diffuse = color;
 	basicMatInfo.ambient = glm::vec3(0.1);
@@ -286,12 +339,17 @@ pMaterial * pPrimitiveMaker::makeBasicMaterial(glm::vec3 color, pShader* shader)
 	basicMatInfo.bumpTexture = NULL;
 	basicMatInfo.specularTexture = NULL;
 
-	pMaterial* res = new pMaterial("PrimitiveMaterial", shader, basicMatInfo);
+	res = pResourceFactory::instance()->createMaterial("Default_Primitive_Material", shader, basicMatInfo);
 	return res;
 }
 
 pShader* pPrimitiveMaker::makeBasicShader()
 {
+	pShader* res = pResourceFactory::instance()->getShader("Default_Primitive_Shader");
+
+	if (res != nullptr) {
+		return res;
+	}
 
 	attribNameMap attribMap = attribNameMap();
 	attribMap.insert(Attributes::VertexPosition, "vPosition");
@@ -305,6 +363,6 @@ pShader* pPrimitiveMaker::makeBasicShader()
 	uniMap.insert(Uniforms::Model_View, "modelView");
 	uniMap.insert(Uniforms::Projection_View, "projectionView");
 
-	pShader* res = new pShader("PrimitiveShader", attribMap, uniMap, "../Resources/Shaders/Primitive.vert", "../Resources/Shaders/Primitive.frag");
+	res = pResourceFactory::instance()->createShader("Default_Primitive_Shader", attribMap, uniMap, shader_primitive_vert, shader_primitive_frag);
 	return res;
 }

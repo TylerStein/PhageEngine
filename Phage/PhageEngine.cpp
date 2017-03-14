@@ -22,6 +22,7 @@ PhageEngine::PhageEngine(GameImplement* game)
 	shaderManager = new pShaderManager();
 	lightManager = pLightManager::instance();
 	audioManager = new pAudioManager();
+	scriptManager = new pScriptManager();
 
 	//Give the modelmanager the other managers
 	modelManager->setMaterialManager(materialManager);
@@ -34,6 +35,7 @@ PhageEngine::PhageEngine(GameImplement* game)
 	resourceFactory->setImageManager(imageManager);
 	resourceFactory->setShaderManager(shaderManager);
 	resourceFactory->setAudioManager(audioManager);
+	resourceFactory->setScriptManager(scriptManager);
 
 	//create an instance of the sceneManager
 	sceneManager = pSceneManager::instance();
@@ -70,7 +72,9 @@ void PhageEngine::CreateWindow(GLint width, GLint height, char* title)
 {
 	//Create the window (width, height, windowTitle, monitor, share*)
 	window = glfwCreateWindow(width, height, title, NULL, NULL);
-
+	windowWidth = width;
+	windowHeight = height;
+	
 	if (!window) {
 		//Window or OpenGL context creation failed
 	}
@@ -107,6 +111,9 @@ void PhageEngine::CreateWindow(GLint width, GLint height, char* title)
 	printf("Supported OGL Version: %s\n", glVersion);
 
 	renderer = new pRenderer(window);
+
+	//Now that a context exists, input can be initialized
+	SetupInput();
 }
 
 void PhageEngine::Start()
@@ -115,9 +122,28 @@ void PhageEngine::Start()
 	doLoop();
 }
 
+
+void PhageEngine::SetupInput()
+{
+	//Create an instance of and set up the input handler
+	inputManager = pInputManager::instance();
+	inputManager->Initialize(window, pInputHandler::instance());
+
+	//Set error callback
+	inputHandler->setErrorCallback(inputManager->error_callback);
+
+	//Set context
+	inputHandler->setCurrentContext(window);
+
+	//Set up key callbacks
+	inputHandler->setKeyCallback(window, inputManager->advancedKey_callback);
+}
+
 void PhageEngine::doLoop() {
 	//While the window isn't being closed, call the looped functions
 	game->onStart();
+	sceneManager->startScene();
+	scriptManager->StartScripts();
 	//Create the last time
 	double lastTick = glfwGetTime();
 	do {
@@ -127,13 +153,20 @@ void PhageEngine::doLoop() {
 		double deltaTime = (currentTick - lastTick) * 10;
 		//Store the current tick as the last one, then run loop
 		lastTick = currentTick;
+		glfwPollEvents();
+		inputManager->inputUpdate(deltaTime);
 		game->onUpdate(deltaTime);
+		sceneManager->updateScene(deltaTime);
+		scriptManager->UpdateScripts(deltaTime);
 		game->onPostUpdate();
 		game->onPreRender();
+		sceneManager->renderScene(renderer);
 		game->onRender();
 		game->onPostRender();
 
 	} while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
 	this->~PhageEngine();
+	sceneManager->endScene();
+	scriptManager->StopScripts();
 	game->onEnd();
 }

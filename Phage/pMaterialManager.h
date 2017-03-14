@@ -25,6 +25,8 @@ public:
 	//Delete a material from the manager
 	void deleteMaterial(std::string materialName);
 
+	std::vector<pMaterial*> getAllMaterials();
+
 	//Clear all materials from the manager
 	void clear();
 

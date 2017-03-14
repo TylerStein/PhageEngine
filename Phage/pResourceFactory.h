@@ -7,6 +7,7 @@
 #include "pPrimitiveMaker.h"
 #include "pShaderManager.h"
 #include "pAudioManager.h"
+#include "pScriptManager.h"
 
 class pResourceFactory
 {
@@ -19,6 +20,7 @@ public:
 	void setImageManager(pImageManager* imageManager);
 	void setShaderManager(pShaderManager* shaderManager);
 	void setAudioManager(pAudioManager* audioManager);
+	void setScriptManager(pScriptManager* scriptManager);
 
 	//Functions to create assets
 	//Create a model
@@ -41,6 +43,7 @@ public:
 	//Functions to receive assets from cache or file
 	//Retreive a model from file
 	pModel* loadModel(std::string name, std::string path, pMaterial* mat = nullptr);
+	pSceneNode* loadModelToScene(std::string name, std::string path, pScene& scene, pSceneNode* parent, pMaterial* mat = nullptr);
 	//Retreive an existing model
 	pModel* getModel(std::string name);
 	//Retreive a material from file
@@ -54,12 +57,25 @@ public:
 	//Retreive existing shader
 	pShader* getShader(std::string name);
 
+	//Retreive an existing script
+	pScript* getScript(std::string name);
+	//Add a script to the resource pool
+	pScript* addScript(std::string name, pScript* script);
 	
+	//Returns tuple of <itemType, count>
+	std::vector<pShader*> getAllShaders();
+	std::vector<pModel*> getAllModels();
+	std::vector<pMaterial*> getAllMaterials();
+	std::vector<pImage*> getAllImages();
+	std::vector<pScript*> getAllScripts();
+
 	//Primitive/Debug accessors
 	pModel* createPrimitiveShape(std::string name, pPrimitiveMaker::Primitives prim, glm::vec3 scale = glm::vec3(1), glm::vec3 color = glm::vec3(1), pMaterial* customMaterial = nullptr);
 
-	//2x2 pixel checkerboard
-	pImage* createDebugImage(std::string name);
+	//1 pixel white
+	pImage* createDebugImage();
+
+
 
 	//White unlit material
 	pMaterial* createDebugMaterial();
@@ -70,6 +86,13 @@ public:
 	*/
 	pShader* createDebugShader();
 
+	/*==Skybox Shader==
+	@Attributes vPosition
+	@Uniforms	transformMatrix, fCubeMapTexture
+	*/
+	pShader* createSkyboxShader();
+	
+	pShader* createPhongShader();
 
 	pSoundSystem* createSoundSystem(std::string soundSystemName, std::string audioFilePath, bool loop);
 	pSoundSystem* getSoundSystem(std::string name);
@@ -87,5 +110,6 @@ private:
 	pImageManager* imageManager;
 	pShaderManager* shaderManager;
 	pAudioManager* soundSystemManager;
+	pScriptManager* scriptManager;
 };
 

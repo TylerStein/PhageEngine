@@ -39,6 +39,20 @@ pImage * pImageManager::getImage(std::string imageName)
 	return imageResources.get(img);
 }
 
+std::vector<pImage*> pImageManager::getAllImages()
+{
+	auto inList = imageResources.getAll();
+	std::vector<pImage*> outList = std::vector<pImage*>();
+	for (int i = 0; i < inList.size(); ++i) {
+		outList.push_back(
+			imageResources.get(
+				inList.at(i)
+			));
+	}
+
+	return outList;
+}
+
 void pImageManager::deleteImage(std::string imageName)
 {
 	imageResources.remove(imageName);

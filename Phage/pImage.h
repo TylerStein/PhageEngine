@@ -22,8 +22,6 @@ public:
 	//Returns the textureID
 	GLuint getTextureID();
 
-	std::string getName() override;
-
 private:
 	//Uses pImageLoader to get the image data
 	void loadImage();
@@ -46,7 +44,5 @@ private:
 	GLuint wrapMode;
 	//Image width and height
 	GLuint width, height;
-
-	std::string name;
 };
 

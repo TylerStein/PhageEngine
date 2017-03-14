@@ -52,6 +52,20 @@ pModel * pModelManager::getModel(std::string modelName)
 	return modelResources.get(mdl);
 }
 
+std::vector<pModel*> pModelManager::getAllModels()
+{
+	auto inList = modelResources.getAll();
+	std::vector<pModel*> outList = std::vector<pModel*>();
+	for (int i = 0; i < inList.size(); ++i) {
+		outList.push_back(
+			modelResources.get(
+				inList.at(i)
+			));
+	}
+
+	return outList;
+}
+
 void pModelManager::deleteModel(std::string modelName)
 {
 	modelResources.remove(modelName);

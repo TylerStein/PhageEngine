@@ -36,6 +36,20 @@ pShader * pShaderManager::getShader(std::string shaderName)
 	return shaderResources.get(ref);
 }
 
+std::vector<pShader*> pShaderManager::getAllShaders()
+{
+	auto inList = shaderResources.getAll();
+	std::vector<pShader*> outList = std::vector<pShader*>();
+	for (int i = 0; i < inList.size(); ++i) {
+		outList.push_back(
+			shaderResources.get(
+				inList.at(i)
+			));
+	}
+
+	return outList;
+}
+
 void pShaderManager::deleteShader(std::string shaderName)
 {
 	shaderResources.remove(shaderName);

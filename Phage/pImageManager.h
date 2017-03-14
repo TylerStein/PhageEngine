@@ -21,6 +21,8 @@ public:
 	pImage* getImage(HandleType &handle);
 	pImage* getImage(std::string imageName);
 
+	std::vector<pImage*> getAllImages();
+
 	//Delete a material from the manager
 	void deleteImage(std::string imageName);
 

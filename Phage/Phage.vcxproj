@@ -157,11 +157,16 @@
     <ClInclude Include="pAudioManager.h" />
     <ClInclude Include="pBoundingBox.h" />
     <ClInclude Include="pBoundingSphere.h" />
+    <ClInclude Include="pCamera.h" />
+    <ClInclude Include="pCameraManager.h" />
+    <ClInclude Include="pCubeMap.h" />
     <ClInclude Include="pFrustum.h" />
     <ClInclude Include="pHashtable.h" />
     <ClInclude Include="pImage.h" />
     <ClInclude Include="pImageLoader.h" />
     <ClInclude Include="pImageManager.h" />
+    <ClInclude Include="pInputHandler.h" />
+    <ClInclude Include="pInputManager.h" />
     <ClInclude Include="pLight.h" />
     <ClInclude Include="pLightManager.h" />
     <ClInclude Include="pMaterialManager.h" />
@@ -185,10 +190,10 @@
     <ClInclude Include="pSceneNode.h" />
     <ClInclude Include="pSceneObject.h" />
     <ClInclude Include="pScript.h" />
+    <ClInclude Include="pScriptManager.h" />
     <ClInclude Include="pShader.h" />
     <ClInclude Include="pShaderManager.h" />
     <ClInclude Include="pSoundSystem.h" />
-    <ClInclude Include="pTransform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Clock.cpp" />
@@ -196,11 +201,16 @@
     <ClCompile Include="pAudioManager.cpp" />
     <ClCompile Include="pBoundingBox.cpp" />
     <ClCompile Include="pBoundingSphere.cpp" />
+    <ClCompile Include="pCamera.cpp" />
+    <ClCompile Include="pCameraManager.cpp" />
+    <ClCompile Include="pCubeMap.cpp" />
     <ClCompile Include="pFrustum.cpp" />
     <ClCompile Include="pHashtable.cpp" />
     <ClCompile Include="pImage.cpp" />
     <ClCompile Include="pImageLoader.cpp" />
     <ClCompile Include="pImageManager.cpp" />
+    <ClCompile Include="pInputHandler.cpp" />
+    <ClCompile Include="pInputManager.cpp" />
     <ClCompile Include="pLight.cpp" />
     <ClCompile Include="pLightManager.cpp" />
     <ClCompile Include="pMaterialManager.cpp" />
@@ -222,7 +232,7 @@
     <ClCompile Include="pSceneManager.cpp" />
     <ClCompile Include="pSceneNode.cpp" />
     <ClCompile Include="pSceneObject.cpp" />
-    <ClCompile Include="pScript.cpp" />
+    <ClCompile Include="pScriptManager.cpp" />
     <ClCompile Include="pShader.cpp" />
     <ClCompile Include="pShaderManager.cpp" />
     <ClCompile Include="pSoundSystem.cpp" />
@@ -230,12 +240,24 @@
   <ItemGroup>
     <None Include="..\Resources\Shaders\BlinnPhong.frag" />
     <None Include="..\Resources\Shaders\BlinnPhong.vert" />
+    <None Include="..\Resources\Shaders\BlinnPhong_Advanced.frag" />
+    <None Include="..\Resources\Shaders\BlinnPhong_Advanced.vert" />
+    <None Include="..\Resources\Shaders\Default\Flat.frag" />
+    <None Include="..\Resources\Shaders\Default\Flat.vert" />
+    <None Include="..\Resources\Shaders\Default\Phong.frag" />
+    <None Include="..\Resources\Shaders\Default\Phong.vert" />
+    <None Include="..\Resources\Shaders\Default\Primitive.frag" />
+    <None Include="..\Resources\Shaders\Default\Primitive.vert" />
     <None Include="..\Resources\Shaders\phong2.frag" />
     <None Include="..\Resources\Shaders\phong2.vert" />
     <None Include="..\Resources\Shaders\PhongMaterial.frag" />
     <None Include="..\Resources\Shaders\PhongMaterial.vert" />
     <None Include="..\Resources\Shaders\Primitive.frag" />
     <None Include="..\Resources\Shaders\Primitive.vert" />
+    <None Include="..\Resources\Shaders\shadowmap.frag" />
+    <None Include="..\Resources\Shaders\shadowmap.vert" />
+    <None Include="..\Resources\Shaders\Skybox.frag" />
+    <None Include="..\Resources\Shaders\Skybox.vert" />
     <None Include="PhageDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
