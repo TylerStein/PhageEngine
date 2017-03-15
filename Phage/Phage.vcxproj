@@ -154,6 +154,7 @@
     <ClInclude Include="GameImplement.h" />
     <ClInclude Include="GLError.h" />
     <ClInclude Include="LogManager.h" />
+    <ClInclude Include="pAnimation.h" />
     <ClInclude Include="pAudioManager.h" />
     <ClInclude Include="pBoundingBox.h" />
     <ClInclude Include="pBoundingSphere.h" />
@@ -198,6 +199,7 @@
   <ItemGroup>
     <ClCompile Include="Clock.cpp" />
     <ClCompile Include="LogManager.cpp" />
+    <ClCompile Include="pAnimation.cpp" />
     <ClCompile Include="pAudioManager.cpp" />
     <ClCompile Include="pBoundingBox.cpp" />
     <ClCompile Include="pBoundingSphere.cpp" />

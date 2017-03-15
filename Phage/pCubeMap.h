@@ -25,6 +25,8 @@ public:
 	void UseTexture(GLenum texNum);
 	void UnuseTexture(GLenum texNum);
 
+	glm::mat4 getTransform();
+
 	pShader* getShader();
 	pModel* getModel();
 	pMaterial* getMaterial();

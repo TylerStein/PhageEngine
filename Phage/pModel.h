@@ -37,18 +37,6 @@ public:
 
 	void UseMaterial();
 
-	//Adds rotation relative to current around a provided axis by <amount> degrees
-	void rotateAround(glm::vec3 rot, GLfloat amount);
-	//Scales relative to current scale by <xyz>
-	void scale(glm::vec3 scl);
-	//Sets the scale (not relative) by <xyz>
-	void setScale(glm::vec3 scl);
-	//Translates relative to current position by <xyz>
-	void translate(glm::vec3 pos);
-	//Translates relative to center by <xyz>
-	void setPosition(glm::vec3 pos);
-	//Set the rotation relative to 0
-	void setRotation(glm::vec3 rot, GLfloat amount);
 	//Set the draw mode
 	void setDrawMode(GLenum drawMode);
 	//Scale the UV
@@ -64,7 +52,6 @@ public:
 private:
 	//Function for initializing the VBO, VAO and ShaderProgram
 	void setupModel();
-	void initDefaultMatrix();
 
 	bool useVertices;
 	bool useNormals;
@@ -100,12 +87,5 @@ private:
 	GLuint BufferID_BiTangents;
 
 	GLenum drawMode;
-
-	glm::mat4 translationMatrix;
-	glm::mat4 rotationMatrix;
-	glm::mat4 scaleMatrix;
-
-	glm::mat4 modelMatrix;
-	glm::mat3 normalMatrix;
 };
 

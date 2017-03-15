@@ -70,7 +70,10 @@ public:
 	std::vector<pScript*> getAllScripts();
 
 	//Primitive/Debug accessors
-	pModel* createPrimitiveShape(std::string name, pPrimitiveMaker::Primitives prim, glm::vec3 scale = glm::vec3(1), glm::vec3 color = glm::vec3(1), pMaterial* customMaterial = nullptr);
+	//pModel* createPrimitiveShape(std::string name, pPrimitiveMaker::Primitives prim, glm::vec3 scale = glm::vec3(1), glm::vec3 color = glm::vec3(1), pMaterial* customMaterial = nullptr);
+
+	pSceneNode* createPrimitiveShape(std::string name, pPrimitiveMaker::Primitives prim, glm::vec3 scale = glm::vec3(1), glm::vec3 color = glm::vec3(1), pMaterial* customMaterial = nullptr);
+
 
 	//1 pixel white
 	pImage* createDebugImage();

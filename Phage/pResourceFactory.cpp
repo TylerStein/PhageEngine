@@ -96,6 +96,7 @@ pImage * pResourceFactory::createImage(std::string name, std::string filePath)
 	return imageManager->getImage(imgH);
 }
 
+/*
 pModel * pResourceFactory::createPrimitiveShape(std::string name, pPrimitiveMaker::Primitives prim, glm::vec3 scale, glm::vec3 color, pMaterial* customMaterial)
 {
 	pModel* tmpModel = pPrimitiveMaker::instance()->GetPrimitive(name, prim, scale, customMaterial, color);
@@ -103,6 +104,17 @@ pModel * pResourceFactory::createPrimitiveShape(std::string name, pPrimitiveMake
 	pResourceHandle<pModel> mdlH = modelManager->addModel(name, tmpModel);
 
 	return modelManager->getModel(mdlH);
+}*/
+
+pSceneNode * pResourceFactory::createPrimitiveShape(std::string name, pPrimitiveMaker::Primitives prim, glm::vec3 scale, glm::vec3 color, pMaterial * customMaterial)
+{
+	pModel* tmpModel = pPrimitiveMaker::instance()->GetPrimitive(name, prim, scale, customMaterial, color);
+
+	pResourceHandle<pModel> mdlH = modelManager->addModel(name, tmpModel);
+
+	pSceneObject* newObj = new pSceneObject(modelManager->getModel(mdlH), nullptr, nullptr, nullptr);
+
+	return new pSceneNode(glm::vec3(0), glm::vec3(0), scale, name, newObj, nullptr);
 }
 
 pImage * pResourceFactory::createDebugImage()

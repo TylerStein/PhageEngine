@@ -33,8 +33,11 @@ pSceneNode::pSceneNode(glm::vec3 & pos, glm::vec3 & rot, glm::vec3 & scaling, st
 	setScale(scaling);
 	name = objName;
 	attachedSceneObject = attachedObject;
-	parentNode = parent;
-	parentNode->appendChild(this);
+
+	if (parent != nullptr) {
+		parentNode = parent;
+		parentNode->appendChild(this);
+	}
 
 	getModelMatrix();
 	setForwardVector();

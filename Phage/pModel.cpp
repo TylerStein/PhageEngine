@@ -81,8 +81,6 @@ pModel::pModel(std::string name, pMaterial * material, GLenum drawMode, GLuint n
 		}
 	}
 
-	initDefaultMatrix();
-
 	setupModel();
 
 }
@@ -145,8 +143,6 @@ pModel::pModel(std::string name, pMaterial * material, GLenum drawMode, std::vec
 		}
 	}
 
-	initDefaultMatrix();
-
 	setupModel();
 }
 
@@ -200,18 +196,6 @@ GLuint pModel::getMVPMatrixID()
 	return material->getMVPMatrixID();
 }
 
-glm::mat4 pModel::getModelMatrix()
-{
-	modelMatrix = translationMatrix * rotationMatrix * scaleMatrix;
-	return modelMatrix;
-}
-
-glm::mat3 pModel::getNormalMatrix()
-{
-	glm::mat3 inverseModelView = glm::inverse(getModelMatrix());
-	normalMatrix = glm::transpose(inverseModelView);
-	return normalMatrix;
-}
 
 pMaterial * pModel::getMaterial()
 {
@@ -231,36 +215,6 @@ GLenum pModel::getDrawMode()
 void pModel::UseMaterial()
 {
 	material->useMaterial();
-}
-
-void pModel::rotateAround(glm::vec3 rot, GLfloat amount)
-{
-	rotationMatrix *= glm::rotate(glm::radians(amount), rot);
-}
-
-void pModel::scale(glm::vec3 scl)
-{
-	scaleMatrix = glm::scale(scaleMatrix, scl);
-}
-
-void pModel::setScale(glm::vec3 scl)
-{
-	scaleMatrix = glm::scale(glm::mat4(1.0f), scl);
-}
-
-void pModel::translate(glm::vec3 pos)
-{
-	translationMatrix = glm::translate(translationMatrix, pos);
-}
-
-void pModel::setPosition(glm::vec3 pos)
-{
-	translationMatrix = glm::translate(glm::mat4(1.0f), pos);
-}
-
-void pModel::setRotation(glm::vec3 rot, GLfloat amount)
-{
-	rotationMatrix = glm::rotate(glm::radians(amount), rot);
 }
 
 void pModel::setDrawMode(GLenum drawMode)
@@ -419,12 +373,4 @@ void pModel::setupModel()
 		glEnableVertexAttribArray(attribID);
 		glVertexAttribPointer(attribID, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 	}
-}
-
-void pModel::initDefaultMatrix()
-{
-	rotationMatrix = glm::mat4(1.0f);
-	translationMatrix = glm::mat4(1.0f);
-	scaleMatrix = glm::mat4(1.0f);
-	modelMatrix = glm::mat4(1.0f);
 }

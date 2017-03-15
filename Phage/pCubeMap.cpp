@@ -72,8 +72,9 @@ void pCubeMap::LoadModel()
 {
 	pMaterial* skyMat = pResourceFactory::instance()->createMaterial("SkyMaterial", pResourceFactory::instance()->createSkyboxShader(), MaterialInfo());
 
-	_model = pResourceFactory::instance()->createPrimitiveShape("SkyCube", pPrimitiveMaker::CUBOID_TRI, glm::vec3(20.0f), glm::vec3(1.0), skyMat);
-	_model->setRotation(glm::vec3(1, 0, 0), 180.0f);
+	_model = pPrimitiveMaker::instance()->GetPrimitive("SkyCube", pPrimitiveMaker::CUBOID_TRI, glm::vec3(20.0f), skyMat, glm::vec3(1));
+	_transform = glm::mat4();
+	_transform = glm::rotate(_transform, 180.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 }
 
 void pCubeMap::UseTexture(GLenum texNum)
@@ -87,6 +88,11 @@ void pCubeMap::UnuseTexture(GLenum texNum)
 	glActiveTexture(texNum);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	glActiveTexture(0);
+}
+
+glm::mat4 pCubeMap::getTransform()
+{
+	return _transform;
 }
 
 pShader * pCubeMap::getShader()

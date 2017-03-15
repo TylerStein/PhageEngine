@@ -37,24 +37,40 @@ void TestScene::onStart()
 
 	//Generate an image for the chair
 	pImage* chairDiffuseImage = engine->resourceFactory->createImage("Chair_Diffuse", "../Resources/Models/chair/diffuse.tga");
+	pImage* floorDiffuseImage = engine->resourceFactory->createImage("Floor_Diffuse", "../Resources/Images/Museum/stonefloor.jpg");
 
 	//Manually create some material info for the chair
 	MaterialInfo chairMaterialInfo;
 	chairMaterialInfo.reset();
-	chairMaterialInfo.ambient = glm::vec3(0.05);
-	chairMaterialInfo.specular = glm::vec3(1);
-	chairMaterialInfo.shininess = 1;
+	chairMaterialInfo.ambient = glm::vec3(0.05f);
+	chairMaterialInfo.specular = glm::vec3(1.0f);
+	chairMaterialInfo.shininess = 1.0f;
 	chairMaterialInfo.diffuseTexture = chairDiffuseImage;
+
+	MaterialInfo floorMaterialInfo;
+	floorMaterialInfo.reset();
+	floorMaterialInfo.ambient = glm::vec3(0.05f);
+	floorMaterialInfo.specular = glm::vec3(1.0f);
+	floorMaterialInfo.shininess = 1.0f;
+	floorMaterialInfo.diffuseTexture = floorDiffuseImage;
 
 	//Generate the material for the chair
 	pMaterial* chairMaterial = engine->resourceFactory->createMaterial("Chair_Material", phongShader, chairMaterialInfo);
+	pMaterial* floorMaterial = engine->resourceFactory->createMaterial("Floor_Material", phongShader, floorMaterialInfo);
 
 	//Load in model node tree and attach to scene root
-	pSceneNode* tmpnode = pModelLoader::instance()->loadModelToSceneObjects("../Resources/Models/chair/chair.obj", chairMaterial);
-	scene->addExistingNodes(tmpnode);
+	pSceneNode* chairNode = pModelLoader::instance()->loadModelToSceneObjects("../Resources/Models/chair/chair.obj", chairMaterial);
+	scene->addExistingNodes(chairNode);
+	chairNode->setScale(glm::vec3(0.68f));
+	chairNode->setPosition(glm::vec3(0, 2, 0));
+
+	pSceneNode* floorNode = engine->resourceFactory->createPrimitiveShape("FloorShape", pPrimitiveMaker::CUBOID_TRI, glm::vec3(4.0, 1.0f, 4.0), glm::vec3(1), floorMaterial);
+	floorNode->setPosition(glm::vec3(0, -6, 0));
+	scene->addExistingNodes(floorNode);
+
 
 	//Add a light to the game (should be via scene)
-	engine->lightManager->addLight(new pLight(Light::DIRECTIONAL, glm::vec3(0.5, -0.5, 0), glm::vec3(1), glm::vec3(1), glm::vec3(0.1f)));
+	engine->lightManager->addLight(new pLight(Light::DIRECTIONAL, glm::vec3(0.5, -0.5, 0.5), glm::vec3(1), glm::vec3(1), glm::vec3(0.1f)));
 }
 
 void TestScene::onPreRender()

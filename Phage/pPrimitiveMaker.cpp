@@ -310,14 +310,12 @@ pModel * pPrimitiveMaker::makePlane_Tri(std::string name, glm::vec2 scale, pMate
 pModel * pPrimitiveMaker::makeSphere_UV(std::string name, glm::vec3 scale, pMaterial * material, glm::vec3 color)
 {
 	pModel* res = pModelLoader::instance()->loadModel(model_primitive_uvsphere, material);
-	res->setScale(scale);
 	return res;
 }
 
 pModel * pPrimitiveMaker::makeTeapot(std::string name, glm::vec3 scale, pMaterial * material, glm::vec3 color)
 {
 	pModel* res = pModelLoader::instance()->loadModel(model_primitive_teapot, material);
-	res->setScale(scale);
 	return res;
 }
 
