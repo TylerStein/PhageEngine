@@ -29,6 +29,17 @@ public:
 
 	void setProjectionMatrix(glm::mat4 projMatrix);
 	void setViewMatrix(glm::mat4 viewMatrix);
+
+	inline glm::mat4 getProjectionMatrix()
+	{
+		return projMatrix;
+	}
+
+	inline glm::mat4 getViewMatrix()
+	{
+		return cameraView;
+	}
+
 private:
 	void initDefaultView();
 

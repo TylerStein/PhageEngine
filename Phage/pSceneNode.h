@@ -41,6 +41,9 @@ public:
 	//Adds rotation relative to current around a provided axis by <amount> degrees
 	void rotateAround(glm::vec3 rot, GLfloat amount);
 
+	//updates the up, forward, and right vectors
+	void updateDirectionVectors();
+
 	//Rotate via quaternion multiplication
 	void rotate(glm::quat rotation);
 
