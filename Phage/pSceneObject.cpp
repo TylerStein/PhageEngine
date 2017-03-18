@@ -54,6 +54,11 @@ void pSceneObject::attachCamera(pCamera * camera)
 	attachedCamera = camera;
 }
 
+pCamera * pSceneObject::getAttachedCamera()
+{
+	return attachedCamera;
+}
+
 void pSceneObject::detachScript()
 {
 	attachedScript = nullptr;
@@ -81,10 +86,22 @@ bool pSceneObject::hasSoundSystem() const
 
 bool pSceneObject::hasCamera() const
 {
-	return attachedSoundSystem != nullptr;
+	if (attachedCamera == nullptr)
+	{
+		return nullptr;
+	}
+	else
+	{
+		return true;
+	}
 }
 
 pSceneNode * pSceneObject::getSceneNode() const
 {
 	return node;
+}
+
+void pSceneObject::setSceneNode(pSceneNode* nde)
+{
+	node = nde;
 }

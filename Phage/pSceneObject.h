@@ -54,10 +54,7 @@ public:
 	//attaches a camera to the sceneObject
 	void attachCamera(pCamera* camera);
 
-	inline pCamera* getAttachedCamera()
-	{
-		return attachedCamera;
-	}
+	pCamera* getAttachedCamera();
 
 	void detachScript();
 
@@ -74,11 +71,13 @@ public:
 
 	pSceneNode* getSceneNode() const;
 
+	void setSceneNode(pSceneNode* nde);
+
 private:
 	pModel* attachedModel = nullptr;
 	pScript* attachedScript = nullptr;
 	pSoundSystem* attachedSoundSystem = nullptr;
-	pCamera* attachedCamera = nullptr;
+	pCamera* attachedCamera;
 
 	pSceneNode* node;
 };

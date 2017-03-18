@@ -29,6 +29,9 @@ public:
 	pModelLoader();
 	~pModelLoader();
 
+	unsigned int uMatCount;
+	unsigned int uMeshCount;
+
 	/*Function uses provided path to load a model.
 	first it creates an Assimp Importer object,
 	uses it to create a scene containing the model to

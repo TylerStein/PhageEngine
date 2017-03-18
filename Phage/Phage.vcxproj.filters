@@ -299,12 +299,6 @@
     <None Include="..\Resources\Shaders\shadowmap.vert">
       <Filter>Resources\Shaders</Filter>
     </None>
-    <None Include="..\Resources\Shaders\Skybox.frag">
-      <Filter>Resources\Shaders</Filter>
-    </None>
-    <None Include="..\Resources\Shaders\Skybox.vert">
-      <Filter>Resources\Shaders</Filter>
-    </None>
     <None Include="..\Resources\Shaders\Default\Flat.frag">
       <Filter>Resources\Shaders\Default</Filter>
     </None>
@@ -321,6 +315,12 @@
       <Filter>Resources\Shaders\Default</Filter>
     </None>
     <None Include="..\Resources\Shaders\Default\Primitive.vert">
+      <Filter>Resources\Shaders\Default</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\Skybox.frag">
+      <Filter>Resources\Shaders\Default</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\Skybox.vert">
       <Filter>Resources\Shaders\Default</Filter>
     </None>
   </ItemGroup>
