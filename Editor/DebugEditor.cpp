@@ -66,13 +66,13 @@ void DebugEditor::onStart()
 	//Create a shader for the shape surfaces
 	engine->resourceFactory->createShader("Phong_Lighting", atrMap, uniMap, "../Resources/Shaders/PhongMaterial.vert", "../Resources/Shaders/PhongMaterial.frag");
 	
-	engine->resourceFactory->createImage("Metal_Diffuse", "../Resources/Images/Metal/diffuse.jpg");
-	engine->resourceFactory->createImage("Metal_Specular", "../Resources/Images/Metal/specular.jpg");
-	engine->resourceFactory->createImage("Metal_Normal", "../Resources/Images/Metal/normal.jpg");
+	engine->resourceFactory->loadImage("Metal_Diffuse", "../Resources/Images/Metal/diffuse.jpg");
+	engine->resourceFactory->loadImage("Metal_Specular", "../Resources/Images/Metal/specular.jpg");
+	engine->resourceFactory->loadImage("Metal_Normal", "../Resources/Images/Metal/normal.jpg");
 
-	engine->resourceFactory->createImage("Oildrum_Diffuse", "../Resources/Models/Oildrum/oildrum_diffuse.jpg");
-	engine->resourceFactory->createImage("Oildrum_Specular", "../Resources/Images/Metal/oildrum_specular.jpg");
-	engine->resourceFactory->createImage("Oildrum_Normal;", "../Resources/Images/Metal/oildrum_normal.jpg");
+	engine->resourceFactory->loadImage("Oildrum_Diffuse", "../Resources/Models/Oildrum/oildrum_diffuse.jpg");
+	engine->resourceFactory->loadImage("Oildrum_Specular", "../Resources/Images/Metal/oildrum_specular.jpg");
+	engine->resourceFactory->loadImage("Oildrum_Normal;", "../Resources/Images/Metal/oildrum_normal.jpg");
 
 	//==Create a material using the previously created shader and images==//
 	pMaterial* tmpMatRef = engine->resourceFactory->createMaterial("Oildrum_Material", 

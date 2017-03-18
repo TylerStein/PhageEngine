@@ -8,12 +8,15 @@
 
 pSceneNode::pSceneNode()
 {
+	attachedSceneObject = new pSceneObject();
+	attachedSceneObject->setSceneNode(this);
+
+	name = "rootNode";
+	parentNode = nullptr;
+
 	setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 	setRotation(glm::vec3(0.0f, 0.0f, 0.0f));
 	setScale(glm::vec3(1.0f, 1.0f, 1.0f));
-	name = "rootNode";
-	attachedSceneObject = new pSceneObject();
-	parentNode = nullptr;
 
 	initDefaultMatrix();
 	setForwardVector();
@@ -28,9 +31,6 @@ pSceneNode::~pSceneNode()
 
 pSceneNode::pSceneNode(glm::vec3 & pos, glm::vec3 & rot, glm::vec3 & scaling, std::string & objName, pSceneObject* attachedObject, pSceneNode* parent)
 {
-	setPosition(pos);
-	setRotation(rot);
-	setScale(scaling);
 	name = objName;
 	attachedSceneObject = attachedObject;
 
@@ -38,6 +38,10 @@ pSceneNode::pSceneNode(glm::vec3 & pos, glm::vec3 & rot, glm::vec3 & scaling, st
 		parentNode = parent;
 		parentNode->appendChild(this);
 	}
+
+	setPosition(pos);
+	setRotation(rot);
+	setScale(scaling);
 
 	getModelMatrix();
 	setForwardVector();
@@ -69,22 +73,35 @@ void pSceneNode::rotateAround(glm::vec3 rot, GLfloat amount)
 {
 	glm::quat tmp = glm::quat(rot * amount);
 	rotation *= tmp;
+	updateDirectionVectors();
 }
+
+void pSceneNode::updateDirectionVectors()
+{
+	setForwardVector();
+	setRightVector();
+	setUpVector();
+}
+
+
 
 void pSceneNode::rotate(glm::quat rot)
 {
 	rotation *= rot;
+	updateDirectionVectors();
 }
 
 void pSceneNode::setRotation(glm::vec3 rot)
 {
 	glm::quat tmp = glm::quat(rot);
 	rotation = tmp;
+	updateDirectionVectors();
 }
 
 void pSceneNode::setRotation(glm::quat rot)
 {
 	rotation = rot;
+	updateDirectionVectors();
 }
 
 glm::quat pSceneNode::getRotationQuat()
@@ -154,13 +171,13 @@ glm::vec3 pSceneNode::getScale() const
 void pSceneNode::setForwardVector()
 {
 	glm::mat4x4 tmp = getModelMatrix();
-	forwardVector = glm::vec3(tmp[2].x, tmp[2].y, tmp[2].z);
+	forwardVector = glm::vec3(tmp[0].z, tmp[1].z, tmp[2].z);
 }
 
 void pSceneNode::setRightVector()
 {
 	glm::mat4x4 tmp = getModelMatrix();
-	rightVector = glm::vec3(tmp[0].x, tmp[0].y, tmp[0].z);
+	rightVector = glm::vec3(tmp[0].x, tmp[1].x, tmp[2].x);
 }
 
 void pSceneNode::setUpVector()
@@ -224,7 +241,14 @@ glm::mat4x4 pSceneNode::getModelMatrix()
 	setRotationMatrix();
 	setScaleMatrix();
 
-	modelMatrix = translationMatrix * rotationMatrix * scaleMatrix;
+	if (attachedSceneObject->getAttachedCamera() != nullptr)
+	{
+		modelMatrix = getScaleMatrix() * getRotationMatrix() * getTranslationMatrix();
+	}
+	else
+	{
+		modelMatrix = getTranslationMatrix() * getRotationMatrix() * getScaleMatrix();
+	}
 
 	return modelMatrix;
 }

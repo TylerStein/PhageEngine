@@ -74,7 +74,7 @@ void pCubeMap::LoadModel()
 
 	_model = pPrimitiveMaker::instance()->GetPrimitive("SkyCube", pPrimitiveMaker::CUBOID_TRI, glm::vec3(20.0f), skyMat, glm::vec3(1));
 	_transform = glm::mat4();
-	_transform = glm::rotate(_transform, 180.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+	_transform = glm::rotate(_transform, glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 }
 
 void pCubeMap::UseTexture(GLenum texNum)

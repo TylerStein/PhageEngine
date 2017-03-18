@@ -85,28 +85,14 @@ pMaterial * pResourceFactory::createMaterial(std::string name, pShader* shader, 
 	return materialManager->getMaterial(mtlH);
 }
 
-
-pImage * pResourceFactory::createImage(std::string name, std::string filePath)
-{
-	//Create the image in memory
-	pImage* img = new pImage(name, filePath);
-	//Add the image to the manager table
-	pResourceHandle<pImage> imgH = imageManager->addImage(name, img);
-	//Return the image from the table
-	return imageManager->getImage(imgH);
-}
-
-/*
-pModel * pResourceFactory::createPrimitiveShape(std::string name, pPrimitiveMaker::Primitives prim, glm::vec3 scale, glm::vec3 color, pMaterial* customMaterial)
+pModel * pResourceFactory::createPrimitiveShape(std::string name, pPrimitiveMaker::Primitives prim, glm::vec3 scale, glm::vec3 color, pMaterial * customMaterial)
 {
 	pModel* tmpModel = pPrimitiveMaker::instance()->GetPrimitive(name, prim, scale, customMaterial, color);
-	
 	pResourceHandle<pModel> mdlH = modelManager->addModel(name, tmpModel);
-
 	return modelManager->getModel(mdlH);
-}*/
+}
 
-pSceneNode * pResourceFactory::createPrimitiveShape(std::string name, pPrimitiveMaker::Primitives prim, glm::vec3 scale, glm::vec3 color, pMaterial * customMaterial)
+pSceneNode * pResourceFactory::addPrimitiveToScene(std::string name, pPrimitiveMaker::Primitives prim, glm::vec3 scale, glm::vec3 color, pMaterial * customMaterial)
 {
 	pModel* tmpModel = pPrimitiveMaker::instance()->GetPrimitive(name, prim, scale, customMaterial, color);
 
@@ -289,6 +275,12 @@ pSceneNode * pResourceFactory::loadModelToScene(std::string name, std::string pa
 	return resNode;
 }
 
+pModel * pResourceFactory::addModel(std::string name, pModel * model)
+{
+	pResourceHandle<pModel> mdl = modelManager->addModel(name, model);
+	return modelManager->getModel(mdl);
+}
+
 pModel * pResourceFactory::getModel(std::string name)
 {
 	//Get the model from the manager's hashtable
@@ -296,7 +288,7 @@ pModel * pResourceFactory::getModel(std::string name)
 
 }
 
-pMaterial * pResourceFactory::getMaterial(std::string name, std::string path)
+pMaterial * pResourceFactory::loadMaterial(std::string name, std::string path)
 {
 	pResourceHandle<pMaterial> mtlH = materialManager->createMaterial(name, path);
 	return materialManager->getMaterial(mtlH);
@@ -307,7 +299,7 @@ pMaterial * pResourceFactory::getMaterial(std::string name)
 	return materialManager->getMaterial(name);
 }
 
-pImage * pResourceFactory::getImage(std::string name, std::string path)
+pImage * pResourceFactory::loadImage(std::string name, std::string path)
 {
 	pResourceHandle<pImage> imgH = imageManager->createImage(name, path);
 	return imageManager->getImage(imgH);

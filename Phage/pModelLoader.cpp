@@ -3,7 +3,7 @@
 
 pModelLoader* pModelLoader::_instance = 0;
 
-pModelLoader::pModelLoader(){}
+pModelLoader::pModelLoader() { uMatCount = 0, uMeshCount = 0; }
 
 pModelLoader::~pModelLoader(){}
 
@@ -17,7 +17,8 @@ pModel* pModelLoader::loadModel(std::string path, pMaterial* mat)
 		| aiProcess_JoinIdenticalVertices
 		| aiProcess_SortByPType
 		| aiProcess_GenSmoothNormals
-		| aiProcess_CalcTangentSpace);
+		| aiProcess_CalcTangentSpace
+		);
 	
 	//Catch errors loading model
 	if (!scene) {
@@ -200,7 +201,8 @@ pMaterial * pModelLoader::processMaterial(const aiMaterial & material, pShader* 
 	material.Get(AI_MATKEY_NAME, matName);
 	if (matName.length <= 0) {
 		if (backupName.empty()) {
-			matName = "unknown_material";
+			matName = "unknown_material" + std::to_string(uMatCount);
+			uMatCount++;
 		}
 		else {
 			matName = backupName + "_material";
@@ -237,7 +239,7 @@ pMaterial * pModelLoader::processMaterial(const aiMaterial & material, pShader* 
 		std::string path = texPath.C_Str();
 		if (!path.empty()) {
 			std::string texName = matName.C_Str() + std::string("_diffuseTexture");
-			matInfo.diffuseTexture = pResourceFactory::instance()->getImage(texName, path);
+			matInfo.diffuseTexture = pResourceFactory::instance()->loadImage(texName, path);
 		}
 	}
 	
@@ -248,7 +250,7 @@ pMaterial * pModelLoader::processMaterial(const aiMaterial & material, pShader* 
 		std::string path = texPath.C_Str();
 		if (!path.empty()) {
 			std::string texName = matName.C_Str() + std::string("_normalTexture");
-			matInfo.bumpTexture = pResourceFactory::instance()->getImage(texName, path);
+			matInfo.bumpTexture = pResourceFactory::instance()->loadImage(texName, path);
 		}
 	}
 	
@@ -259,7 +261,7 @@ pMaterial * pModelLoader::processMaterial(const aiMaterial & material, pShader* 
 		std::string path = texPath.C_Str();
 		if (!path.empty()) {
 			std::string texName = matName.C_Str() + std::string("_specularTexture");
-			matInfo.specularTexture = pResourceFactory::instance()->getImage(texName, path);
+			matInfo.specularTexture = pResourceFactory::instance()->loadImage(texName, path);
 		}
 	}
 
@@ -291,7 +293,8 @@ pModel * pModelLoader::processMesh(const aiMesh & mesh, pMaterial* mat, std::str
 
 	if (meshName.empty()) {
 		if (backupName.empty() <= 0) {
-			meshName = "unkown_mesh";
+			meshName = "unkown_mesh" + std::to_string(uMeshCount);
+			uMeshCount++;
 		}
 		else {
 			meshName = backupName + "_mesh";

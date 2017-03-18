@@ -47,10 +47,12 @@ void pRenderer::renderSceneNode(pSceneNode * node, glm::mat4x4 mat)
 
 		pShader* shdr = model->getMaterial()->getShader();
 
+		
 		//Apply the model position matrix
 		if (shdr->hasUniform(Uniforms::Model_View)) {
 			glUniformMatrix4fv(model->getModelMatrixID(), 1, GL_FALSE, &mat[0][0]);
 		}
+		
 
 		//Apply the view matrix
 		if (shdr->hasUniform(Uniforms::Camera_View)) {
@@ -60,10 +62,17 @@ void pRenderer::renderSceneNode(pSceneNode * node, glm::mat4x4 mat)
 		if (shdr->hasUniform(Uniforms::Projection_View)) {
 			glUniformMatrix4fv(model->getProjectionMatrixID(), 1, GL_FALSE, &projMatrix[0][0]);
 		}
+
+		
 		//Apply the normal matrix
 		if (shdr->hasUniform(Uniforms::Normal_View)) {
 			glm::mat3 normalMatrix = glm::transpose(glm::inverse(mat));
 			glUniformMatrix3fv(model->getNormalMatrixID(), 1, GL_FALSE, &normalMatrix[0][0]);
+		}
+
+		if (shdr->hasUniform(Uniforms::ModelViewProjection)) {
+			glm::mat4 MVP = projMatrix * cameraView * mat;
+			glUniformMatrix4fv(model->getMVPMatrixID(), 1, GL_FALSE, &MVP[0][0]);
 		}
 
 		//Feed the model the camera position
@@ -173,6 +182,8 @@ void pRenderer::renderSkybox()
 
 	skybox->UseTexture(GL_TEXTURE0);
 
+	glm::mat4 skyboxMVP = projMatrix * glm::inverse(glm::transpose(cameraView)) * skybox->getTransform();
+
 	//Apply the model position matrix
 	if (shdr->hasUniform(Uniforms::Model_View)) {
 		glUniformMatrix4fv(model->getModelMatrixID(), 1, GL_FALSE, &skybox->getTransform()[0][0]);
@@ -192,9 +203,7 @@ void pRenderer::renderSkybox()
 	}
 
 	if (shdr->hasUniform(Uniforms::ModelViewProjection)) {
-		glm::mat4 modelMatrix = skybox->getTransform();
-		glm::mat4 MVP = projMatrix * cameraView * modelMatrix;
-		glUniformMatrix4fv(model->getMVPMatrixID(), 1, GL_FALSE, &MVP[0][0]);
+		glUniformMatrix4fv(model->getMVPMatrixID(), 1, GL_FALSE, &skyboxMVP[0][0]);
 	}
 
 	//Feed the model the camera position

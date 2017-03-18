@@ -74,17 +74,16 @@ void pSceneGraph::applyTransform(pSceneNode * node, glm::vec3 & pos, glm::quat &
 	}
 }
 
-
 void pSceneGraph::renderSceneNode(pSceneNode * node, pRenderer * renderer)
 {
 	if (node != nullptr)
 	{
 		glm::mat4x4 tmp = node->getModelMatrix();
 
-		//for (int i = 0; i < matrixStack.size(); ++i)
-		for (int i = matrixStack.size() - 1; i >= 0; --i)
+		for (int i = 0; i < matrixStack.size(); ++i)
+		//for (int i = matrixStack.size() - 1; i >= 0; i--)
 		{
-			tmp = matrixStack[i] * tmp;
+			tmp = tmp * matrixStack[i];
 		}
 
 		renderer->renderSceneNode(node, tmp);
