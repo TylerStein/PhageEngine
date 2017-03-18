@@ -36,8 +36,8 @@ void TestScene::onStart()
 	pShader* phongShader = engine->resourceFactory->createPhongShader();
 
 	//Generate an image for the chair
-	pImage* chairDiffuseImage = engine->resourceFactory->createImage("Chair_Diffuse", "../Resources/Models/chair/diffuse.tga");
-	pImage* floorDiffuseImage = engine->resourceFactory->createImage("Floor_Diffuse", "../Resources/Images/Museum/stonefloor.jpg");
+	pImage* chairDiffuseImage = engine->resourceFactory->loadImage("Chair_Diffuse", "../Resources/Models/chair/diffuse.tga");
+	pImage* floorDiffuseImage = engine->resourceFactory->loadImage("Floor_Diffuse", "../Resources/Images/Museum/stonefloor.jpg");
 
 	//Manually create some material info for the chair
 	MaterialInfo chairMaterialInfo;
@@ -90,7 +90,7 @@ void TestScene::onStart()
 	//gunModel3->rotateAround(gunModel2->getUpVector(), 45);
 	//gunModel3->setScale(glm::vec3(4.0f));
 
-	pSceneNode* floorNode = engine->resourceFactory->createPrimitiveShape("FloorShape", pPrimitiveMaker::CUBOID_TRI, glm::vec3(4.0, 1.0f, 4.0), glm::vec3(1), floorMaterial);
+	pSceneNode* floorNode = engine->resourceFactory->addPrimitiveToScene("FloorShape", pPrimitiveMaker::CUBOID_TRI, glm::vec3(4.0, 1.0f, 4.0), glm::vec3(1), floorMaterial);
 	floorNode->setPosition(glm::vec3(0, 0, 0));
 	scene->addExistingNodes(floorNode);
 

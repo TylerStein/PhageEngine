@@ -239,7 +239,7 @@ pMaterial * pModelLoader::processMaterial(const aiMaterial & material, pShader* 
 		std::string path = texPath.C_Str();
 		if (!path.empty()) {
 			std::string texName = matName.C_Str() + std::string("_diffuseTexture");
-			matInfo.diffuseTexture = pResourceFactory::instance()->getImage(texName, path);
+			matInfo.diffuseTexture = pResourceFactory::instance()->loadImage(texName, path);
 		}
 	}
 	
@@ -250,7 +250,7 @@ pMaterial * pModelLoader::processMaterial(const aiMaterial & material, pShader* 
 		std::string path = texPath.C_Str();
 		if (!path.empty()) {
 			std::string texName = matName.C_Str() + std::string("_normalTexture");
-			matInfo.bumpTexture = pResourceFactory::instance()->getImage(texName, path);
+			matInfo.bumpTexture = pResourceFactory::instance()->loadImage(texName, path);
 		}
 	}
 	
@@ -261,7 +261,7 @@ pMaterial * pModelLoader::processMaterial(const aiMaterial & material, pShader* 
 		std::string path = texPath.C_Str();
 		if (!path.empty()) {
 			std::string texName = matName.C_Str() + std::string("_specularTexture");
-			matInfo.specularTexture = pResourceFactory::instance()->getImage(texName, path);
+			matInfo.specularTexture = pResourceFactory::instance()->loadImage(texName, path);
 		}
 	}
 
