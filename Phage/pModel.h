@@ -5,6 +5,47 @@
 #include "pMaterial.h"
 #include "glm\mat4x4.hpp"
 
+#define BONES_PER_VERTEX 8
+
+struct VertexBoneData {
+	unsigned int boneID;
+	float boneWeight;
+};
+
+struct Bone {
+	std::vector<Bone> children;
+	unsigned int ID;
+	glm::mat4 transform;
+};
+
+struct Vertex {
+	Vertex(glm::vec3 pos = glm::vec3(0), glm::vec3 norm = glm::vec3(0), glm::vec2 coord = glm::vec2(0), glm::vec3 tan = glm::vec3(0), glm::vec3 bitan = glm::vec3(0), glm::vec3 col = glm::vec3(0), std::vector<VertexBoneData> bones = std::vector<VertexBoneData>()) {
+		position = pos;
+		normal = norm;
+		coordinates = coord;
+		tangent = tan;
+		biTangent = bitan;
+		color = col;
+
+		boneCount = bones.size();
+		for (int i = 0; i < boneCount; ++i) {
+			if (i < BONES_PER_VERTEX) {
+				boneData[i] = bones[i];
+			}
+		}
+	}
+
+	glm::vec3 position;
+	glm::vec3 normal;
+	glm::vec2 coordinates;
+	glm::vec3 tangent;
+	glm::vec3 biTangent;
+	glm::vec3 color;
+
+	unsigned int boneCount;
+	VertexBoneData boneData[BONES_PER_VERTEX];
+};
+
 class pModel : public pAsset
 {
 
@@ -27,9 +68,6 @@ public:
 	GLuint getNormalMatrixID();
 	GLuint getMVPMatrixID();
 
-	glm::mat4 getModelMatrix();
-	glm::mat3 getNormalMatrix();
-
 	pMaterial* getMaterial();
 	void setMaterial(pMaterial* newMaterial);
 
@@ -49,6 +87,10 @@ public:
 
 	pType type;
 
+	std::string directory;
+
+	std::vector<glm::vec3> getVertexPositions();
+
 private:
 	//Function for initializing the VBO, VAO and ShaderProgram
 	void setupModel();
@@ -61,30 +103,22 @@ private:
 	bool useBiTangents;
 	bool useIndeces;
 
-	std::vector<GLuint> vIndeces;
-
-	std::vector<GLfloat> vPositions;
-	std::vector<GLfloat> vNormals;
-	std::vector<GLfloat> vCoordinates;
-	std::vector<GLfloat> vColors;
-	std::vector<GLfloat> vTangents;
-	std::vector<GLfloat> vBiTangents;
-
 	pMaterial* material;
 
 	GLuint vertCount;
 
 	GLuint numIndeces;
-	GLuint VAOID; //One vertex array object to hold the vertex buffer objects
 	GLuint ElementBufferID; //Potentially uses an element buffer (for indexed vertices)
 
-	GLuint BufferID_Positions;
-	GLuint BufferID_Normals;
-	GLuint BufferID_Coordinates;
-	GLuint BufferID_Colors;
-	GLuint BufferID_Indeces;
-	GLuint BufferID_Tangents;
-	GLuint BufferID_BiTangents;
+	GLuint EBOID; //Element buffer object ID
+	GLuint VAOID; //Vertex array object ID
+	GLuint VBOID; //Vertex buffer object ID
+
+	std::vector<Vertex> vertices;
+	std::vector<GLuint> vIndeces;
+	
+	std::vector<Bone> bones;
+	bool useBones;
 
 	GLenum drawMode;
 };

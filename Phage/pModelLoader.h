@@ -53,7 +53,9 @@ public:
 private:
 
 	//Adds material to the resource manager
-	pMaterial* processMaterial(const aiMaterial& material, pShader* shader, std::string backupName = "");
+	pMaterial* processMaterial(const aiMaterial& material, pShader* shader, const std::string& modelPath, std::string backupName = "");
+
+	pImage* processTextureImage(const aiString& texPath, const std::string& modelPath, const std::string& name = "");
 
 	//Adds model to the resource manager
 	pModel* processMesh(const aiMesh& mesh, pMaterial* mat, std::string backupName = "");
@@ -69,5 +71,6 @@ private:
 	std::vector<GLfloat>* vec3_addToArray(aiVector3D* src, std::vector<GLfloat>* dst);
 	std::vector<GLfloat>* vec3_2_addToArray(aiVector3D* src, std::vector<GLfloat>* dst);
 	std::vector<GLfloat>* vec4_3_addToArray(aiColor4D* src, std::vector<GLfloat>* dst);
+	glm::mat4 aiMat4_to_glmMat4(aiMatrix4x4 src);
 };
 

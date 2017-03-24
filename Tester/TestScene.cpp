@@ -35,64 +35,31 @@ void TestScene::onStart()
 	//Create a shader for the shape surfaces
 	pShader* phongShader = engine->resourceFactory->createPhongShader();
 
-	//Generate an image for the chair
-	pImage* chairDiffuseImage = engine->resourceFactory->loadImage("Chair_Diffuse", "../Resources/Models/chair/diffuse.tga");
-	pImage* floorDiffuseImage = engine->resourceFactory->loadImage("Floor_Diffuse", "../Resources/Images/Museum/stonefloor.jpg");
+	pImage* bricksImageDiffuse = engine->resourceFactory->loadImage("Image_Bricks", "../Resources/Images/Museum/stonefloor.jpg");
+	pImage* bricksImageNormal = engine->resourceFactory->loadImage("Image_Bricks_Norm", "../Resources/Images/Museum/stonefloor_norm.jpg");
 
-	//Manually create some material info for the chair
-	MaterialInfo chairMaterialInfo;
-	chairMaterialInfo.reset();
-	chairMaterialInfo.ambient = glm::vec3(0.05f);
-	chairMaterialInfo.specular = glm::vec3(1.0f);
-	chairMaterialInfo.shininess = 1.0f;
-	chairMaterialInfo.diffuseTexture = chairDiffuseImage;
+	pMaterial* floorMaterial = engine->resourceFactory->createMaterial("Material_Floor", phongShader, MaterialInfo(
+		glm::vec3(1), 
+		glm::vec3(0.01), 
+		glm::vec3(1), 
+		glm::vec3(0), 
+		64.0f, 
+		bricksImageDiffuse,
+		nullptr,
+		bricksImageNormal,
+		true
+	));
 
-	MaterialInfo floorMaterialInfo;
-	floorMaterialInfo.reset();
-	floorMaterialInfo.ambient = glm::vec3(0.05f);
-	floorMaterialInfo.specular = glm::vec3(1.0f);
-	floorMaterialInfo.shininess = 1.0f;
-	floorMaterialInfo.diffuseTexture = floorDiffuseImage;
-
-	//Generate the material for the chair
-	pMaterial* chairMaterial = engine->resourceFactory->createMaterial("Chair_Material", phongShader, chairMaterialInfo);
-	pMaterial* floorMaterial = engine->resourceFactory->createMaterial("Floor_Material", phongShader, floorMaterialInfo);
-
-	pModel* bunnyRef = engine->resourceFactory->loadModel("bunnyModel", "../Resources/Models/bunny.obj");
-
-	pSceneObject* rootBunny = scene->createNewObject(bunnyRef, nullptr, nullptr, nullptr, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(5), "RootBunny", nullptr);
-
-	pSceneObject* childBunny1 = scene->createNewObject(bunnyRef, nullptr, nullptr, nullptr, glm::vec3(0, 0, 2), glm::vec3(0, 0, 0), glm::vec3(1), "RootBunny", rootBunny->getSceneNode());
-
-	pSceneObject* childBunny2 = scene->createNewObject(bunnyRef, nullptr, nullptr, nullptr, glm::vec3(0, 0, -2), glm::vec3(0, 0, 0), glm::vec3(1), "RootBunny", rootBunny->getSceneNode());
-
-	rootBunny->getSceneNode()->translate(glm::vec3(1, 0, 0));
-	rootBunny->getSceneNode()->rotateAround(rootBunny->getSceneNode()->getUpVector(), 90);
-	rootBunny->getSceneNode()->setScale(glm::vec3(10));
-
-	//Load in model node tree and attach to scene root
-	//pSceneNode* chairNode = pModelLoader::instance()->loadModelToSceneObjects("../Resources/Models/bunny.obj");
-	//scene->addExistingNodes(chairNode);
-	//chairNode->setScale(glm::vec3(5.0f));
-	//chairNode->setPosition(glm::vec3(0, 2, 0));
-
-	//pSceneNode* gunModel2 = pModelLoader::instance()->loadModelToSceneObjects("../Resources/Models/bunny.obj");
-	//chairNode->appendChild(gunModel2);
-
-	//gunModel2->translate(glm::vec3(3, 3, 3));
-	//gunModel2->rotateAround(gunModel2->getUpVector(), -45);
-	//gunModel2->setScale(glm::vec3(4.0f));
-
-	//pSceneNode* gunModel3 = pModelLoader::instance()->loadModelToSceneObjects("../Resources/Models/bunny.obj");
-	//chairNode->appendChild(gunModel3);
-
-	//gunModel3->translate(glm::vec3(-3, -3, -3));
-	//gunModel3->rotateAround(gunModel2->getUpVector(), 45);
-	//gunModel3->setScale(glm::vec3(4.0f));
-
-	pSceneNode* floorNode = engine->resourceFactory->addPrimitiveToScene("FloorShape", pPrimitiveMaker::CUBOID_TRI, glm::vec3(4.0, 1.0f, 4.0), glm::vec3(1), floorMaterial);
+	pSceneNode* floorNode = engine->resourceFactory->addPrimitiveToScene("Mesh_Floor", pPrimitiveMaker::PLANE_TRI, glm::vec3(1.0, 1.0, 1.0), glm::vec3(1), floorMaterial);
+	pModel* floorMesh = floorNode->getAttachedSceneObject()->getAttachedModel();
+	floorMesh->scaleTextureCoordinates(glm::vec2(6.0f, 6.0f));
 	floorNode->setPosition(glm::vec3(0, 0, 0));
+	floorNode->setRotation(glm::vec3(0.5, 0, 0));
 	scene->addExistingNodes(floorNode);
+
+	//pSceneNode* butterfly = engine->resourceFactory->loadModelToScene("Butterfly", "../Resources/Models/Butterfly/Butterfly.obj", *scene, scene->sceneGraph->getRootSceneNode());
+	pSceneNode* house = engine->resourceFactory->loadModelToScene("House", "../Resources/Models/House/house interior.obj", *scene, nullptr);
+	house->setScale(glm::vec3(0.1f));
 
 	pCubeMap* skyboxCube = new pCubeMap("../Resources/Cubemaps/Citadella/posx.jpg",
 		"../Resources/Cubemaps/Citadella/negx.jpg",
@@ -103,13 +70,9 @@ void TestScene::onStart()
 		);
 	engine->renderer->setSkybox(skyboxCube);
 
-	//chairNode->translate(glm::vec3(3, 3, 3));
-	//chairNode->setScale(glm::vec3(0.5));
-	//chairNode->rotateAround(chairNode->getUpVector(), 45);
-
-
 	//Add a light to the game (should be via scene)
-	engine->lightManager->addLight(new pLight(Light::DIRECTIONAL, glm::vec3(0.5, 0.5, 0.5), glm::vec3(1), glm::vec3(1), glm::vec3(0.1f)));
+	//engine->lightManager->addLight(new pLight(Light::DIRECTIONAL, glm::vec3(0, 0, 1), glm::vec3(1), glm::vec3(1), glm::vec3(0.1f)));
+	engine->lightManager->addLight(new pLight(Light::POINT, glm::vec3(10, 10, 0), 42.0f, glm::vec3(1, 0.0, 0.0), glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0f)));
 }
 
 void TestScene::onPreRender()
@@ -165,11 +128,11 @@ void TestScene::onUpdate(GLdouble deltaTime)
 	}
 
 	if (engine->inputManager->hasKeyBeenRepeated(keyName::KEY_RIGHT)) {
-		camNode->rotateAround(camNode->getUpVector(), rot);
+		camNode->rotateAround(glm::vec3(0, 1, 0), rot);
 	}
 
 	if (engine->inputManager->hasKeyBeenRepeated(keyName::KEY_LEFT)) {
-		camNode->rotateAround(camNode->getUpVector(), -rot);
+		camNode->rotateAround(glm::vec3(0, 1, 0), -rot);
 	}
 
 	if (engine->inputManager->hasKeyBeenRepeated(keyName::KEY_UP)) {

@@ -1,5 +1,7 @@
 #include "pModelLoader.h"
 #include "pResourceFactory.h"
+#include "pAnimation.h"
+#include <filesystem>
 
 pModelLoader* pModelLoader::_instance = 0;
 
@@ -118,6 +120,13 @@ pModel* pModelLoader::loadModel(std::string path, pMaterial* mat)
 
 pSceneNode * pModelLoader::loadModelToSceneObjects(std::string path, pMaterial * mat)
 {
+#ifdef _DEBUG
+	std::cout << "Beginning import of model from path: " << path << std::endl;
+	double startTime = glfwGetTime();
+#endif
+
+
+
 	//Get the incoming model's info as an AssetImporter scene
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate
@@ -131,15 +140,15 @@ pSceneNode * pModelLoader::loadModelToSceneObjects(std::string path, pMaterial *
 	if (!scene) {
 #ifdef _DEBUG
 		std::cout << "Failed to import model from " << path << std::endl;
-		return nullptr;
 #endif
 		LogManager::instance()->error(("Failed to import model from " + path + "\n"));
+		return nullptr;
 	}
 
 	//Load embedded textures
 	if (scene->HasTextures()) {
 		for (int i = 0; i < scene->mNumTextures; ++i) {
-		
+			
 		}
 	}
 
@@ -155,17 +164,20 @@ pSceneNode * pModelLoader::loadModelToSceneObjects(std::string path, pMaterial *
 
 		for (int i = 0; i < scene->mNumMaterials; ++i) {
 			const aiMaterial* mater = scene->mMaterials[i];
-			pMaterial* newMat = processMaterial(*mater, shaderRef, rootName);
+			pMaterial* newMat = processMaterial(*mater, shaderRef, path, rootName);
 			indexedMaterials.push_back(newMat);
 		}
 	}
 
 	std::vector<pModel*> indexedMeshes = std::vector<pModel*>();
 
+	bool first = true;
+
 	//Load meshes
 	if (scene->HasMeshes()) {
 		for (int i = 0; i < scene->mNumMeshes; ++i) {
 			const aiMesh* mesh = scene->mMeshes[i];
+
 			//Store this meshe's material index
 			int matIndex = mesh->mMaterialIndex;
 			pMaterial* matRef = mat;
@@ -176,13 +188,68 @@ pSceneNode * pModelLoader::loadModelToSceneObjects(std::string path, pMaterial *
 				}
 			}
 			pModel* newMesh = processMesh(*mesh, matRef, rootName);
+			if (first) {
+				newMesh->directory = path;
+				first = false;
+			}
 			indexedMeshes.push_back(newMesh);
+		}
+	}
+
+	//Load animations
+	if (scene->HasAnimations()) {
+		for (int i = 0; i < scene->mNumAnimations; ++i) {
+			const aiAnimation anim = *scene->mAnimations[i];
+			
+			//Create a pAnimation 
+			pAnimation* pAnim = new pAnimation();
+
+			//Store the animation name
+			const std::string animName = std::string(anim.mName.C_Str());
+			
+			//Store the animation speed (tps) and duration
+			const double ticksPerSecond = anim.mTicksPerSecond;
+			const double duration = anim.mDuration;
+
+			//Set animation values
+			pAnim->_duration = duration;
+			pAnim->_ticksPerSecond = ticksPerSecond;
+			pAnim->_name = animName;
+
+			//Process mesh animation channels
+			for (int o = 0; o < anim.mNumMeshChannels; ++o) {
+				const aiMeshAnim meshAnim = *anim.mMeshChannels[o];
+
+				//Store the name of the mesh this animation channel is intended for
+				const std::string meshName = std::string(meshAnim.mName.C_Str());
+
+				//Store this mesh animation's keyframes
+				for (int k = 0; k < meshAnim.mNumKeys; ++k) {
+					//Store animation keyframe time and valueID
+					const double animTime = meshAnim.mKeys[k].mTime;
+					const unsigned int animID = meshAnim.mKeys[k].mValue;
+
+
+				}
+			}
+
+
+			//Process bone animation channels
+			for (int o = 0; o < anim.mNumChannels; ++o) {
+
+			}
+			
 		}
 	}
 
 	//Build node tree
 	pSceneNode* rootNode = processNodes(*scene, indexedMeshes);
 
+
+#ifdef _DEBUG
+	float loadTime = (float)(glfwGetTime() - startTime);
+	printf("Model load completed in %.2f seconds\n", loadTime);
+#endif
 
 	return rootNode;
 }
@@ -192,7 +259,7 @@ void pModelLoader::loadModelToResources(std::string path, pMaterial * mat)
 
 }
 
-pMaterial * pModelLoader::processMaterial(const aiMaterial & material, pShader* shader, std::string backupName)
+pMaterial * pModelLoader::processMaterial(const aiMaterial & material, pShader* shader, const std::string& modelPath, std::string backupName)
 {
 	MaterialInfo matInfo;
 	matInfo.reset();
@@ -239,7 +306,7 @@ pMaterial * pModelLoader::processMaterial(const aiMaterial & material, pShader* 
 		std::string path = texPath.C_Str();
 		if (!path.empty()) {
 			std::string texName = matName.C_Str() + std::string("_diffuseTexture");
-			matInfo.diffuseTexture = pResourceFactory::instance()->loadImage(texName, path);
+			matInfo.diffuseTexture = processTextureImage(texPath, modelPath, texName);
 		}
 	}
 	
@@ -250,7 +317,7 @@ pMaterial * pModelLoader::processMaterial(const aiMaterial & material, pShader* 
 		std::string path = texPath.C_Str();
 		if (!path.empty()) {
 			std::string texName = matName.C_Str() + std::string("_normalTexture");
-			matInfo.bumpTexture = pResourceFactory::instance()->loadImage(texName, path);
+			matInfo.bumpTexture = processTextureImage(texPath, modelPath, texName);
 		}
 	}
 	
@@ -261,7 +328,7 @@ pMaterial * pModelLoader::processMaterial(const aiMaterial & material, pShader* 
 		std::string path = texPath.C_Str();
 		if (!path.empty()) {
 			std::string texName = matName.C_Str() + std::string("_specularTexture");
-			matInfo.specularTexture = pResourceFactory::instance()->loadImage(texName, path);
+			matInfo.specularTexture = processTextureImage(texPath, modelPath, texName);
 		}
 	}
 
@@ -279,6 +346,92 @@ pMaterial * pModelLoader::processMaterial(const aiMaterial & material, pShader* 
 	return newMat;
 }
 
+pImage * pModelLoader::processTextureImage(const aiString & texPath, const std::string& modelPath, const std::string& name)
+{
+	using namespace std::experimental::filesystem::v1;
+
+	try {
+
+		//Create a filesystem path object with the proposed paths
+		path tPath(texPath.C_Str());
+		path mPath(modelPath.c_str());
+
+		//Check that the path is valid (points to some file)
+		if (!tPath.has_extension()) {
+#ifdef _DEBUG
+			printf("Supplied texture path has no extention, texture not loaded.\n");
+#endif
+			LogManager::instance()->warning("Supplied texture path has no extention, texture not loaded.\n");
+			return nullptr;
+		}
+
+		//Store the proposed model and texture directories
+		path modelDir = mPath.parent_path();
+		path texDir = tPath.parent_path();
+
+		//Check if the originally proposed directory exists
+		if (exists(tPath)) {
+			//Check if the originally proposed file exists
+			if (is_regular_file(tPath)) {
+				//All's well, create the image
+				return pResourceFactory::instance()->loadImage(name, texPath.C_Str());
+			}
+		}
+
+		//The image was not in the originally given directory, start manually searching
+		//First check for <image name> in <model directory>
+		//So it's <model dir>/<image>
+
+		//Get image name+type (image.type)
+		std::string imageName = tPath.filename().generic_string();
+
+		//Check model directory for image
+		path testImagePath = (modelDir.generic_string() + "/" + imageName);
+		if (exists(testImagePath)) {
+			if (is_regular_file(testImagePath)) {
+				//Image found, add to manager and return
+				return pResourceFactory::instance()->loadImage(name, testImagePath.generic_string());
+			}
+		}
+
+		//The image was not in the model directory
+		//Check for a parent directory of the image, then check for <parent dir> within <model dir>
+		//So it's <model dir>/<image parent dir>/<image>
+
+		//First get the parent folder string
+		path::iterator itr = tPath.end(); //Itr points to "image.type"
+		if (itr != tPath.begin()) {
+			//Itr becomes the parent folder name
+			itr++;
+			std::string parentDir = itr->generic_string();
+
+			//Construct test directory
+			testImagePath = (modelDir.generic_string() + "/" + parentDir + "/" + imageName);
+
+			if (exists(testImagePath)) {
+				if (is_regular_file(testImagePath)) {
+					//Image found, add to manager and return
+					return pResourceFactory::instance()->loadImage(name, testImagePath.generic_string());
+				}
+			}
+		}
+	}
+	catch (const filesystem_error& ex) {
+#ifdef _DEBUG
+		std::cout << "Filesystem Error:\n" << ex.what() << "\n";
+#endif
+		std::string what = std::string(ex.what());
+		LogManager::instance()->warning("Filesystem Error:\n" + what + "\n");
+	}
+
+#ifdef _DEBUG
+	std::cout << "Unable to load image from path: " << texPath.C_Str() << std::endl;
+#endif
+	LogManager::instance()->info("Unable to load image from path: " + std::string(texPath.C_Str()) + "\n");
+
+	return nullptr;
+}
+
 pModel * pModelLoader::processMesh(const aiMesh & mesh, pMaterial* mat, std::string backupName)
 {
 	bool hasPositions = false;
@@ -288,12 +441,14 @@ pModel * pModelLoader::processMesh(const aiMesh & mesh, pMaterial* mat, std::str
 	bool hasTangents = false;
 	bool hasIndeces = false;
 
+	bool hasBones = false;
+
 	std::string meshName = "";
 	meshName = std::string(mesh.mName.C_Str());
 
 	if (meshName.empty()) {
-		if (backupName.empty() <= 0) {
-			meshName = "unkown_mesh" + std::to_string(uMeshCount);
+		if (backupName.empty()) {
+			meshName = "unnamed_mesh" + std::to_string(uMeshCount);
 			uMeshCount++;
 		}
 		else {
@@ -308,12 +463,14 @@ pModel * pModelLoader::processMesh(const aiMesh & mesh, pMaterial* mat, std::str
 	std::vector<GLfloat> vTangents = std::vector<GLfloat>();
 	std::vector<GLfloat> vBiTangents = std::vector<GLfloat>();
 	std::vector<GLuint> vIndeces = std::vector<GLuint>();
+	std::vector<VertexBoneData> vBoneData = std::vector<VertexBoneData>();
 
 	hasPositions = mesh.HasPositions();
 	hasCoordinates = mesh.HasTextureCoords(0);
 	hasNormals = mesh.HasNormals();
 	hasColors = mesh.HasVertexColors(0);
 	hasTangents = mesh.HasTangentsAndBitangents();
+	hasBones = mesh.HasBones();
 
 	//Iterate through each face on the mesh
 	for (int o = 0; o < mesh.mNumFaces; ++o) {
@@ -356,7 +513,29 @@ pModel * pModelLoader::processMesh(const aiMesh & mesh, pMaterial* mat, std::str
 		}
 	}
 
+	if (hasBones) {
+		//For each bone contained in this mesh
+		for (int i = 0; i < mesh.mNumBones; ++i) {
+			//Store a reference to this bone
+			const aiBone thisBone = *mesh.mBones[i];
 
+			//Store this bone's name
+			const std::string thisBoneName = std::string(thisBone.mName.C_Str());
+
+			//Store this bone's offset (from mesh space to this bone pos)
+			const glm::mat4 thisBoneOffset = aiMat4_to_glmMat4(thisBone.mOffsetMatrix);
+
+			//For each vertex weight data in this bone
+			for (int o = 0; o < thisBone.mNumWeights; ++o) {
+				//Store this bone's vertex ID and weight
+				const unsigned int thisVertID = thisBone.mWeights[o].mVertexId;
+				const float thisVertWeight = thisBone.mWeights[o].mWeight;
+
+
+				 
+			}
+		}
+	}
 
 	pMaterial* matRef = mat;
 
@@ -439,5 +618,22 @@ std::vector<GLfloat> * pModelLoader::vec4_3_addToArray(aiColor4D * src, std::vec
 	dst->push_back(src->g);
 	dst->push_back(src->b);
 	return dst;
+}
+
+glm::mat4 pModelLoader::aiMat4_to_glmMat4(aiMatrix4x4 src)
+{
+	glm::mat4 res = glm::mat4();
+
+	glm::vec4 rowA = glm::vec4(src.a1, src.a2, src.a3, src.a4);
+	glm::vec4 rowB = glm::vec4(src.b1, src.b2, src.b3, src.b4);
+	glm::vec4 rowC = glm::vec4(src.c1, src.c2, src.c3, src.c4);
+	glm::vec4 rowD = glm::vec4(src.d1, src.d2, src.d3, src.d4);
+
+	res[0] = rowA;
+	res[1] = rowB;
+	res[2] = rowC;
+	res[3] = rowD;
+
+	return res;
 }
 

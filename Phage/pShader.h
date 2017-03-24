@@ -105,7 +105,8 @@ enum Attributes {
 	VertexColor = 1 << 4,
 	VertexTangent = 1 << 5,
 	VertexBiTangent = 1 << 6,
-	VertexIndeces = 1 << 7
+	VertexIndeces = 1 << 7,
+	BoneData = 1 << 8
 };
 
 //Represents attributes for functions/flags

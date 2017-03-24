@@ -4,8 +4,8 @@
 
 PhageEngine* engine;
 DebugEditor* editor;
-int windowWidth = 1200;
-int windowHeight = 1200;
+int windowWidth = 1920;
+int windowHeight = 1080;
 char* windowTitle = "Phage Engine Editor";
 
 

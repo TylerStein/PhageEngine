@@ -23,6 +23,7 @@ public:
 	void setScriptManager(pScriptManager* scriptManager);
 
 	//==MODELS==//
+
 	//Create a model
 	pModel* createModel(std::string name, pMaterial* mat, GLfloat* vertPositions, GLfloat* vertNormals, GLfloat* vertColors, GLfloat* vertUVs, GLuint numVerts, GLenum drawMode);
 	pModel* createModel(std::string name, pMaterial * material, GLenum drawMode, std::vector<GLfloat> vPositions,
@@ -42,6 +43,7 @@ public:
 	pModel* addModel(std::string name, pModel* model);
 
 	//==MATERIALS==//
+
 	//Create a material
 	pMaterial* createMaterial(std::string name, pShader* shader, MaterialInfo info);
 	//(UNIMPLEMENTED) Load a material resource file
@@ -51,6 +53,7 @@ public:
 
 
 	//==SHADERS==//
+
 	//Create a shader
 	pShader* createShader(std::string shaderName, attribNameMap attribs, uniformNameMap uniforms, std::string vertShaderPath, std::string fragShaderPath);
 	//Retreive existing shader
@@ -58,6 +61,7 @@ public:
 
 
 	//==IMAGES==//
+
 	//Retreive an image from file
 	pImage* loadImage(std::string name, std::string path);
 	//Retreive an existing image
@@ -65,6 +69,7 @@ public:
 
 
 	//==SCRIPTS==//
+
 	//Retreive an existing script
 	pScript* getScript(std::string name);
 	//Add a script to the resource pool

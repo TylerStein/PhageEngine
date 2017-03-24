@@ -23,17 +23,17 @@ void pBoundingBox::surround(pModel & model)
 	glm::vec3 min = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 max = glm::vec3(0.0f, 0.0f, 0.0f);
 
-	GLuint increaseAmount = 3;
+	std::vector<glm::vec3> vPositions = model.getVertexPositions();
 
-	for (int i = 1; i < (model.vertCount * increaseAmount); i += increaseAmount)
+	for (int i = 1; i < model.vertCount; i ++)
 	{
-		if (model.vPositions[i] < min.x) { min.x = model.vPositions[i]; }
-		if (model.vPositions[i + 1] < min.y) { min.y = model.vPositions[i + 1]; }
-		if (model.vPositions[i + 2] < min.z) { min.z = model.vPositions[i + 3]; }
+		if (vPositions[i].x < min.x) { min.x = vPositions[i].x; }
+		if (vPositions[i].y < min.y) { min.y = vPositions[i].y; }
+		if (vPositions[i].z < min.z) { min.z = vPositions[i].z; }
 
-		if (model.vPositions[i] > max.x) { max.x = model.vPositions[i]; }
-		if (model.vPositions[i + 1] > max.y) { max.y = model.vPositions[i = 1]; }
-		if (model.vPositions[i + 2] > max.z) { max.z = model.vPositions[i = 2]; }
+		if (vPositions[i].x > max.x) { max.x = vPositions[i].x; }
+		if (vPositions[i].y > max.y) { max.y = vPositions[i].y; }
+		if (vPositions[i].z > max.z) { max.z = vPositions[i].z; }
 	}
 	pBoundingBox(min, max);
 }

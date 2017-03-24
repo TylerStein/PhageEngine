@@ -155,6 +155,7 @@
     <ClInclude Include="GLError.h" />
     <ClInclude Include="LogManager.h" />
     <ClInclude Include="pAnimation.h" />
+    <ClInclude Include="pAnimator.h" />
     <ClInclude Include="pAudioManager.h" />
     <ClInclude Include="pBoundingBox.h" />
     <ClInclude Include="pBoundingSphere.h" />
@@ -200,6 +201,7 @@
     <ClCompile Include="Clock.cpp" />
     <ClCompile Include="LogManager.cpp" />
     <ClCompile Include="pAnimation.cpp" />
+    <ClCompile Include="pAnimator.cpp" />
     <ClCompile Include="pAudioManager.cpp" />
     <ClCompile Include="pBoundingBox.cpp" />
     <ClCompile Include="pBoundingSphere.cpp" />

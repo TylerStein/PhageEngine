@@ -41,7 +41,9 @@ e:\github\phageengine\phage\x64\debug\pmaterialmanager.obj
 e:\github\phageengine\phage\x64\debug\pmatrixstack.obj
 e:\github\phageengine\phage\x64\debug\passet.obj
 e:\github\phageengine\phage\x64\debug\clock.obj
+e:\github\phageengine\phage\x64\debug\panimator.obj
 e:\github\phageengine\x64\debug\phage.lib
+e:\github\phageengine\phage\x64\debug\pmodelloader.obj.enc
 e:\github\phageengine\x64\debug\phage.pdb
 e:\github\phageengine\phage\x64\debug\phage.tlog\cl.command.1.tlog
 e:\github\phageengine\phage\x64\debug\phage.tlog\cl.read.1.tlog

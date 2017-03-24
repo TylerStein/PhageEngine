@@ -36,10 +36,7 @@ void pRenderer::renderSceneNode(pSceneNode * node, glm::mat4x4 mat)
 
 	if (model != nullptr)
 	{
-		//Bind the model's vertex array id
-		glBindVertexArray(model->getVertexArrayID());//Bind the model's vertex array id
-
-													 //Use the shader program
+		 //Use the shader program
 		glUseProgram(model->getShaderProgramID());
 
 		//Apply the model's mateiral
@@ -47,12 +44,12 @@ void pRenderer::renderSceneNode(pSceneNode * node, glm::mat4x4 mat)
 
 		pShader* shdr = model->getMaterial()->getShader();
 
-		
+
 		//Apply the model position matrix
 		if (shdr->hasUniform(Uniforms::Model_View)) {
 			glUniformMatrix4fv(model->getModelMatrixID(), 1, GL_FALSE, &mat[0][0]);
 		}
-		
+
 
 		//Apply the view matrix
 		if (shdr->hasUniform(Uniforms::Camera_View)) {
@@ -63,7 +60,7 @@ void pRenderer::renderSceneNode(pSceneNode * node, glm::mat4x4 mat)
 			glUniformMatrix4fv(model->getProjectionMatrixID(), 1, GL_FALSE, &projMatrix[0][0]);
 		}
 
-		
+
 		//Apply the normal matrix
 		if (shdr->hasUniform(Uniforms::Normal_View)) {
 			glm::mat3 normalMatrix = glm::transpose(glm::inverse(mat));
@@ -77,85 +74,27 @@ void pRenderer::renderSceneNode(pSceneNode * node, glm::mat4x4 mat)
 
 		//Feed the model the camera position
 		if (shdr->hasUniform(Uniforms::Camera_Position)) {
-			glUniform3f(shdr->getUniformID(Uniforms::Camera_Position), camLoc.x, camLoc.y, camLoc.z);
+			glm::vec3 tmp = glm::inverse(cameraView)[3];
+			glUniform3f(shdr->getUniformID(Uniforms::Camera_Position), tmp.x, tmp.y, tmp.z);
 		}
 
+
+		//Bind the model's vertex array id
+		glBindVertexArray(model->getVertexArrayID());//Bind the model's vertex array id
+
 		if (model->usesIndeces()) {
-			//Bind the buffer of the model's indexed vertices
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model->getElementBufferID());
-			//Draw the model's points from the currently bound EBO with currently used shader
-			glDrawElements(model->getDrawMode(), model->getNumIndeces(), GL_UNSIGNED_INT, nullptr);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+			glDrawElements(model->getDrawMode(), model->getNumIndeces(), GL_UNSIGNED_INT, 0);
 		}
 		else {
 			//Draw the model's points from the currently bound VAO with currently used shader
 			glDrawArrays(model->getDrawMode(), 0, model->getVertCount());
 		}
 
+		glBindVertexArray(0);
+
 		model->getMaterial()->unuseMaterial();
 	}
 }
-
-/*
-void pRenderer::renderModel(pModel* model)
-{
-	//Bind the model's vertex array id
-	glBindVertexArray(model->getVertexArrayID());
-
-	//Use the shader program
-	glUseProgram(model->getShaderProgramID());
-
-	//Apply the model's mateiral
-	model->UseMaterial();
-
-	pShader* shdr = model->getMaterial()->getShader();
-
-	//Apply the model position matrix
-	if (shdr->hasUniform(Uniforms::Model_View)) {
-		glUniformMatrix4fv(model->getModelMatrixID(), 1, GL_FALSE, &model->getModelMatrix()[0][0]);
-	}
-	//Apply the view matrix
-	if (shdr->hasUniform(Uniforms::Camera_View)) {
-		glUniformMatrix4fv(model->getViewMatrixID(), 1, GL_FALSE, &cameraView[0][0]);
-	}
-	//Apply the perspective matrix
-	if (shdr->hasUniform(Uniforms::Projection_View)) {
-		glUniformMatrix4fv(model->getProjectionMatrixID(), 1, GL_FALSE, &projMatrix[0][0]);
-	}
-	//Apply the normal matrix
-	if (shdr->hasUniform(Uniforms::Normal_View)) {
-		glUniformMatrix3fv(model->getNormalMatrixID(), 1, GL_FALSE, &model->getNormalMatrix()[0][0]);
-	}
-
-	if (shdr->hasUniform(Uniforms::ModelViewProjection)) {
-		glm::mat4 modelMatrix = model->getModelMatrix();
-		glm::mat4 MVP = projMatrix * cameraView * modelMatrix;
-		glUniformMatrix4fv(model->getMVPMatrixID(), 1, GL_FALSE, &MVP[0][0]);
-	}
-
-	//Feed the model the camera position
-	if (shdr->hasUniform(Uniforms::Camera_Position)) {
-		glUniform3f(shdr->getUniformID(Uniforms::Camera_Position), camLoc.x, camLoc.y, camLoc.z);
-	}
-
-	if (model->usesIndeces()) {
-		//Bind the buffer of the model's indexed vertices
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model->getElementBufferID());
-		//Draw the model's points from the currently bound EBO with currently used shader
-		glDrawElements(model->getDrawMode(), model->getNumIndeces(), GL_UNSIGNED_INT, nullptr);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	}
-	else {
-		//Draw the model's points from the currently bound VAO with currently used shader
-		glDrawArrays(model->getDrawMode(), 0, model->getVertCount());
-	}
-
-	model->getMaterial()->unuseMaterial();
-
-	glBindVertexArray(0);
-	glUseProgram(0);
-}
-*/
 
 void pRenderer::setSkybox(pCubeMap * cubeMap)
 {
@@ -177,7 +116,6 @@ void pRenderer::renderSkybox()
 	pModel* model = skybox->getModel();
 	pShader* shdr = model->getMaterial()->getShader();
 
-	glBindVertexArray(model->getVertexArrayID());
 	glUseProgram(shdr->getShaderID());
 
 	skybox->UseTexture(GL_TEXTURE0);
@@ -216,20 +154,21 @@ void pRenderer::renderSkybox()
 		
 	}
 
+
+	//Bind the model's vertex array id
+	glBindVertexArray(model->getVertexArrayID());//Bind the model's vertex array id
+
 	if (model->usesIndeces()) {
-		//Bind the buffer of the model's indexed vertices
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model->getElementBufferID());
-		//Draw the model's points from the currently bound EBO with currently used shader
-		glDrawElements(model->getDrawMode(), model->getNumIndeces(), GL_UNSIGNED_INT, nullptr);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glDrawElements(model->getDrawMode(), model->getNumIndeces(), GL_UNSIGNED_INT, 0);
 	}
 	else {
 		//Draw the model's points from the currently bound VAO with currently used shader
 		glDrawArrays(model->getDrawMode(), 0, model->getVertCount());
 	}
 
-	skybox->UnuseTexture(GL_TEXTURE0);
 	glBindVertexArray(0);
+
+	skybox->UnuseTexture(GL_TEXTURE0);
 	glUseProgram(0);
 
 	//Set the culling and depth settings back to previous state

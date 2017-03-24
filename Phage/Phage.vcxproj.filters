@@ -122,6 +122,7 @@
       <Filter>Management</Filter>
     </ClCompile>
     <ClCompile Include="pAnimation.cpp" />
+    <ClCompile Include="pAnimator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Clock.h">
@@ -260,6 +261,7 @@
       <Filter>Management</Filter>
     </ClInclude>
     <ClInclude Include="pAnimation.h" />
+    <ClInclude Include="pAnimator.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PhageDiagram.cd" />

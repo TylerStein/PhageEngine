@@ -12,15 +12,16 @@ void pSceneGraph::renderSceneGraph(pRenderer * renderer, pSceneNode* node)
 	{
 		matrixStack.push_back(node->getModelMatrix());
 		renderSceneGraph(renderer, node->attachedSceneNodeList[i]);
+		if (!matrixStack.empty())
+		{
+			matrixStack.pop_back();
+		}
 	}
 	if (node != rootSceneNode)
 	{
 		renderSceneNode(node, renderer);
 	}
-	if (!matrixStack.empty())
-	{
-		matrixStack.pop_back();
-	}
+
 }
 
 void pSceneGraph::updateSceneGraph(double deltaTime, pSceneNode * node)

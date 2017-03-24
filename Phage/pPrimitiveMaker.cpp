@@ -257,7 +257,9 @@ pModel * pPrimitiveMaker::makeCuboid_Tri(std::string name, glm::vec3 scale, pMat
 
 	};
 
-	return new pModel("pCuboid_Tri", material, GL_TRIANGLES, 24, vPositions, 36, vIndeces, vCoordinates, vNormals, vTangents, nullptr, vColors);
+	pModel* res = new pModel("pCuboid_Tri", material, GL_TRIANGLES, 24, vPositions, 36, vIndeces, vCoordinates, vNormals, vTangents, nullptr, vColors);
+	res->directory = "PRIMITIVE_CUBOID_TRI";
+	return res;
 }
 
 pModel * pPrimitiveMaker::makePlane_Tri(std::string name, glm::vec2 scale, pMaterial* material, glm::vec3 color)
@@ -302,8 +304,13 @@ pModel * pPrimitiveMaker::makePlane_Tri(std::string name, glm::vec2 scale, pMate
 		color.x, color.y, color.z
 	};
 
+	GLuint vIndeces[] = {
+		1, 2, 0,
+		1, 3, 2
+	};
 	
-	pModel* res = new pModel("pPlane_Tri", material, GL_TRIANGLE_STRIP, 4, vPositions, 0, nullptr, vCoordinates, vNormals, vTangents, nullptr, vColors);
+	pModel* res = new pModel("pPlane_Tri", material, GL_TRIANGLES, 4, vPositions, 6, vIndeces, vCoordinates, vNormals, vTangents, nullptr, vColors);
+	res->directory = "PRIMITIVE_PLANE_TRI";
 	return res;
 }
 

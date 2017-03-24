@@ -1,11 +1,10 @@
 #pragma once
 #include "pSceneNode.h"
 
-#define BONES_PER_VERTEX 4
-struct VertexBoneData {
-
-	unsigned int IDs[BONES_PER_VERTEX];
-	float weights[BONES_PER_VERTEX];
+struct AnimationKeyframe {
+	glm::vec3 _position;
+	glm::quat _rotation;
+	double _timestep;
 };
 
 class pAnimation
@@ -17,6 +16,13 @@ public:
 
 	bool _isSkeletal;
 
+	double _duration;
+	double _ticksPerSecond;
+
+	std::string _name;
+
 	pSceneNode* _animRoot;
+
+	AnimationKeyframe* _keyframes[];
 };
 

@@ -1,6 +1,12 @@
 #pragma once
 #include <string>
 
+#ifdef _DEBUG
+#define RESOURCES_PATH "../Resources"
+#else
+#define RESOURCES_PATH "../Resources"
+#endif
+
 //Public static string literals for hardcoded file paths, for now
 static std::string shader_primitive_vert = "../Resources/Shaders/Primitive.vert";
 static std::string shader_primitive_frag = "../Resources/Shaders/Primitive.frag";

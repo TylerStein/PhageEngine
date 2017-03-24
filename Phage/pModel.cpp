@@ -7,6 +7,7 @@
 #include <vector>
 #include "GLFW\glfw3.h"
 
+
 pModel::pModel(std::string name, pMaterial * material, GLenum drawMode, GLuint numVerts, GLfloat * vPositions, GLuint numIndeces, GLuint* vIndeces, GLfloat * vCoordinates, GLfloat * vNormals, GLfloat * vTangents, GLfloat * vBiTangents, GLfloat * vColors)
 {
 	if (name == "") { name = (material->getName() + "NewModel"); }
@@ -26,6 +27,8 @@ pModel::pModel(std::string name, pMaterial * material, GLenum drawMode, GLuint n
 	useBiTangents = !(vBiTangents == nullptr);
 	useColors = !(vColors == nullptr);
 
+	vertices = std::vector<Vertex>(vertCount);
+
 	if (useIndeces) {
 		this->vIndeces = std::vector<GLuint>();
 		for (int i = 0; i < numIndeces; ++i) {
@@ -34,50 +37,87 @@ pModel::pModel(std::string name, pMaterial * material, GLenum drawMode, GLuint n
 	}
 
 	if (useVertices) {
-		this->vPositions = std::vector<GLfloat>();
+		//this->vPositions = std::vector<GLfloat>();
 		const GLuint totalFloats = (numVerts * 3);
-		for (int i = 0; i < totalFloats; ++i) {
-			this->vPositions.push_back(vPositions[i]);
+		//for (int i = 0; i < totalFloats; ++i) {
+		//	this->vPositions.push_back(vPositions[i]);
+		//}
+
+		int v = 0;
+		for (int i = 0; i < totalFloats; i += 3) {
+			vertices[v].position = glm::vec3(vPositions[i], vPositions[i + 1], vPositions[i + 2]);
+			v++;
 		}
+
 	}
 
 	if (useTexCoords) {
-		this->vCoordinates = std::vector<GLfloat>();
+		//this->vCoordinates = std::vector<GLfloat>();
 		const GLuint totalFloats = (numVerts * 2);
-		for (int i = 0; i < totalFloats; ++i) {
-			this->vCoordinates.push_back(vCoordinates[i]);
+		//for (int i = 0; i < totalFloats; ++i) {
+		//	this->vCoordinates.push_back(vCoordinates[i]);
+		//}
+
+		int v = 0;
+		for (int i = 0; i < totalFloats; i += 2) {
+			vertices[v].coordinates = glm::vec2(vCoordinates[i], vCoordinates[i + 1]);
+			v++;
 		}
 	}
 
 	if (useNormals) {
-		this->vNormals = std::vector<GLfloat>();
+		//this->vNormals = std::vector<GLfloat>();
 		const GLuint totalFloats = (numVerts * 3);
-		for (int i = 0; i < totalFloats; ++i) {
-			this->vNormals.push_back(vNormals[i]);
+		//for (int i = 0; i < totalFloats; ++i) {
+		//	this->vNormals.push_back(vNormals[i]);
+		//}
+
+		int v = 0;
+		for (int i = 0; i < totalFloats; i += 3) {
+			vertices[v].normal = glm::vec3(vNormals[i], vNormals[i + 1], vNormals[i + 2]);
+			v++;
 		}
 	}
 
 	if (useTangents) {
-		this->vTangents = std::vector<GLfloat>();
+		//this->vTangents = std::vector<GLfloat>();
 		const GLuint totalFloats = (numVerts * 3);
-		for (int i = 0; i < totalFloats; ++i) {
-			this->vTangents.push_back(vTangents[i]);
+		//for (int i = 0; i < totalFloats; ++i) {
+		//	this->vTangents.push_back(vTangents[i]);
+		//}
+
+		int v = 0;
+		for (int i = 0; i < totalFloats; i += 3) {
+			vertices[v].tangent = glm::vec3(vTangents[i], vTangents[i + 1], vTangents[i + 2]);
+			v++;
 		}
 	}
 
 	if (useBiTangents) {
-		this->vBiTangents = std::vector<GLfloat>();
+		//this->vBiTangents = std::vector<GLfloat>();
 		const GLuint totalFloats = (numVerts * 3);
-		for (int i = 0; i < totalFloats; ++i) {
-			this->vBiTangents.push_back(vBiTangents[i]);
+		//for (int i = 0; i < totalFloats; ++i) {
+		//	this->vBiTangents.push_back(vBiTangents[i]);
+		//}
+
+		int v = 0;
+		for (int i = 0; i < totalFloats; i += 3) {
+			vertices[v].biTangent = glm::vec3(vBiTangents[i], vBiTangents[i + 1], vBiTangents[i + 2]);
+			v++;
 		}
 	}
 
 	if (useColors) {
-		this->vColors = std::vector<GLfloat>();
+		//this->vColors = std::vector<GLfloat>();
 		const GLuint totalFloats = (numVerts * 3);
-		for (int i = 0; i < totalFloats; ++i) {
-			this->vColors.push_back(vColors[i]);
+		//for (int i = 0; i < totalFloats; ++i) {
+		//	this->vColors.push_back(vColors[i]);
+		//}
+
+		int v = 0;
+		for (int i = 0; i < totalFloats; i += 3) {
+			vertices[v].color = glm::vec3(vColors[i], vColors[i + 1], vColors[i + 2]);
+			v++;
 		}
 	}
 
@@ -108,9 +148,21 @@ pModel::pModel(std::string name, pMaterial * material, GLenum drawMode, std::vec
 	useBiTangents = false;
 	useColors = false;
 
-	if (vertCount > 0) { 
-		useVertices = true;
-		this->vPositions = std::vector<GLfloat>(vPositions);
+	if (vertCount > 0) {
+
+		vertices = std::vector<Vertex>(vertCount);
+
+		if (vPositions.size() > 0) {
+			useVertices = true;
+			//this->vPositions = std::vector<GLfloat>(vPositions);
+
+			int v = 0;
+			for (int i = 0; i < vPositions.size(); i += 3) {
+				vertices[v].position = glm::vec3(vPositions[i], vPositions[i + 1], vPositions[i + 2]);
+				v++;
+			}
+
+		}
 
 		if (numIndeces > 0) {
 			useIndeces = true;
@@ -119,27 +171,57 @@ pModel::pModel(std::string name, pMaterial * material, GLenum drawMode, std::vec
 
 		if (vCoordinates.size() > 0) {
 			useTexCoords = true;
-			this->vCoordinates = std::vector<GLfloat>(vCoordinates);
+			//this->vCoordinates = std::vector<GLfloat>(vCoordinates);
+
+			int v = 0;
+			for (int i = 0; i < vCoordinates.size(); i += 2) {
+				vertices[v].coordinates = glm::vec2(vCoordinates[i], vCoordinates[i + 1]);
+				v++;
+			}
 		}
 
 		if (vNormals.size() > 0) {
 			useNormals = true;
-			this->vNormals = std::vector<GLfloat>(vNormals);
+			//this->vNormals = std::vector<GLfloat>(vNormals);
+
+			int v = 0;
+			for (int i = 0; i < vNormals.size(); i += 3) {
+				vertices[v].normal = glm::vec3(vNormals[i], vNormals[i + 1], vNormals[i + 2]);
+				v++;
+			}
 		}
 
 		if (vTangents.size() > 0) {
 			useTangents = true;
-			this->vTangents = std::vector<GLfloat>(vTangents);
+			//this->vTangents = std::vector<GLfloat>(vTangents);
+
+			int v = 0;
+			for (int i = 0; i < vTangents.size(); i += 3) {
+				vertices[v].tangent = glm::vec3(vTangents[i], vTangents[i + 1], vTangents[i + 2]);
+				v++;
+			}
 		}
 
 		if (vBiTangents.size() > 0) {
 			useBiTangents = true;
-			this->vBiTangents = std::vector<GLfloat>(vBiTangents);
+			//this->vBiTangents = std::vector<GLfloat>(vBiTangents);
+
+			int v = 0;
+			for (int i = 0; i < vBiTangents.size(); i += 3) {
+				vertices[v].biTangent = glm::vec3(vBiTangents[i], vBiTangents[i + 1], vBiTangents[i + 2]);
+				v++;
+			}
 		}
 
 		if (vColors.size() > 0) {
 			useColors = true;
-			this->vColors = std::vector<GLfloat>(vColors);
+			//this->vColors = std::vector<GLfloat>(vColors);
+
+			int v = 0;
+			for (int i = 0; i < vColors.size(); i += 3) {
+				vertices[v].color = glm::vec3(vColors[i], vColors[i + 1], vColors[i + 2]);
+				v++;
+			}
 		}
 	}
 
@@ -178,7 +260,7 @@ GLuint pModel::getViewMatrixID()
 
 GLuint pModel::getElementBufferID()
 {
-	return ElementBufferID;
+	return EBOID;
 }
 
 GLuint pModel::getProjectionMatrixID()
@@ -224,33 +306,22 @@ void pModel::setDrawMode(GLenum drawMode)
 
 void pModel::scaleTextureCoordinates(glm::vec2 scale)
 {
-	//Ensure coordinates even exist
-	if (&vCoordinates != nullptr) {
-		//Scale each coordinate float
-		for (int i(0); i < vertCount; i += 2) {
-			vCoordinates[i] *= scale.x;
-			vCoordinates[i + 1] *= scale.y;
-		}
+	//Delete the old buffers
+	deleteBuffers();
 
-		//Overwrite the original coordinate buffer data
-		//glDeleteBuffers(1, &BufferID_Coordinates);
-		//BufferID_Coordinates = 0;
-		//glGenBuffers(1, &BufferID_Coordinates);
-		glBindBuffer(GL_ARRAY_BUFFER, BufferID_Coordinates);
-		glBufferData(GL_ARRAY_BUFFER, vertCount * 2 * sizeof(GLfloat), &vCoordinates[0], GL_STATIC_DRAW);
+	//Scale the texture coords
+	for (int i = 0; i < vertCount; i++) {
+		vertices[i].coordinates *= scale;
 	}
 
+	//Remake the model data buffer
+	setupModel();
 }
 void pModel::deleteBuffers()
 {
-	//Deletes buffers from the GPU
-	if(useVertices){ glDeleteBuffers(1, &BufferID_Positions); }
-	if(useNormals) { glDeleteBuffers(1, &BufferID_Normals); }
-	if (useColors) { glDeleteBuffers(1, &BufferID_Colors); }
-	if (useTexCoords) { glDeleteBuffers(1, &BufferID_Coordinates); }
-	if (useTangents) { glDeleteBuffers(1, &BufferID_Tangents); }
-	if (useBiTangents) { glDeleteBuffers(1, &BufferID_BiTangents); }
-	if (useIndeces) { glDeleteBuffers(1, &BufferID_Indeces); }
+	glDeleteVertexArrays(1, &VAOID);
+	glDeleteBuffers(1, &VBOID);
+	glDeleteBuffers(1, &EBOID);
 }
 
 bool pModel::usesIndeces()
@@ -263,114 +334,86 @@ GLuint pModel::getNumIndeces()
 	return numIndeces;
 }
 
-
-void pModel::setupModel()
+std::vector<glm::vec3> pModel::getVertexPositions()
 {
-	int currentBuffer = 0;
+	std::vector<glm::vec3> vPos = std::vector<glm::vec3>(vertCount);
+	for (int i = 0; i < vertCount; i++) {
+		vPos[i] = vertices[i].position;
+	}
 
+	return vPos;
+}
+
+void pModel::setupModel() {
 	pShader* shader = material->getShader();
 
-	if (glfwGetCurrentContext() == nullptr) {
-#ifdef _DEBUG
-		printf("Attempted to send data to GPU without an active OpenGL context!");
-#endif
-		LogManager::instance()->error("Attempting to send data to GPU without an active OpenGL context!");
-		return;
-	}
-
-	//Create the vertex array object to hold our VBOs and bind it
 	glGenVertexArrays(1, &VAOID);
+	glGenBuffers(1, &VBOID);
+	glGenBuffers(1, &EBOID);
 
 	glBindVertexArray(VAOID);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOID);
 
-	//Set up the element array buffer if indeces are availible
-	if (useIndeces) {
-		ElementBufferID = 0;
-		glGenBuffers(1, &ElementBufferID);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ElementBufferID);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * numIndeces, &vIndeces[0], GL_STATIC_DRAW);
-	}
+	glBufferData(GL_ARRAY_BUFFER, vertCount * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
 
-	if (useVertices && (shader->hasAttribute(Attributes::VertexPosition))) {
-		//Generate the points VBO, bind it and copy the points onto the buffer
-		BufferID_Positions = 0;
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndeces * sizeof(GLuint), vIndeces.data(), GL_STATIC_DRAW);
 
+	//Vertex attributes
+	//Position
+	if (useVertices && shader->hasAttribute(Attributes::VertexPosition)) {
 		GLuint attribID = shader->getAttributeID(Attributes::VertexPosition);
 
-		glGenBuffers(1, &BufferID_Positions);
-		glBindBuffer(GL_ARRAY_BUFFER, BufferID_Positions);
-		glBufferData(GL_ARRAY_BUFFER, vertCount * 3 * sizeof(GLfloat), &vPositions[0], GL_STATIC_DRAW);
-
 		glEnableVertexAttribArray(attribID);
-
-		//Attirbute pointer to the 0th index, 3 of type, type is float, not normalized, 0 stride, no pointer
-		glVertexAttribPointer(attribID, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+		glVertexAttribPointer(attribID, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
 	}
 
-	if (useColors && (shader->hasAttribute(Attributes::VertexColor))) {
-		//Generate the colors VBO, bind it and copy the points onto the buffer
-		BufferID_Colors = 0;
-		glGenBuffers(1, &BufferID_Colors);
-		glBindBuffer(GL_ARRAY_BUFFER, BufferID_Colors);
-		glBufferData(GL_ARRAY_BUFFER, vertCount * 3 * sizeof(GLfloat), &vColors[0], GL_STATIC_DRAW);
-
-		//Attirbute pointer to the 0th index, 3 of type, type is float, not normalized, 0 stride, no pointer
-		GLuint attribID = shader->getAttributeID(Attributes::VertexColor);
-		glEnableVertexAttribArray(attribID);
-		glVertexAttribPointer(attribID, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-	}
-
-
-	if (useTexCoords && (shader->hasAttribute(Attributes::VertexCoordinate))) {
-		//Generate the UV VBO, bind it and copy the points onto the buffer
-		BufferID_Coordinates = 0;
-		glGenBuffers(1, &BufferID_Coordinates);
-		glBindBuffer(GL_ARRAY_BUFFER, BufferID_Coordinates);
-		glBufferData(GL_ARRAY_BUFFER, vertCount * 2 * sizeof(GLfloat), &vCoordinates[0], GL_STATIC_DRAW);
-
-		//Attirbute pointer to the 0th index, 2 of type, type is float, not normalized, 0 stride, no pointer
-		GLuint attribID = shader->getAttributeID(Attributes::VertexCoordinate);
-		glEnableVertexAttribArray(attribID);
-		glVertexAttribPointer(attribID, 2, GL_FLOAT, GL_FALSE, 0, NULL);
-	}
-
-
-	if (useNormals && (shader->hasAttribute(Attributes::VertexNormal))) {
-		//Generate Normals VBO, bind it and copy the points onto the buffer
-		BufferID_Normals = 0;
-		glGenBuffers(1, &BufferID_Normals);
-		glBindBuffer(GL_ARRAY_BUFFER, BufferID_Normals);
-		glBufferData(GL_ARRAY_BUFFER, vertCount * 3 * sizeof(GLfloat), &vNormals[0], GL_STATIC_DRAW);
-
-		//Attirbute pointer to the 0th index, 3 of type, type is float, not normalized, 0 stride, no pointer
+	//Normals
+	if (useNormals && shader->hasAttribute(Attributes::VertexNormal)) {
 		GLuint attribID = shader->getAttributeID(Attributes::VertexNormal);
+
 		glEnableVertexAttribArray(attribID);
-		glVertexAttribPointer(attribID, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+		glVertexAttribPointer(attribID, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, normal));
 	}
 
-	if (useTangents && (shader->hasAttribute(Attributes::VertexTangent))) {
-		//Generate Normals VBO, bind it and copy the points onto the buffer
-		BufferID_Tangents = 0;
-		glGenBuffers(1, &BufferID_Tangents);
-		glBindBuffer(GL_ARRAY_BUFFER, BufferID_Tangents);
-		glBufferData(GL_ARRAY_BUFFER, vertCount * 3 * sizeof(GLfloat), &vTangents[0], GL_STATIC_DRAW);
+	//Coordinates
+	if (useTexCoords && shader->hasAttribute(Attributes::VertexCoordinate)) {
+		GLuint attribID = shader->getAttributeID(Attributes::VertexCoordinate);
 
-		//Attirbute pointer to the 0th index, 3 of type, type is float, not normalized, 0 stride, no pointer
+		glEnableVertexAttribArray(attribID);
+		glVertexAttribPointer(attribID, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, coordinates));
+	}
+
+	//Tangents
+	if (useTangents && shader->hasAttribute(Attributes::VertexTangent)) {
 		GLuint attribID = shader->getAttributeID(Attributes::VertexTangent);
+
 		glEnableVertexAttribArray(attribID);
-		glVertexAttribPointer(attribID, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+		glVertexAttribPointer(attribID, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, tangent));
 	}
 
-	if (useBiTangents && (shader->hasAttribute(Attributes::VertexBiTangent))) {
-		//Generate Normals VBO, bind it and copy the points onto the buffer
-		BufferID_BiTangents = 0;
-		glGenBuffers(1, &BufferID_BiTangents);
-		glBindBuffer(GL_ARRAY_BUFFER, BufferID_BiTangents);
-		glBufferData(GL_ARRAY_BUFFER, vertCount * 3 * sizeof(GLfloat), &vBiTangents[0], GL_STATIC_DRAW);
-
-		//Attirbute pointer to the 0th index, 3 of type, type is float, not normalized, 0 stride, no pointer
+	//Bitangents
+	if (useBiTangents && shader->hasAttribute(Attributes::VertexBiTangent)) {
 		GLuint attribID = shader->getAttributeID(Attributes::VertexBiTangent);
+
 		glEnableVertexAttribArray(attribID);
-		glVertexAttribPointer(attribID, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+		glVertexAttribPointer(attribID, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, biTangent));
 	}
+
+	//Colors
+	if (useColors && shader->hasAttribute(Attributes::VertexColor)) {
+		GLuint attribID = shader->getAttributeID(Attributes::VertexColor);
+
+		glEnableVertexAttribArray(attribID);
+		glVertexAttribPointer(attribID, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, color));
+	}
+
+	//Bones
+	if (useBones && shader->hasAttribute(Attributes::BoneData)) {
+		GLuint attribID = shader->getAttributeID(Attributes::BoneData);
+
+		glEnableVertexAttribArray(attribID);
+		glVertexAttribIPointer(attribID, 4, GL_INT, sizeof(VertexBoneData), (GLvoid*)offsetof(Vertex, boneData));
+	}
+
 }

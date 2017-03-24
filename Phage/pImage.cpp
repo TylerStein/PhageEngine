@@ -14,7 +14,6 @@ pImage::pImage(std::string name, std::string imageDir, GLuint minFilterType, GLu
 	this->wrapMode = wrapMode;
 
 	loadImage();
-
 }
 
 pImage::~pImage()

@@ -137,7 +137,7 @@ pShader * pResourceFactory::createDebugShader()
 	//Shader does not already exist
 	if (tmpShader == nullptr) {
 #ifdef _DEBUG
-		std::cout << "Primitive shader loaded for first time" << std::endl;
+		std::cout << "Primitive shader loaded for the first time" << std::endl;
 #endif
 		attribNameMap atrMap = attribNameMap();
 		uniformNameMap uniMap = uniformNameMap();
@@ -157,9 +157,6 @@ pShader * pResourceFactory::createDebugShader()
 		return shaderManager->getShader(shdrH);
 	}
 
-#ifdef _DEBUG
-		std::cout << "Primitive shader already loaded" << std::endl;
-#endif
 	return tmpShader;
 }
 
@@ -170,7 +167,7 @@ pShader * pResourceFactory::createSkyboxShader()
 	//Shader does not already exist
 	if (tmpShader == nullptr) {
 #ifdef _DEBUG
-		std::cout << "Skybox shader loaded for first time" << std::endl;
+		std::cout << "Skybox shader loaded for the first time" << std::endl;
 #endif
 		attribNameMap atrMap = attribNameMap();
 		uniformNameMap uniMap = uniformNameMap();
@@ -183,9 +180,6 @@ pShader * pResourceFactory::createSkyboxShader()
 		return shaderManager->getShader(shdrH);
 	}
 
-#ifdef _DEBUG
-	std::cout << "Skybox shader already loaded" << std::endl;
-#endif
 	return tmpShader;
 }
 
@@ -196,7 +190,7 @@ pShader * pResourceFactory::createPhongShader()
 	//Shader does not already exist
 	if (tmpShader == nullptr) {
 #ifdef _DEBUG
-		std::cout << "Phong shader loaded for first time" << std::endl;
+		std::cout << "Phong shader loaded for the first time" << std::endl;
 #endif
 		attribNameMap atrMap = attribNameMap();
 		uniformNameMap uniMap = uniformNameMap();
@@ -233,9 +227,6 @@ pShader * pResourceFactory::createPhongShader()
 		return shaderManager->getShader(shdrH);
 	}
 
-#ifdef _DEBUG
-	std::cout << "Phong shader already loaded" << std::endl;
-#endif
 	return tmpShader;
 }
 
@@ -266,7 +257,7 @@ pModel * pResourceFactory::loadModel(std::string name, std::string path, pMateri
 	return modelManager->getModel(mdl);
 }
 
-pSceneNode * pResourceFactory::loadModelToScene(std::string name, std::string path, pScene & scene, pSceneNode * parent, pMaterial * mat)
+pSceneNode * pResourceFactory::loadModelToScene(std::string name, std::string path, pScene& scene, pSceneNode* parent, pMaterial * mat)
 {
 	pSceneNode* resNode = pModelLoader::instance()->loadModelToSceneObjects(path, mat);
 

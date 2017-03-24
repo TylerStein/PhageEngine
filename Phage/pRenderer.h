@@ -18,8 +18,6 @@ public:
 
 	void renderSceneNode(pSceneNode* node, glm::mat4x4 mat);
 
-	void renderModel(pModel* model);
-
 	void setSkybox(pCubeMap* cubeMap);
 	void renderSkybox();
 	
