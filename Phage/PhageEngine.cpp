@@ -24,6 +24,9 @@ PhageEngine::PhageEngine(GameImplement* game)
 	audioManager = new pAudioManager();
 	scriptManager = new pScriptManager();
 
+	animationManager = pAnimationManager::instance();
+	skeletonManager = pSkeletonManager::instance();
+
 	//Give the modelmanager the other managers
 	modelManager->setMaterialManager(materialManager);
 	modelManager->setImageManager(imageManager);

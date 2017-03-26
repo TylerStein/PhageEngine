@@ -11,7 +11,8 @@
 #include "pLightManager.h"
 #include "pScriptManager.h"
 #include "pInputManager.h"
-
+#include "pAnimationManager.h"
+#include "pSkeletonManager.h"
 
 class PhageEngine
 {
@@ -63,6 +64,9 @@ private:
 	pAudioManager* audioManager;
 	pSceneGraph* sceneGraph;
 	pScriptManager* scriptManager;
+
+	pAnimationManager* animationManager;
+	pSkeletonManager* skeletonManager;
 
 	pInputHandler* inputHandler;
 };

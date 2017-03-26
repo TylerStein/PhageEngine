@@ -1,19 +1,15 @@
 #pragma once
 #include "pAnimation.h"
 
+//An animator to be attached to a scene object
 class pAnimator
 {
 public:
 	pAnimator();
 	~pAnimator();
+	
 
-	pSceneNode* _node;
-	pAnimation* _animation;
-
-	//CUrrent animation time
-	double _currentTime;
-
-	AnimationKeyframe _currentKeyframe;
-	AnimationKeyframe _nextKeyframe;
+	double _scrub; //Location of current playback
+	pAnimationClip* _animation; //The actual animation to apply
 };
 

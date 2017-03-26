@@ -200,21 +200,20 @@ pSceneNode * pModelLoader::loadModelToSceneObjects(std::string path, pMaterial *
 	if (scene->HasAnimations()) {
 		for (int i = 0; i < scene->mNumAnimations; ++i) {
 			const aiAnimation anim = *scene->mAnimations[i];
-			
-			//Create a pAnimation 
-			pAnimation* pAnim = new pAnimation();
 
 			//Store the animation name
 			const std::string animName = std::string(anim.mName.C_Str());
 			
 			//Store the animation speed (tps) and duration
-			const double ticksPerSecond = anim.mTicksPerSecond;
+			double ticksPerSecond = anim.mTicksPerSecond;
 			const double duration = anim.mDuration;
 
-			//Set animation values
-			pAnim->_duration = duration;
-			pAnim->_ticksPerSecond = ticksPerSecond;
-			pAnim->_name = animName;
+			if (ticksPerSecond == 0) {
+				ticksPerSecond = 24.0;
+			}
+
+			//Create an animation clip
+			pAnimationClip* animClip = new pAnimationClip(animName, duration, ticksPerSecond);
 
 			//Process mesh animation channels
 			for (int o = 0; o < anim.mNumMeshChannels; ++o) {

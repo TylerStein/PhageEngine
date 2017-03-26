@@ -121,6 +121,8 @@
     <ClCompile Include="pInputManager.cpp">
       <Filter>Management</Filter>
     </ClCompile>
+    <ClCompile Include="pAnimationManager.cpp" />
+    <ClCompile Include="pSkeletonManager.cpp" />
     <ClCompile Include="pAnimation.cpp" />
     <ClCompile Include="pAnimator.cpp" />
   </ItemGroup>
@@ -261,6 +263,9 @@
       <Filter>Management</Filter>
     </ClInclude>
     <ClInclude Include="pAnimation.h" />
+    <ClInclude Include="pSkeleton.h" />
+    <ClInclude Include="pAnimationManager.h" />
+    <ClInclude Include="pSkeletonManager.h" />
     <ClInclude Include="pAnimator.h" />
   </ItemGroup>
   <ItemGroup>
