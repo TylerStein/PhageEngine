@@ -1,6 +1,6 @@
 #include "pAnimation.h"
 
-pAnimationClip::pAnimationClip(std::string name, double duration, double frameRate, bool loop)
+pAnimation::pAnimation(std::string name, double duration, double frameRate, bool loop)
 {
 	this->name = name;
 	_framesPerSecond = frameRate;
@@ -8,28 +8,65 @@ pAnimationClip::pAnimationClip(std::string name, double duration, double frameRa
 	_isLooping = loop;
 }
 
-bool pAnimationClip::isLooping() const
+bool pAnimation::isLooping() const
 {
 	return _isLooping;
 }
 
-double pAnimationClip::duration() const
+double pAnimation::duration() const
 {
 	return _duration;
 }
 
-double pAnimationClip::framesPerSecond() const
+double pAnimation::framesPerSecond() const
 {
 	return _framesPerSecond;
 }
 
 
-void pAnimationClip::setLooping(bool toLoop)
+void pAnimation::setLooping(bool toLoop)
 {
 	_isLooping = toLoop;
 }
 
-void pAnimationClip::setPlaybackRate(double newFramesPerSecond)
+void pAnimation::setPlaybackRate(double newFramesPerSecond)
 {
 	_framesPerSecond = newFramesPerSecond;
+}
+
+void pAnimationClip::setStartTime(float time)
+{
+	if (time >= 0.0f && time < _endTime) {
+		_startTime = time;
+	}
+}
+
+float pAnimationClip::getStartTime() const
+{
+	return _startTime;
+}
+
+void pAnimationClip::setEndTime(float time)
+{
+	if (time > _startTime) {
+		_endTime = time;
+	}
+}
+
+float pAnimationClip::getEndTime() const
+{
+	return _endTime;
+}
+
+pVertexAnimationClip::pVertexAnimationClip(std::string name) 
+	: pAnimationClip(name)
+{
+}
+
+pAnimationClip::pAnimationClip(std::string name)
+{
+}
+
+pAnimationClip::~pAnimationClip()
+{
 }

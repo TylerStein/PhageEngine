@@ -125,6 +125,8 @@
     <ClCompile Include="pSkeletonManager.cpp" />
     <ClCompile Include="pAnimation.cpp" />
     <ClCompile Include="pAnimator.cpp" />
+    <ClCompile Include="pSkeleton.cpp" />
+    <ClCompile Include="Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Clock.h">
@@ -267,6 +269,7 @@
     <ClInclude Include="pAnimationManager.h" />
     <ClInclude Include="pSkeletonManager.h" />
     <ClInclude Include="pAnimator.h" />
+    <ClInclude Include="Shader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PhageDiagram.cd" />

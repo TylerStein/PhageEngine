@@ -409,11 +409,11 @@ void pModel::setupModel() {
 	}
 
 	//Bones
-	if (useBones && shader->hasAttribute(Attributes::BoneData)) {
-		GLuint attribID = shader->getAttributeID(Attributes::BoneData);
-
-		glEnableVertexAttribArray(attribID);
-		glVertexAttribIPointer(attribID, 4, GL_INT, sizeof(VertexBoneData), (GLvoid*)offsetof(Vertex, boneData));
-	}
+	//if (useBones && shader->hasAttribute(Attributes::BoneData)) {
+	//	GLuint attribID = shader->getAttributeID(Attributes::BoneData);
+	//
+	//	glEnableVertexAttribArray(attribID);
+	//	glVertexAttribIPointer(attribID, 4, GL_INT, sizeof(VertexBoneData), (GLvoid*)offsetof(Vertex, boneData));
+	//}
 
 }

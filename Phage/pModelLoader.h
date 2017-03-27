@@ -4,8 +4,12 @@
 #include <assimp/postprocess.h>
 #include <GL\glew.h>
 #include <glm\glm.hpp>
+
 #include <vector>
 #include <string>
+#include <map>
+
+#include "pAnimation.h"
 #include "pModel.h"
 #include "pScene.h"
 
@@ -51,6 +55,10 @@ public:
 	void loadModelToResources(std::string path, pMaterial* mat = nullptr);
 
 private:
+	//Process node, vertex, and skeletal animation by reading them into resources and associating them with scene nodes
+	std::map<std::string, pAnimation*> processAnimations(const aiScene& importScene);
+	
+	Skeleton* processSkeleton(const aiMesh& mesh);
 
 	//Adds material to the resource manager
 	pMaterial* processMaterial(const aiMaterial& material, pShader* shader, const std::string& modelPath, std::string backupName = "");
@@ -61,7 +69,7 @@ private:
 	pModel* processMesh(const aiMesh& mesh, pMaterial* mat, std::string backupName = "");
 
 	//Creates node tree to put in the pScene
-	pSceneNode* processNodes(const aiScene& scene, const std::vector<pModel*> indexedMeshes, const aiNode* root = nullptr);
+	pSceneNode* processNodes(const aiScene& scene, const std::vector<pModel*> indexedMeshes, const std::map<unsigned int, Skeleton> indexedSkeletons, const std::map <std::string, pAnimation*> animationMap, aiNode* root = nullptr);
 
 	/*contains instance of the pModelLoader object*/
 	static pModelLoader* _instance;

@@ -114,8 +114,7 @@ public:
 		return res;
 	}
 
-	static inline void printActiveAttributes(GLuint programID) {
-		GLint i;
+	static inline void printActiveAttributes(GLuint programID, std::string title = "Shader") {
 		GLint count;
 
 		GLint size; // size of the variable
@@ -126,25 +125,34 @@ public:
 		GLsizei length; // name length
 
 		glGetProgramiv(programID, GL_ACTIVE_ATTRIBUTES, &count);
-		printf("Active Attributes: %d\n", count);
+		printf("%s - Active Attributes: %d\n", title, count);
 
-		for (i = 0; i < count; i++)
+		for (GLint i = 0; i < count; i++)
 		{
 			glGetActiveAttrib(programID, (GLuint)i, bufSize, &length, &size, &type, name);
 
-			printf("Attribute #%d Type: %u Name: %s\n", i, type, name);
+			printf("Attribute #%d - Type: %u Name: %s\n", i, type, name);
 		}
+	}
+
+	static inline void printActiveUniforms(GLuint programID, std::string title = "Shader") {
+		GLint count;
+
+		GLint size; // size of the variable
+		GLenum type; // type of the variable (float, vec3 or mat4, etc)
+
+		const GLsizei bufSize = 32; // maximum name length
+		GLchar name[bufSize]; // variable name in GLSL
+		GLsizei length; // name length
 
 		glGetProgramiv(programID, GL_ACTIVE_UNIFORMS, &count);
-		printf("Active Uniforms: %d\n", count);
+		printf("%s - Active Uniforms: %d\n", title, count);
 
-		for (i = 0; i < count; i++)
+		for (GLint i = 0; i < count; i++)
 		{
 			glGetActiveUniform(programID, (GLuint)i, bufSize, &length, &size, &type, name);
 
 			printf("Uniform #%d Type: %u Name: %s\n", i, type, name);
 		}
-
-		printf("-----------------------------\n");
 	}
 };

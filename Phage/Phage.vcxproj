@@ -199,6 +199,7 @@
     <ClInclude Include="pSkeletonManager.h" />
     <ClInclude Include="pSoundSystem.h" />
     <ClInclude Include="pAnimationManager.h" />
+    <ClInclude Include="Shader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Clock.cpp" />
@@ -242,9 +243,11 @@
     <ClCompile Include="pScriptManager.cpp" />
     <ClCompile Include="pShader.cpp" />
     <ClCompile Include="pShaderManager.cpp" />
+    <ClCompile Include="pSkeleton.cpp" />
     <ClCompile Include="pSkeletonManager.cpp" />
     <ClCompile Include="pSoundSystem.cpp" />
     <ClCompile Include="pAnimationManager.cpp" />
+    <ClCompile Include="Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resources\Shaders\BlinnPhong.frag" />

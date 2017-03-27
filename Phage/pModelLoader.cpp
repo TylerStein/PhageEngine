@@ -1,6 +1,6 @@
 #include "pModelLoader.h"
 #include "pResourceFactory.h"
-#include "pAnimation.h"
+#include "pAnimator.h"
 #include <filesystem>
 
 pModelLoader* pModelLoader::_instance = 0;
@@ -145,18 +145,18 @@ pSceneNode * pModelLoader::loadModelToSceneObjects(std::string path, pMaterial *
 		return nullptr;
 	}
 
+	//Get a name from the model root node
+	std::string rootName = scene->mRootNode->mName.C_Str();
+	if (rootName.empty()) { rootName = "imported_model_root"; }
+
+	std::vector<pMaterial*> indexedMaterials = std::vector<pMaterial*>();
+
 	//Load embedded textures
 	if (scene->HasTextures()) {
 		for (int i = 0; i < scene->mNumTextures; ++i) {
 			
 		}
 	}
-
-	//Get a name from the model root node
-	std::string rootName = scene->mRootNode->mName.C_Str();
-	if (rootName.empty()) { rootName = "imported_model_root"; }
-
-	std::vector<pMaterial*> indexedMaterials = std::vector<pMaterial*>();
 
 	//Load materials
 	if (scene->HasMaterials()) {
@@ -171,13 +171,25 @@ pSceneNode * pModelLoader::loadModelToSceneObjects(std::string path, pMaterial *
 
 	std::vector<pModel*> indexedMeshes = std::vector<pModel*>();
 
+	//Mesh index and skeleton 
+	std::map<unsigned int, Skeleton> skeletonMap = std::map<unsigned int, Skeleton>();
+
+	//Node name and animation
+	std::map<std::string, pAnimation*> animationMap = std::map<std::string, pAnimation*>();
+
 	bool first = true;
 
-	//Load meshes
-	if (scene->HasMeshes()) {
+	//Load meshes & skeletons
+	if (scene->HasMeshes())
+ {
 		for (int i = 0; i < scene->mNumMeshes; ++i) {
 			const aiMesh* mesh = scene->mMeshes[i];
 
+			//Extract skeleton
+			if (mesh->HasBones()) {
+				processSkeleton(*mesh);
+			}
+			
 			//Store this meshe's material index
 			int matIndex = mesh->mMaterialIndex;
 			pMaterial* matRef = mat;
@@ -196,53 +208,15 @@ pSceneNode * pModelLoader::loadModelToSceneObjects(std::string path, pMaterial *
 		}
 	}
 
-	//Load animations
-	if (scene->HasAnimations()) {
-		for (int i = 0; i < scene->mNumAnimations; ++i) {
-			const aiAnimation anim = *scene->mAnimations[i];
 
-			//Store the animation name
-			const std::string animName = std::string(anim.mName.C_Str());
-			
-			//Store the animation speed (tps) and duration
-			double ticksPerSecond = anim.mTicksPerSecond;
-			const double duration = anim.mDuration;
-
-			if (ticksPerSecond == 0) {
-				ticksPerSecond = 24.0;
-			}
-
-			//Create an animation clip
-			pAnimationClip* animClip = new pAnimationClip(animName, duration, ticksPerSecond);
-
-			//Process mesh animation channels
-			for (int o = 0; o < anim.mNumMeshChannels; ++o) {
-				const aiMeshAnim meshAnim = *anim.mMeshChannels[o];
-
-				//Store the name of the mesh this animation channel is intended for
-				const std::string meshName = std::string(meshAnim.mName.C_Str());
-
-				//Store this mesh animation's keyframes
-				for (int k = 0; k < meshAnim.mNumKeys; ++k) {
-					//Store animation keyframe time and valueID
-					const double animTime = meshAnim.mKeys[k].mTime;
-					const unsigned int animID = meshAnim.mKeys[k].mValue;
-
-
-				}
-			}
-
-
-			//Process bone animation channels
-			for (int o = 0; o < anim.mNumChannels; ++o) {
-
-			}
-			
-		}
+	//Load scene animations
+	if(scene->HasAnimations()) {
+		animationMap = processAnimations(*scene);
 	}
 
+
 	//Build node tree
-	pSceneNode* rootNode = processNodes(*scene, indexedMeshes);
+	pSceneNode* rootNode = processNodes(*scene, indexedMeshes, skeletonMap, animationMap);
 
 
 #ifdef _DEBUG
@@ -256,6 +230,140 @@ pSceneNode * pModelLoader::loadModelToSceneObjects(std::string path, pMaterial *
 void pModelLoader::loadModelToResources(std::string path, pMaterial * mat)
 {
 
+}
+
+std::map<std::string, pAnimation*> pModelLoader::processAnimations(const aiScene& scene)
+{
+	std::map<std::string, pAnimation*> resMap = std::map<std::string, pAnimation*>();
+
+	//Iterate through each aiAnimation
+	for (int i = 0; i < scene.mNumAnimations; ++i) {
+		const aiAnimation anim = *scene.mAnimations[i];
+
+		//Store the animation name
+		const std::string animName = std::string(anim.mName.C_Str());
+
+		//Store the animation speed (tps) and duration
+		double ticksPerSecond = anim.mTicksPerSecond;
+		const double duration = anim.mDuration;
+
+		if (ticksPerSecond == 0) {
+			ticksPerSecond = 30.0;
+		}
+
+		//Create an animation clip
+		pAnimationClip* animClip = new pAnimationClip(animName);
+		std::string intendedNodeName = "";
+
+		pAnimation* finalAnim = new pAnimation(animName, duration, ticksPerSecond);
+		//TODO: Import animation, continued
+
+		//Process mesh VERTEX based animation channels
+		for (int o = 0; o < anim.mNumMeshChannels; ++o) {
+			const aiMeshAnim meshAnim = *anim.mMeshChannels[o];
+
+			//Store the name of the mesh this animation channel is intended for
+			const std::string meshName = std::string(meshAnim.mName.C_Str());
+		
+
+			pVertexAnimationClip* vertexAnimClip = new pVertexAnimationClip(meshName);
+
+			//Duration of animation clip
+			double duration = 0.0;
+
+			//Store this mesh animation's keyframes
+			for (int k = 0; k < meshAnim.mNumKeys; ++k) {
+				//Store animation keyframe time and valueID
+				const double animTime = meshAnim.mKeys[k].mTime;
+				const unsigned int animID = meshAnim.mKeys[k].mValue;
+\
+				if (animTime > duration) {
+					duration = animTime;
+				}
+
+				
+			}
+
+			
+		}
+
+
+		//Process animation channels (contains keyframe & animation data)
+		for (int o = 0; o < anim.mNumChannels; ++o) {
+			const aiNodeAnim nodeAnim = *anim.mChannels[o];
+
+			intendedNodeName = std::string(nodeAnim.mNodeName.C_Str());
+
+			
+			
+
+			for (int k = 0; k < nodeAnim.mNumPositionKeys; ++k) {
+
+			}
+
+			for (int k = 0; k < nodeAnim.mNumRotationKeys; ++k) {
+
+			}
+
+			for (int k = 0; k < nodeAnim.mNumScalingKeys; ++k) {
+
+			}
+
+			
+		}
+
+
+		//Look for skeletal animation data
+		for (int o = 0; o < scene.mNumMeshes; ++o) {
+			
+		}
+
+		
+
+		resMap.emplace(intendedNodeName, finalAnim);
+	}
+
+	return resMap;
+}
+
+Skeleton* pModelLoader::processSkeleton(const aiMesh& mesh) {
+	Skeleton* res = nullptr;
+
+	std::string name = std::string(mesh.mName .C_Str()) + std::string("_skeleton");
+	unsigned int numBones = 0;
+	std::map<std::string, unsigned int> boneMap = std::map<std::string, unsigned int>();
+	std::vector<Joint*> joints = std::vector<Joint*>();
+	for (int i = 0; i < mesh.mNumBones; i++) {
+		unsigned int boneIndex = 0;
+		std::string boneName = std::string(mesh.mBones[i]->mName.data);
+
+		if (boneMap.find(boneName) == boneMap.end()) {
+			boneIndex = boneMap.size();
+			numBones++;
+			
+			Joint* joint;
+			joints.push_back(joint);
+		}else{
+			boneIndex = boneMap[boneName];
+		}
+
+		boneMap[boneName] = boneIndex;
+		joints[boneIndex]->_inverseTransform = aiMat4_to_glmMat4(mesh.mBones[i]->mOffsetMatrix);
+
+
+		for (unsigned int j = 0; j < mesh.mBones[i]->mNumWeights; i++) {
+			unsigned int vertexID = mesh.mBones[i]->mWeights[j].mVertexId;
+			float weight = mesh.mBones[i]->mWeights[j].mWeight;
+
+		    joints[i]->addBoneData(boneIndex, weight);
+		}
+
+		res->_joints.emplace(boneIndex, joints[boneIndex]);
+	}
+
+
+
+	return res;
 }
 
 pMaterial * pModelLoader::processMaterial(const aiMaterial & material, pShader* shader, const std::string& modelPath, std::string backupName)
@@ -547,7 +655,7 @@ pModel * pModelLoader::processMesh(const aiMesh & mesh, pMaterial* mat, std::str
 	return resModel;
 }
 
-pSceneNode * pModelLoader::processNodes(const aiScene & scene, const std::vector<pModel*> indexedMeshes, const aiNode* root)
+pSceneNode * pModelLoader::processNodes(const aiScene& scene, const std::vector<pModel*> indexedMeshes, const std::map<unsigned int, Skeleton> indexedSkeletons, const std::map <std::string, pAnimation*> animationMap, aiNode* root)
 {
 	if (root == nullptr) { root = scene.mRootNode; }
 	pSceneNode* thisNode = new pSceneNode();
@@ -578,11 +686,30 @@ pSceneNode * pModelLoader::processNodes(const aiScene & scene, const std::vector
 		sceneObj->attachModel(nodeMesh);
 	}
 
+	if (indexedSkeletons.size() > 0) {
+		//const Skeleton* nodeSkeleton = &skeletonMap.at(thisNode->getName());
+		const unsigned int meshIndex = root->mMeshes[0];
+		const Skeleton* skeleton = &indexedSkeletons.at(meshIndex);
+
+		if (skeleton != nullptr) {
+			pSceneObject* obj = thisNode->getAttachedSceneObject();
+			//TODO: Add skeleton to scene object here
+		}
+	}
+
+	if (animationMap.size() > 0) {
+		const pAnimation* anim = animationMap.at(thisNode->getName());
+		if (anim != nullptr) {
+			pSceneObject* obj = thisNode->getAttachedSceneObject();
+			//TODO: Add animator with animation to scene object here
+		}
+	}
+
 	//Process this node's children
 	for (int i = 0; i < root->mNumChildren; ++i) {
 		aiNode* child = root->mChildren[i];
 		if (child != NULL) {
-			thisNode->appendChild(processNodes(scene, indexedMeshes, child));
+			thisNode->appendChild(processNodes(scene, indexedMeshes, indexedSkeletons, animationMap, child));
 		}
 	}
 

@@ -1,15 +1,26 @@
 #pragma once
 #include "pAnimation.h"
 
-//An animator to be attached to a scene object
-class pAnimator
-{
+//Plays animations on an object
+class pAnimator {
 public:
-	pAnimator();
-	~pAnimator();
-	
 
-	double _scrub; //Location of current playback
-	pAnimationClip* _animation; //The actual animation to apply
+	//Retreive an animation layer
+	pAnimation* getAnimationLayer(int idx) const;
+
+	//Add an animation layer
+	void addAnimationLayer(pAnimation* anim);
+
+	//Remove an animation layer
+	void removeAnimationLayer(int idx);
+private:
+	//One layer per animation
+	std::vector<pAnimation*> _layers;
+
+	//Loop the animation?
+	bool _loop;
+
+	//Animation playback position
+	double _scrub;
 };
 
