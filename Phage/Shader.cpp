@@ -3,15 +3,19 @@
 #include "GLError.h"
 #include <string>
 
-Shader::Shader(std::vector<std::string> directories, std::vector<GLenum> types)
+
+Shader::Shader(std::vector<std::string> shaderDirectories, std::vector<GLenum> shaderTypes, std::vector<ShaderValue> attributeValues)
 {
 	//Holds shader values
 	_shaderValues = std::vector<ShaderValue*>();
+	for(int i = 0; i < attributeValues.size(); i++){
+		_shaderValues.push_back(new ShaderValue(attributeValues[i]));
+	}
 
 	//Holds file directory for shader types
 	_shaderDirectory = std::map<GLenum, std::string>();
-	for (int i = 0; i < directories.size(); i++) {
-		_shaderDirectory.emplace(types[i], directories[i]);
+	for (int i = 0; i < shaderDirectories.size(); i++) {
+		_shaderDirectory.emplace(shaderTypes[i], shaderDirectories[i]);
 	}
 
 	_isInUse = false;
@@ -29,6 +33,7 @@ bool Shader::compileShader()
 
 	GLuint programID = 0;
 
+	_shaderValues.clear();
 	std::vector<GLuint> shaderIDs = std::vector<GLuint>();
 
 	//Iterate through provided shader paths
@@ -62,85 +67,123 @@ bool Shader::compileShader()
 		glDetachShader(programID, shaderIDs[i]);
 	}
 
-	/*
-	//Create char* of the shaders
-	const char* vertex_shader = vs.c_str();
-	const char* fragment_shader = fs.c_str();
-
-	//Compile the vertex shader
-	GLuint vertShaderID = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertShaderID, 1, &vertex_shader, NULL);
-	glCompileShader(vertShaderID);
-	GLError::checkShaderError(vertShaderID, "VertexShader");
-
-	//Compile the fragment shader
-	GLuint fragShaderID = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragShaderID, 1, &fragment_shader, NULL);
-	glCompileShader(fragShaderID);
-	GLError::checkShaderError(fragShaderID, "FragmentShader");
-
-	//Create the shader program by attaching the vertex and fragment shaders
-	shaderID = glCreateProgram();
-	glAttachShader(shaderID, fragShaderID);
-	glAttachShader(shaderID, vertShaderID);
-
-	//Link the shaderID as the currently used shader
-	glLinkProgram(shaderID);
-
-	GLError::printActiveAttributes(shaderID);
-
-	//Check for linking errors
-	GLError::checkLinkError(shaderID);
-
-	glDetachShader(shaderID, fragShaderID);
-	glDetachShader(shaderID, vertShaderID);*/
-
 	return true;
 }
 
-bool Shader::updateShaderUniforms()
+bool Shader::sendShaderUniforms()
 {
 	if (!_isInUse) {
 		useShader();
 	}
 
 	for (int i = 0; i < _shaderValues.size(); i++) {
-		updateShaderUniform(*_shaderValues[i]);
+		sendShaderUniform(*_shaderValues[i]);
 	}
 
 	unuseShader();
 	return true;
 }
 
-bool Shader::updateShaderUniform(ShaderValue val)
+#define PRINT_VALUES true
+bool Shader::sendShaderUniform(ShaderValue val)
 {
 	if (val.isAttribute() == false && _isInUse) {
 		switch (val.valueType()) {
 		case GL_INT:
+			if (PRINT_VALUES) { printf("Set Uniform[%i] (Int) = %i", val.id(), (int)val.data()); }
 			glUniform1i(val.id(), (GLint)val.data());
 			return true;
 		case GL_FLOAT:
+			if (PRINT_VALUES) { printf("Set Uniform[%i] (Float) = %f", val.id(), (float*)val.data()); }
 			glUniform1f(val.id(),  *(GLfloat*)(val.data()));
 			return true;
 		case GL_FLOAT_VEC2:
+			if (PRINT_VALUES) { printf("Set Uniform[%i] (Vec2f) = %f", val.id(), (float*)val.data()); }
 			glUniform2fv(val.id(), 1, (GLfloat*)(val.data()));
 			return true;
 		case GL_FLOAT_VEC3:
+			if (PRINT_VALUES) { printf("Set Uniform[%i] (Vec3f) = %f", val.id(), (float*)val.data()); }
 			glUniform3fv(val.id(), 1, (GLfloat*)(val.data()));
 			return true;
 		case GL_FLOAT_VEC4:
+			if (PRINT_VALUES) { printf("Set Uniform[%i] (Vec4f) = %f", val.id(), (float*)val.data()); }
 			glUniform4fv(val.id(), 1, (GLfloat*)val.data());
 			return true;
 		case GL_MATRIX3_NV:
+			if (PRINT_VALUES) { printf("Set Uniform[%i] (Mat3NV) = %f", val.id(), (float*)val.data()); }
 			glUniformMatrix3fv(val.id(), 1, GL_FALSE, (GLfloat*)val.data());
 			return true;
 		case GL_MATRIX4_NV:
+			if (PRINT_VALUES) { printf("Set Uniform[%i] (Mat4NV) = %f", val.id(), (float*)val.data()); }
 			glUniformMatrix4fv(val.id(), 1, GL_FALSE, (GLfloat*)val.data());
 			return true;
 		}
 	}
-	return false;
+	else {
+#ifdef _DEBUG
+		printf("Attempted to set uniform: Value is attribute or ShaderProgram is not in use");
+#endif
+	}
+	
+	return	false;
 }
+
+bool Shader::sendShaderAttribute(ShaderValue val, GLuint& attributeBufferID, GLuint dataOffset, GLenum usage, GLenum targetBuffer)
+{
+	if (val.isAttribute() == true && _isInUse && getValueDoesExist(val.id())) {
+		switch (val.valueType()) {
+		case GL_INT:
+			if (PRINT_VALUES) { printf("Set Attribute[%i] (Int) = %i", val.id(), (int)val.data()); }
+
+			//Create and bind buffer array  using attributeBufferID if it doesn't already exist
+			if (attributeBufferID == 0) {
+				glGenBuffers(1, &attributeBufferID);
+				glBufferData(targetBuffer, val.dataSize(), val.data(), usage);
+			}
+
+			//Fill buffer data array
+			if (attributeBufferID != 0) {
+				glEnableVertexAttribArray(attributeBufferID);
+				glVertexAttribPointer(attributeBufferID, 1, val.valueType(), GL_FALSE, sizeof(GLint), (GLvoid*)dataOffset);
+
+			}
+
+			return true;
+		case GL_FLOAT:
+			if (PRINT_VALUES) { printf("Set Attribute[%i] (Float) = %f", val.id(), (float*)val.data()); }
+			glUniform1f(val.id(), *(GLfloat*)(val.data()));
+			return true;
+		case GL_FLOAT_VEC2:
+			if (PRINT_VALUES) { printf("Set Attribute[%i] (Vec2f) = %f", val.id(), (float*)val.data()); }
+			glUniform2fv(val.id(), 1, (GLfloat*)(val.data()));
+			return true;
+		case GL_FLOAT_VEC3:
+			if (PRINT_VALUES) { printf("Set Attribute[%i] (Vec3f) = %f", val.id(), (float*)val.data()); }
+			glUniform3fv(val.id(), 1, (GLfloat*)(val.data()));
+			return true;
+		case GL_FLOAT_VEC4:
+			if (PRINT_VALUES) { printf("Set Attribute[%i] (Vec4f) = %f", val.id(), (float*)val.data()); }
+			glUniform4fv(val.id(), 1, (GLfloat*)val.data());
+			return true;
+		case GL_MATRIX3_NV:
+			if (PRINT_VALUES) { printf("Set Attribute[%i] (Mat3NV) = %f", val.id(), (float*)val.data()); }
+			glUniformMatrix3fv(val.id(), 1, GL_FALSE, (GLfloat*)val.data());
+			return true;
+		case GL_MATRIX4_NV:
+			if (PRINT_VALUES) { printf("Set Attribute[%i] (Mat4NV) = %f", val.id(), (float*)val.data()); }
+			glUniformMatrix4fv(val.id(), 1, GL_FALSE, (GLfloat*)val.data());
+			return true;
+		}
+	}
+	else {
+#ifdef _DEBUG
+		printf("Attempted to set Attribute: Value is uniform or ShaderProgram is not in use");
+#endif
+	}
+
+	return	false;
+}
+
 
 bool Shader::printShaderValues()
 {
@@ -166,9 +209,21 @@ bool Shader::setValueData(GLuint valueID, GLuint size, GLvoid * data)
 {
 	if (valueID < _shaderValues.size()) {
 		_shaderValues[valueID]->setData(size, data);
+
 		return true;
 	}
 
+	return false;
+}
+
+bool Shader::setValueData(ShaderAttributes attrib, GLuint size, GLvoid * data)
+{
+	for (int i = 0; i < _shaderValues.size(); i++) {
+		if (_shaderValues[i]->hasAttribute(attrib)) {
+			_shaderValues[i]->setData(size, data);
+			return true;
+		}
+	}
 	return false;
 }
 
@@ -198,13 +253,50 @@ GLchar * Shader::getValueName(GLuint valueID) const
 	return _shaderValues[valueID]->name();
 }
 
-ShaderValue::ShaderValue(GLchar * name, GLuint valueID, GLenum valueType, bool isAttribute)
+bool Shader::getValueDoesExist(GLuint valueID) const
+{
+	return (valueID < _shaderValues.size());
+}
+
+ShaderValue * Shader::getShaderValue(GLchar * name) const
+{
+	return getShaderValue(getValueID(name));
+}
+
+ShaderValue * Shader::getShaderValue(GLuint valueID) const
+{
+	return _shaderValues[valueID];
+}
+
+ShaderValue * Shader::getShaderAttributeValue(ShaderAttributes attrib) const
+{
+	for (GLuint i = 0; i < _shaderValues.size(); i++) {
+		if (_shaderValues[i]->hasAttribute(attrib)) {
+			return _shaderValues[i];
+		}
+	}
+
+	return nullptr;
+}
+
+GLuint Shader::getUniformFromShader(std::string valueName)
+{
+	return glGetUniformLocation(_shaderID, (char*)valueName.c_str());
+}
+
+GLuint Shader::getAttributeFromShader(std::string valueName)
+{
+	return glGetAttribLocation(_shaderID, (char*)valueName.c_str());
+}
+
+ShaderValue::ShaderValue(GLchar* name, GLuint valueID, GLenum valueType, ShaderAttributes attrib)
 {
 	_name = name;
 	_valueID = valueID;
 	_valueType = valueType;
-	_isAttribute = isAttribute;
 	_data = nullptr;
+	_dataSize = 0;
+	_attribute = attrib;
 }
 
 GLvoid * ShaderValue::data() const
@@ -229,7 +321,27 @@ GLchar * ShaderValue::name() const
 
 bool ShaderValue::isAttribute() const
 {
-	return _isAttribute;
+	bool res = (_attribute & NONE);
+	return !res;
+}
+
+bool ShaderValue::hasAttribute(ShaderAttributes attrib)
+{
+	return false;
+}
+
+GLuint ShaderValue::dataSize() const
+{
+	return _dataSize;
+}
+
+ShaderAttributes ShaderValue::attribute() const
+{
+	return _attribute;
+}
+
+ShaderValue::ShaderValue(GLchar * name, GLuint valueID, GLenum valueType, ShaderAttributes attribs)
+{
 }
 
 void ShaderValue::setData(GLuint size, GLvoid * data)

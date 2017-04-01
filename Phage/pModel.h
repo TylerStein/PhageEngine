@@ -30,7 +30,6 @@ class pModel : public pAsset
 	friend class pBoundingBox;
 
 public:
-	enum Buffers {POSITIONS, NORMALS, TEXCOORDS, INDECES, COLORS, TANGENTS, BITANGENTS };
 	//pModel(std::string name, pMaterial* material, GLfloat* verts, GLfloat* vertColors, GLfloat* vertUVs, GLfloat* vertNorms, GLuint numVertices, GLenum drawMode);
 	pModel(std::string name, pMaterial* material, GLenum drawMode, GLuint numVerts, GLfloat* vPositions, GLuint numIndeces = 0, GLuint* vIndeces = nullptr, GLfloat* vCoordinates = nullptr, GLfloat* vNormals = nullptr, GLfloat* vTangents = nullptr, GLfloat* vBiTangents = nullptr, GLfloat* vColors = nullptr);
 	pModel(std::string name, pMaterial* material, GLenum drawMode, std::vector<GLfloat> vPositions, std::vector<GLuint> vIndeces, std::vector<GLfloat> vCoordinates, std::vector<GLfloat> vNormals, std::vector<GLfloat> vTangents, std::vector<GLfloat> vBiTangents, std::vector<GLfloat> vColors);

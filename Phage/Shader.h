@@ -4,13 +4,26 @@
 #include <vector>
 #include <map>
 
+enum ShaderAttributes {
+	VertexPosition = 1 << 1,
+	VertexNormal = 1 << 2,
+	VertexCoordinate = 1 << 3,
+	VertexColor = 1 << 4,
+	VertexTangent = 1 << 5,
+	VertexBiTangent = 1 << 6,
+	VertexIndeces = 1 << 7,
+	BoneData = 1 << 8,
+
+	NONE = 1 << 32
+};
 
 //Base class for shader values
 class ShaderValue {
 	friend class Shader;
+
 public:
 	//Create a shader value extracted from a shader
-	ShaderValue(GLchar* name, GLuint valueID, GLenum valueType, bool isAttribute = false);
+	ShaderValue(GLchar* name, GLuint valueID, GLenum valueType, ShaderAttributes attrib = NONE);
 
 	//Set data for this value
 	void setData(GLuint size, GLvoid* data);
@@ -19,9 +32,10 @@ public:
 	GLuint id() const;
 	GLenum valueType() const;
 	GLchar* name() const;
+	GLuint dataSize() const;
+	ShaderAttributes attribute() const;
 	bool isAttribute() const;
-
-
+	bool hasAttribute(ShaderAttributes attrib);
 
 protected:
 	GLvoid* _data;
@@ -29,22 +43,28 @@ protected:
 	GLchar* _name;
 	GLuint _valueID;
 	GLenum _valueType;
-	bool _isAttribute;
+	ShaderAttributes _attribute;
 };
 
 class Shader : pAsset
 {
+	
 public:
-	//Constructor takes array of directories and an array of associated shadertypes
-	Shader(std::vector<std::string> directories = std::vector<std::string>(), std::vector<GLenum> types = std::vector<GLenum>());
+	//Supply array of: Directories[] and their shader types[], attribute names[] and their role[]
+	Shader(std::vector<std::string> shaderDirectories, std::vector<GLenum> shaderTypes, std::vector<ShaderValue> attributeValues);
 	~Shader();
 
 	//Compile shader on to the GPU
 	bool compileShader();
 
 	//Update uniforms used by shader
-	bool updateShaderUniforms();
-	bool updateShaderUniform(ShaderValue val);
+	bool sendShaderUniforms();
+
+	//Sets the value of a particular uniform
+	bool sendShaderUniform(ShaderValue val);
+
+	//Sets the value of a particular attribute (Creates and sends buffer if attributeBufferID is invalid)
+	bool sendShaderAttribute(ShaderValue val, GLuint& attributeBufferID, GLuint dataOffset = 0U, GLenum usage = GL_STATIC_DRAW, GLenum targetBuffer = GL_ARRAY_BUFFER);
 
 	//Print attributes and uniforms to console
 	bool printShaderValues();
@@ -55,12 +75,24 @@ public:
 	//Update value data source (could hook up to any constant pointer)
 	bool setValueData(GLchar* name, GLuint size, GLvoid* data);
 	bool setValueData(GLuint valueID, GLuint size, GLvoid* data);
+	bool setValueData(ShaderAttributes attrib, GLuint size, GLvoid* data);
 
 	//Get shader value ID
 	GLuint getValueID(GLchar* name) const;
 
 	//Get shader value name
 	GLchar* getValueName(GLuint valueID) const;
+
+	//Get shader value existance
+	bool getValueDoesExist(GLuint valueID) const;
+
+	ShaderValue* getShaderValue(GLchar* name) const;
+	ShaderValue* getShaderValue(GLuint valueID) const;
+	ShaderValue* getShaderAttributeValue(ShaderAttributes attrib) const;
+
+	//Get ID of value from shader
+	GLuint getUniformFromShader(std::string valueName);
+	GLuint getAttributeFromShader(std::string valueName);
 
 	//Holds shader values
 	std::vector<ShaderValue*> _shaderValues;

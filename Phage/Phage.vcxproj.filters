@@ -121,12 +121,22 @@
     <ClCompile Include="pInputManager.cpp">
       <Filter>Management</Filter>
     </ClCompile>
-    <ClCompile Include="pAnimationManager.cpp" />
-    <ClCompile Include="pSkeletonManager.cpp" />
-    <ClCompile Include="pAnimation.cpp" />
-    <ClCompile Include="pAnimator.cpp" />
-    <ClCompile Include="pSkeleton.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="pAnimation.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="pAnimationManager.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="pAnimator.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="pSkeleton.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="pSkeletonManager.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Clock.h">
@@ -264,12 +274,22 @@
     <ClInclude Include="pInputManager.h">
       <Filter>Management</Filter>
     </ClInclude>
-    <ClInclude Include="pAnimation.h" />
-    <ClInclude Include="pSkeleton.h" />
-    <ClInclude Include="pAnimationManager.h" />
-    <ClInclude Include="pSkeletonManager.h" />
-    <ClInclude Include="pAnimator.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="pAnimation.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="pAnimationManager.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="pAnimator.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="pSkeleton.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="pSkeletonManager.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="PhageDiagram.cd" />
@@ -370,6 +390,9 @@
     </Filter>
     <Filter Include="Resources\Shaders\Default">
       <UniqueIdentifier>{09633ec1-6b63-4a87-9756-a0ade4b7d5ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Animation">
+      <UniqueIdentifier>{d9fddc21-85e5-4d93-ac62-1ef68eac1e28}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

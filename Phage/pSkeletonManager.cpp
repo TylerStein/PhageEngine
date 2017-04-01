@@ -27,9 +27,9 @@ skeletonHandle pSkeletonManager::addSkeleton(Skeleton * skeleton)
 	return _skeletonManager->put(std::string(skeleton->getName()), skeleton);
 }
 
-bool pSkeletonManager::removeSkeleton(unsigned int animID)
+bool pSkeletonManager::removeSkeleton(unsigned int skeletonID)
 {
-	skeletonHandle resHandler = skeletonHandle(animID);
+	skeletonHandle resHandler = skeletonHandle(skeletonID);
 
 	try {
 		std::string animName = _skeletonManager->get(resHandler)->getName();

@@ -5,17 +5,10 @@
 class pAnimator {
 public:
 
-	//Retreive an animation layer
-	pAnimation* getAnimationLayer(int idx) const;
-
-	//Add an animation layer
-	void addAnimationLayer(pAnimation* anim);
-
-	//Remove an animation layer
-	void removeAnimationLayer(int idx);
+	void setAnimation(pAnimation* newAnim);
 private:
-	//One layer per animation
-	std::vector<pAnimation*> _layers;
+	//The animation to be played
+	pAnimation* _animation;
 
 	//Loop the animation?
 	bool _loop;

@@ -34,6 +34,22 @@ void pAnimation::setPlaybackRate(double newFramesPerSecond)
 	_framesPerSecond = newFramesPerSecond;
 }
 
+void pAnimation::addAnimationClip(pAnimationClip * anim)
+{
+	_animationClips.push_back(anim);
+}
+
+void pAnimation::removeAnimationClip(std::string name)
+{
+	std::vector<pAnimationClip*> newList = std::vector<pAnimationClip*>();
+	for (int i = 0; i < _animationClips.size(); i++) {
+		if (_animationClips[i]->getName() != name) {
+			newList.push_back(_animationClips[i]);
+		}
+	}
+	_animationClips = std::vector<pAnimationClip*>(newList);
+}
+
 void pAnimationClip::setStartTime(float time)
 {
 	if (time >= 0.0f && time < _endTime) {
@@ -61,12 +77,23 @@ float pAnimationClip::getEndTime() const
 pVertexAnimationClip::pVertexAnimationClip(std::string name) 
 	: pAnimationClip(name)
 {
+	
 }
 
 pAnimationClip::pAnimationClip(std::string name)
 {
+	this->name = name;
 }
 
 pAnimationClip::~pAnimationClip()
+{
+}
+
+pBasicAnimationClip::pBasicAnimationClip(std::string name) 
+	: pAnimationClip(name)
+{
+}
+
+pSkeletalAnimationClip::pSkeletalAnimationClip(std::string name) : pAnimationClip(name)
 {
 }

@@ -20,7 +20,7 @@ public:
 	Skeleton* getSkeleton(skeletonHandle skelHandle);
 
 	skeletonHandle addSkeleton(Skeleton* skeleton);
-	bool removeSkeleton(unsigned int animID);
+	bool removeSkeleton(unsigned int skeletonID);
 private:
 	pSkeletonManager();
 	~pSkeletonManager();
