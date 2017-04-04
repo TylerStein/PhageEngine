@@ -63,8 +63,43 @@ public:
 };
 
 
-//A single skeletal animation keyframe/sampple
+//A single skeletal animation keyframe/sample
 struct SkeletalAnimationSample {
+	SkeletalAnimationSample(JointPose * jointPoses = nullptr, int jointCount = 0) {
+		_jointPoses = jointPoses;
+		_jointCount = jointCount;
+	}
+
+	//Add a joint pose or multiple
+	void addJointPose(JointPose * newPose, int newPoseCount = 1) {
+		if (hasJointPoses()) {
+			//Add new joint poses
+			for (int i = 0; i < newPoseCount; i++) {
+				_jointPoses[_jointCount - 1] = newPose[i];
+				_jointCount++;
+			}
+		}
+		else {
+			_jointPoses = newPose;
+			_jointCount = newPoseCount;
+		}
+	}
+
+	//Does this contain any joint poses?
+	bool hasJointPoses() {
+		return (&_jointPoses[0] != nullptr);
+	}
+
+
+	JointPose* getPose(std::string name) {
+		for (unsigned int i = 0U; i < _jointCount; ++i) {
+			if (_jointPoses[i]._jointName == name) {
+				return &_jointPoses[i];
+			}
+		}
+		return nullptr;
+	}
+
 	unsigned int _jointCount; //Number of joint poses present
 	JointPose* _jointPoses; //Array of joint poses for this frame
 };
@@ -73,7 +108,9 @@ struct SkeletalAnimationSample {
 //Animations targeted at skeletal rigs
 class pSkeletalAnimationClip : public pAnimationClip {
 public:
-	pSkeletalAnimationClip(std::string name);
+	pSkeletalAnimationClip(std::string name) : pAnimationClip(name) {
+
+	}
 	SkeletalAnimationSample* _animationSamples; //Skeletal animation samples/frames
 	Skeleton* _skeleton; //Skeleton this animation clip is intended for
 };
@@ -97,7 +134,7 @@ protected:
 	std::vector<pAnimationClip*> _animationClips;
 
 	double _framesPerSecond; //Desired playback rate
-	unsigned int _duration; //Duration of animation clip
+	double _duration; //Duration of animation clip
 	bool _isLooping; //Is this animation supposed to loop?
 };
 

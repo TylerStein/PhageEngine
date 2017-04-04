@@ -93,7 +93,3 @@ pBasicAnimationClip::pBasicAnimationClip(std::string name)
 	: pAnimationClip(name)
 {
 }
-
-pSkeletalAnimationClip::pSkeletalAnimationClip(std::string name) : pAnimationClip(name)
-{
-}

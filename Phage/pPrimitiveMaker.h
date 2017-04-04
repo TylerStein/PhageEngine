@@ -4,7 +4,7 @@
 class pPrimitiveMaker
 {
 public:
-	static enum Primitives {CUBOID_TRI,  PLANE_TRI, SPHERE_UV, TEAPOT};
+	enum Primitives {CUBOID_TRI,  PLANE_TRI, SPHERE_UV, TEAPOT};
 	static pModel* GetPrimitive(std::string name, Primitives type, glm::vec3 scale = glm::vec3(1), pMaterial* material = nullptr, glm::vec3 color = glm::vec3(1));
 	static pPrimitiveMaker* instance();
 private:

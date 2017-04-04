@@ -216,7 +216,7 @@ bool Shader::setValueData(GLuint valueID, GLuint size, GLvoid * data)
 	return false;
 }
 
-bool Shader::setValueData(ShaderAttributes attrib, GLuint size, GLvoid * data)
+bool Shader::setValueData(Attributes attrib, GLuint size, GLvoid * data)
 {
 	for (int i = 0; i < _shaderValues.size(); i++) {
 		if (_shaderValues[i]->hasAttribute(attrib)) {
@@ -268,7 +268,7 @@ ShaderValue * Shader::getShaderValue(GLuint valueID) const
 	return _shaderValues[valueID];
 }
 
-ShaderValue * Shader::getShaderAttributeValue(ShaderAttributes attrib) const
+ShaderValue * Shader::getShaderAttributeValue(Attributes attrib) const
 {
 	for (GLuint i = 0; i < _shaderValues.size(); i++) {
 		if (_shaderValues[i]->hasAttribute(attrib)) {
@@ -289,7 +289,7 @@ GLuint Shader::getAttributeFromShader(std::string valueName)
 	return glGetAttribLocation(_shaderID, (char*)valueName.c_str());
 }
 
-ShaderValue::ShaderValue(GLchar* name, GLuint valueID, GLenum valueType, ShaderAttributes attrib)
+ShaderValue::ShaderValue(GLchar* name, GLuint valueID, GLenum valueType, Attributes attrib)
 {
 	_name = name;
 	_valueID = valueID;
@@ -321,11 +321,11 @@ GLchar * ShaderValue::name() const
 
 bool ShaderValue::isAttribute() const
 {
-	bool res = (_attribute & NONE);
+	bool res = (_attribute & Attributes::NONE);
 	return !res;
 }
 
-bool ShaderValue::hasAttribute(ShaderAttributes attrib)
+bool ShaderValue::hasAttribute(Attributes attrib)
 {
 	return false;
 }
@@ -335,13 +335,9 @@ GLuint ShaderValue::dataSize() const
 	return _dataSize;
 }
 
-ShaderAttributes ShaderValue::attribute() const
+Attributes ShaderValue::attribute() const
 {
 	return _attribute;
-}
-
-ShaderValue::ShaderValue(GLchar * name, GLuint valueID, GLenum valueType, ShaderAttributes attribs)
-{
 }
 
 void ShaderValue::setData(GLuint size, GLvoid * data)

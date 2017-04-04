@@ -25,3 +25,57 @@ enum KeyStatus
 {
 	keyChecked = 0, keyDown = 1, keyUp = 2, timePressed = 3
 };
+
+
+enum Attributes {
+	//Vertex Data
+	VertexPosition = 1 << 1,
+	VertexNormal = 1 << 2,
+	VertexCoordinate = 1 << 3,
+	VertexColor = 1 << 4,
+	VertexTangent = 1 << 5,
+	VertexBiTangent = 1 << 6,
+	VertexIndeces = 1 << 7,
+	BoneData = 1 << 8,
+
+	NONE = 1 << 16
+};
+
+//Represents attributes for functions/flags
+enum Uniforms {
+	//Material Info
+	DiffuseColor = 1 << 1, //Diffuse color multiplier
+	AmbientColor = 1 << 2, //Ambient color multiplier
+	SpecularColor = 1 << 3, //Specular color multiplier
+	Shininess = 1 << 4, //Specular shine multiplier
+	Emission = 1 << 5,
+
+	//Textures
+	DiffuseTexture = 1 << 6, //Diffuse texture
+	SpecularTexture = 1 << 7, //Specular texture
+	BumpTexture = 1 << 8, //Bump texture
+
+	//View Matrices
+	Camera_View = 1 << 9, //The camera view matrix
+	Projection_View = 1 << 10, //The projection matrix
+	Model_View = 1 << 11, //The model movement matrix
+	Normal_View = 1 << 12, //The model normal matrix
+	ModelViewProjection = 1 << 13, //The MVP matrix
+
+	//Light Properties
+	Light_Position = 1 << 14,
+	Light_Color = 1 << 15,
+	Light_Power = 1 << 16,
+	Light_Ambient = 1 << 17,
+	Light_Range = 1 << 18,
+	Light_Count = 1 << 19,
+	Light_Angle = 1 << 20,
+	Light_Cone = 1 << 21,
+	Light_Type = 1 << 22,
+
+	//Misc
+	Camera_Position = 1 << 23,
+	Time_Elapsed = 1 << 24,
+	Time_Delta = 1 << 25,
+	Cube_Map_Texture = 1 << 26
+};

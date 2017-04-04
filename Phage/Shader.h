@@ -1,9 +1,11 @@
 #pragma once
 #include "GL/glew.h"
+#include "pEnums.h"
 #include "pAsset.h"
 #include <vector>
 #include <map>
 
+/*
 enum ShaderAttributes {
 	VertexPosition = 1 << 1,
 	VertexNormal = 1 << 2,
@@ -14,8 +16,8 @@ enum ShaderAttributes {
 	VertexIndeces = 1 << 7,
 	BoneData = 1 << 8,
 
-	NONE = 1 << 32
-};
+	NONE = 1 << 16
+};*/
 
 //Base class for shader values
 class ShaderValue {
@@ -23,7 +25,7 @@ class ShaderValue {
 
 public:
 	//Create a shader value extracted from a shader
-	ShaderValue(GLchar* name, GLuint valueID, GLenum valueType, ShaderAttributes attrib = NONE);
+	ShaderValue(GLchar* name, GLuint valueID, GLenum valueType, Attributes attrib = NONE);
 
 	//Set data for this value
 	void setData(GLuint size, GLvoid* data);
@@ -33,9 +35,9 @@ public:
 	GLenum valueType() const;
 	GLchar* name() const;
 	GLuint dataSize() const;
-	ShaderAttributes attribute() const;
+	Attributes attribute() const;
 	bool isAttribute() const;
-	bool hasAttribute(ShaderAttributes attrib);
+	bool hasAttribute(Attributes attrib);
 
 protected:
 	GLvoid* _data;
@@ -43,7 +45,7 @@ protected:
 	GLchar* _name;
 	GLuint _valueID;
 	GLenum _valueType;
-	ShaderAttributes _attribute;
+	Attributes _attribute;
 };
 
 class Shader : pAsset
@@ -75,7 +77,7 @@ public:
 	//Update value data source (could hook up to any constant pointer)
 	bool setValueData(GLchar* name, GLuint size, GLvoid* data);
 	bool setValueData(GLuint valueID, GLuint size, GLvoid* data);
-	bool setValueData(ShaderAttributes attrib, GLuint size, GLvoid* data);
+	bool setValueData(Attributes attrib, GLuint size, GLvoid* data);
 
 	//Get shader value ID
 	GLuint getValueID(GLchar* name) const;
@@ -88,7 +90,7 @@ public:
 
 	ShaderValue* getShaderValue(GLchar* name) const;
 	ShaderValue* getShaderValue(GLuint valueID) const;
-	ShaderValue* getShaderAttributeValue(ShaderAttributes attrib) const;
+	ShaderValue* getShaderAttributeValue(Attributes attrib) const;
 
 	//Get ID of value from shader
 	GLuint getUniformFromShader(std::string valueName);

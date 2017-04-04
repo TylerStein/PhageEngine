@@ -52,7 +52,7 @@ pModel* pModelLoader::loadModel(std::string path, pMaterial* mat)
 	std::vector<GLuint> vIndeces = std::vector<GLuint>();
 
 	//Iterate through each mesh and merge them in to one
-	for(int i = 0; i < scene->mNumMeshes; ++i) {
+	for(unsigned int i = 0U; i < scene->mNumMeshes; ++i) {
 		//Does not currently support multi-mesh models
 		aiMesh* mesh = scene->mMeshes[0];
 
@@ -65,7 +65,7 @@ pModel* pModelLoader::loadModel(std::string path, pMaterial* mat)
 		vertCount += mesh->mNumVertices;
 
 		//Iterate through each face on the mesh
-		for (int o = 0; o < mesh->mNumFaces; ++o) {
+		for (unsigned int o = 0U; o < mesh->mNumFaces; ++o) {
 			//Store the current face
 			const aiFace& face = mesh->mFaces[o];
 			//Make sure the face has 3 vertices
@@ -81,7 +81,7 @@ pModel* pModelLoader::loadModel(std::string path, pMaterial* mat)
 		}
 
 		//Iterate through each vertex on the mesh
-		for (int o = 0; o < mesh->mNumVertices; ++o) {
+		for (unsigned int o = 0U; o < mesh->mNumVertices; ++o) {
 
 			if (hasPositions) {
 				vec3_addToArray(&mesh->mVertices[o], &vPositions);
@@ -153,7 +153,7 @@ pSceneNode * pModelLoader::loadModelToSceneObjects(std::string path, pMaterial *
 
 	//Load embedded textures
 	if (scene->HasTextures()) {
-		for (int i = 0; i < scene->mNumTextures; ++i) {
+		for (unsigned int i = 0U; i < scene->mNumTextures; ++i) {
 			
 		}
 	}
@@ -163,7 +163,7 @@ pSceneNode * pModelLoader::loadModelToSceneObjects(std::string path, pMaterial *
 	if (scene->HasMaterials()) {
 		pShader* shaderRef = pResourceFactory::instance()->createPhongShader();
 
-		for (int i = 0; i < scene->mNumMaterials; ++i) {
+		for (unsigned int i = 0U; i < scene->mNumMaterials; ++i) {
 			const aiMaterial* mater = scene->mMaterials[i];
 			pMaterial* newMat = processMaterial(*mater, shaderRef, path, rootName);
 			indexedMaterials.push_back(newMat);
@@ -179,16 +179,13 @@ pSceneNode * pModelLoader::loadModelToSceneObjects(std::string path, pMaterial *
 	//Indexed mesh map
 	std::vector<pModel*> indexedMeshes = std::vector<pModel*>();
 
-	//Skeleton and the associated meshe's index
-	std::map<unsigned int, Skeleton> skeletonMap = std::map<unsigned int, Skeleton>();
-
 	//Load meshes & skeletons
 	if (scene->HasMeshes())
  {
-		for (int i = 0; i < scene->mNumMeshes; ++i) {
+		for (unsigned int i = 0U; i < scene->mNumMeshes; ++i) {
 			const aiMesh* mesh = scene->mMeshes[i];
 	
-			//Store this meshe's material index
+			//Store this mesh material index
 			int matIndex = mesh->mMaterialIndex;
 			pMaterial* matRef = mat;
 			if (matRef == nullptr) {
@@ -200,22 +197,23 @@ pSceneNode * pModelLoader::loadModelToSceneObjects(std::string path, pMaterial *
 
 			pModel* newMesh = processMesh(*mesh, matRef, rootName);
 
+			//Decide if this mesh should hold its file directory
 			if (first) {
 				newMesh->directory = path;
 				first = false;
 			}
+
 			indexedMeshes.push_back(newMesh);
 
 			//Extract skeleton
 			if (mesh->HasBones()) {
+				//Process the skeleton
 				Skeleton* skelly = processSkeleton(*mesh);
-				unsigned int idx = indexedMeshes.size() - 1;
-				skeletonMap.emplace(idx, skelly);
+				//Hand the skeleton over to the model/mesh
+				newMesh->setSkeleton(skelly);
 			}
 		}
 	}
-
-	std::map<std::string, pAnimation*> animationMap = std::map <std::string, pAnimation*>();
 
 	//Load scene animations
 	if(scene->HasAnimations()) {
@@ -224,7 +222,7 @@ pSceneNode * pModelLoader::loadModelToSceneObjects(std::string path, pMaterial *
 
 
 	//Build node tree
-	pSceneNode* rootNode = processNodes(*scene, indexedMeshes, skeletonMap, animationMap);
+	pSceneNode* rootNode = processNodes(*scene, indexedMeshes, animationMap);
 
 
 #ifdef _DEBUG
@@ -245,11 +243,91 @@ std::map<std::string, pAnimation*> pModelLoader::processAnimations(const aiScene
 	std::map<std::string, pAnimation*> resMap = std::map<std::string, pAnimation*>();
 
 	//Iterate through each aiAnimation
-	for (int i = 0; i < scene.mNumAnimations; ++i) {
+	for (unsigned int i = 0U; i < scene.mNumAnimations; ++i) {
 		const aiAnimation anim = *scene.mAnimations[i];
+		
+		//Initialize the new animation
+		pAnimation* newAnim = new pAnimation(anim.mName.C_Str(), anim.mDuration, anim.mTicksPerSecond);
+
+		pSkeletalAnimationClip* skeletalClip = new pSkeletalAnimationClip(anim.mName.C_Str());
+
+		std::map<double, SkeletalAnimationSample> keyframes = std::map<double, SkeletalAnimationSample>();
+
+		//Iterate through each channel (bone/joint)
+		for (unsigned int o = 0U; o < anim.mNumChannels; ++o) {
+			const aiNodeAnim* nodeAnim = anim.mChannels[o];
+
+			//Get the name of the bone/joint this set of keyframes is meant for
+			const std::string jointName = nodeAnim->mNodeName.C_Str();
+
+			//Iterate through each position keyframe
+			for (unsigned int p = 0U; p < nodeAnim->mNumPositionKeys; ++p)  {
+				glm::vec3 pos = glm::vec3(nodeAnim->mPositionKeys[p].mValue.x, nodeAnim->mPositionKeys[p].mValue.y, nodeAnim->mPositionKeys[p].mValue.z);
+
+				//Check if a keyframe already exists at this time
+				if (&keyframes[nodeAnim->mPositionKeys[p].mTime] == NULL) {
+					JointPose * newPose = new JointPose(jointName, pos, glm::quat(), 1.0f);
+					keyframes.emplace(nodeAnim->mPositionKeys[p].mTime, SkeletalAnimationSample(newPose, 1));
+				}
+				else {
+					JointPose* oldPose = keyframes[nodeAnim->mPositionKeys[p].mTime].getPose(jointName);
+					if (oldPose != nullptr) {
+						oldPose->_translation = pos;
+					}
+				}
+			}
+
+			//Iterate through each rotation keyframe
+			for (unsigned int p = 0U; p < nodeAnim->mNumRotationKeys; ++p) {
+				glm::quat rot = glm::quat(nodeAnim->mRotationKeys[p].mValue.x, nodeAnim->mRotationKeys[p].mValue.y, nodeAnim->mRotationKeys[p].mValue.z, nodeAnim->mRotationKeys[p].mValue.w);
+
+				//Check if a keyframe already exists at this time
+				if (&keyframes[nodeAnim->mRotationKeys[p].mTime] == NULL) {
+					JointPose * newPose = new JointPose(jointName, glm::vec3(0), rot, 1.0f);
+					keyframes.emplace(nodeAnim->mRotationKeys[p].mTime, SkeletalAnimationSample(newPose, 1));
+				}
+				else {
+					JointPose* oldPose = keyframes[nodeAnim->mRotationKeys[p].mTime].getPose(jointName);
+					if (oldPose != nullptr) {
+						oldPose->_rotation = rot;
+					}
+				}
+			}
+
+			//Iterate through each scaling keyframe
+			for (unsigned int p = 0U; p < nodeAnim->mNumScalingKeys; ++p) {
+				glm::vec3 vScale = glm::vec3(nodeAnim->mScalingKeys[p].mValue.x, nodeAnim->mScalingKeys[p].mValue.y, nodeAnim->mScalingKeys[p].mValue.z);
+				float sScale = (vScale.x + vScale.y + vScale.z) * 0.333f;
+
+				//Check if a keyframe already exists at this time
+				if (&keyframes[nodeAnim->mScalingKeys[p].mTime] == NULL) {
+					JointPose * newPose = new JointPose(jointName, glm::vec3(0), glm::quat(), sScale);
+					keyframes.emplace(nodeAnim->mScalingKeys[p].mTime, SkeletalAnimationSample(newPose, 1));
+				}
+				else {
+					JointPose* oldPose = keyframes[nodeAnim->mScalingKeys[p].mTime].getPose(jointName);
+					if (oldPose != nullptr) {
+						oldPose->_scale = sScale;
+					}
+				}
+			}
 
 
+		}
 
+		
+		//Store the animation samples in the skeletal animation clip
+		int x = 0;
+		for (auto const& iter : keyframes) {
+			skeletalClip->_animationSamples[x] = iter.second;
+			x++;
+		}
+
+		//Add the skeletal animation clip to the final animation
+		newAnim->addAnimationClip(skeletalClip);
+
+		//Add to the complete animations list
+		resMap.emplace(newAnim->getName(), newAnim);
 	}
 
 	return resMap;
@@ -264,7 +342,7 @@ Skeleton* pModelLoader::processSkeleton(const aiMesh& mesh) {
 	std::vector<Joint*> joints = std::vector<Joint*>();
 
 	//Iterate through each joint/bone
-	for (int i = 0; i < mesh.mNumBones; i++) {
+	for (unsigned int i = 0U; i < mesh.mNumBones; i++) {
 		unsigned int jointIndex = 0;
 		std::string jointName = std::string(mesh.mBones[i]->mName.data);
 
@@ -516,7 +594,7 @@ pModel * pModelLoader::processMesh(const aiMesh & mesh, pMaterial* mat, std::str
 	hasBones = mesh.HasBones();
 
 	//Iterate through each face on the mesh
-	for (int o = 0; o < mesh.mNumFaces; ++o) {
+	for (unsigned int o = 0U; o < mesh.mNumFaces; ++o) {
 		//Store the current face
 		const aiFace& face = mesh.mFaces[o];
 		//Make sure the face has 3 vertices
@@ -532,7 +610,7 @@ pModel * pModelLoader::processMesh(const aiMesh & mesh, pMaterial* mat, std::str
 	}
 
 		//Iterate through each vertex on the mesh
-	for (int o = 0; o < mesh.mNumVertices; ++o) {
+	for (unsigned int o = 0U; o < mesh.mNumVertices; ++o) {
 
 		if (hasPositions) {
 			vec3_addToArray(&mesh.mVertices[o], &vPositions);
@@ -558,7 +636,7 @@ pModel * pModelLoader::processMesh(const aiMesh & mesh, pMaterial* mat, std::str
 
 	if (hasBones) {
 		//For each bone contained in this mesh
-		for (int i = 0; i < mesh.mNumBones; ++i) {
+		for (unsigned int i = 0U; i < mesh.mNumBones; ++i) {
 			//Store a reference to this bone
 			const aiBone thisBone = *mesh.mBones[i];
 
@@ -569,7 +647,7 @@ pModel * pModelLoader::processMesh(const aiMesh & mesh, pMaterial* mat, std::str
 			const glm::mat4 thisBoneOffset = aiMat4_to_glmMat4(thisBone.mOffsetMatrix);
 
 			//For each vertex weight data in this bone
-			for (int o = 0; o < thisBone.mNumWeights; ++o) {
+			for (unsigned int o = 0U; o < thisBone.mNumWeights; ++o) {
 				//Store this bone's vertex ID and weight
 				const unsigned int thisVertID = thisBone.mWeights[o].mVertexId;
 				const float thisVertWeight = thisBone.mWeights[o].mWeight;
@@ -591,7 +669,7 @@ pModel * pModelLoader::processMesh(const aiMesh & mesh, pMaterial* mat, std::str
 	return resModel;
 }
 
-pSceneNode * pModelLoader::processNodes(const aiScene& scene, const std::vector<pModel*> indexedMeshes, const std::map<unsigned int, Skeleton> indexedSkeletons, const std::map <std::string, pAnimation*> animationMap, aiNode* root)
+pSceneNode * pModelLoader::processNodes(const aiScene& scene, const std::vector<pModel*> indexedMeshes, const std::map <std::string, pAnimation*> animationMap, aiNode* root, glm::mat4& parentTransform)
 {
 	if (root == nullptr) { root = scene.mRootNode; }
 	pSceneNode* thisNode = new pSceneNode();
@@ -622,16 +700,6 @@ pSceneNode * pModelLoader::processNodes(const aiScene& scene, const std::vector<
 		sceneObj->attachModel(nodeMesh);
 	}
 
-	if (indexedSkeletons.size() > 0) {
-		//const Skeleton* nodeSkeleton = &skeletonMap.at(thisNode->getName());
-		const unsigned int meshIndex = root->mMeshes[0];
-		const Skeleton* skeleton = &indexedSkeletons.at(meshIndex);
-
-		if (skeleton != nullptr) {
-			pSceneObject* obj = thisNode->getAttachedSceneObject();
-			//TODO: Add skeleton to scene object here
-		}
-	}
 
 	if (animationMap.size() > 0) {
 		const pAnimation* anim = animationMap.at(thisNode->getName());
@@ -642,10 +710,10 @@ pSceneNode * pModelLoader::processNodes(const aiScene& scene, const std::vector<
 	}
 
 	//Process this node's children
-	for (int i = 0; i < root->mNumChildren; ++i) {
+	for (unsigned int i = 0U; i < root->mNumChildren; ++i) {
 		aiNode* child = root->mChildren[i];
 		if (child != NULL) {
-			thisNode->appendChild(processNodes(scene, indexedMeshes, indexedSkeletons, animationMap, child));
+			thisNode->appendChild(processNodes(scene, indexedMeshes, animationMap, child, parentTransform));
 		}
 	}
 

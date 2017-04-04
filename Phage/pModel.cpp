@@ -334,6 +334,16 @@ GLuint pModel::getNumIndeces()
 	return numIndeces;
 }
 
+Skeleton * pModel::getSkeleton() const
+{
+	return skeleton;
+}
+
+void pModel::setSkeleton(Skeleton * skeleton)
+{
+	this->skeleton = skeleton;
+}
+
 std::vector<glm::vec3> pModel::getVertexPositions()
 {
 	std::vector<glm::vec3> vPos = std::vector<glm::vec3>(vertCount);
@@ -351,9 +361,9 @@ void pModel::setupModel() {
 		std::vector<std::string>() = { "../Resources/Shaders/phong.vert", "../Resources/Shaders/phong.frag" },
 		std::vector<GLenum>() = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER },
 		std::vector<ShaderValue>() = {
-		ShaderValue("vPositions", 0, GL_FLOAT_VEC3, VertexPosition),
-		ShaderValue("vCoordinates", 0, GL_FLOAT_VEC2, VertexCoordinate),
-		ShaderValue("vNormals", 0, GL_FLOAT_VEC3, VertexNormal)
+		ShaderValue("vPositions", 0, GL_FLOAT_VEC3, Attributes::VertexPosition),
+		ShaderValue("vCoordinates", 0, GL_FLOAT_VEC2, Attributes::VertexCoordinate),
+		ShaderValue("vNormals", 0, GL_FLOAT_VEC3, Attributes::VertexNormal)
 	});
 
 	glGenVertexArrays(1, &VAOID);
@@ -366,10 +376,10 @@ void pModel::setupModel() {
 	glBindBuffer(GL_ARRAY_BUFFER, VBOID);
 	
 
-	ShaderValue* positionValue = shdr->getShaderAttributeValue(VertexPosition);
+	ShaderValue* positionValue = shdr->getShaderAttributeValue(Attributes::VertexPosition);
 	shdr->sendShaderAttribute(*positionValue, VBOID, 0U, GL_STATIC_DRAW, GL_VERTEX_ARRAY);
 
-	ShaderValue* elementValue = shdr->getShaderAttributeValue(VertexIndeces);
+	ShaderValue* elementValue = shdr->getShaderAttributeValue(Attributes::VertexIndeces);
 	shdr->sendShaderAttribute(*elementValue, EBOID, 0U, GL_STATIC_DRAW, GL_ELEMENT_ARRAY_BUFFER);
 	
 

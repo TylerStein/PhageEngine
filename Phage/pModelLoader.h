@@ -69,7 +69,7 @@ private:
 	pModel* processMesh(const aiMesh& mesh, pMaterial* mat, std::string backupName = "");
 
 	//Creates node tree to put in the pScene
-	pSceneNode* processNodes(const aiScene& scene, const std::vector<pModel*> indexedMeshes, const std::map<unsigned int, Skeleton> indexedSkeletons, const std::map <std::string, pAnimation*> animationMap, aiNode* root = nullptr);
+	pSceneNode* processNodes(const aiScene& scene, const std::vector<pModel*> indexedMeshes, const std::map <std::string, pAnimation*> animationMap, aiNode* root = nullptr, glm::mat4& parentTransform = glm::mat4());
 
 	/*contains instance of the pModelLoader object*/
 	static pModelLoader* _instance;

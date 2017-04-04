@@ -4,7 +4,7 @@
 #include "pAsset.h"
 #include "pMaterial.h"
 #include "glm\mat4x4.hpp"
-
+#include "pSkeleton.h"
 
 struct Vertex {
 	Vertex(glm::vec3 pos = glm::vec3(0), glm::vec3 norm = glm::vec3(0), glm::vec2 coord = glm::vec2(0), glm::vec3 tan = glm::vec3(0), glm::vec3 bitan = glm::vec3(0), glm::vec3 col = glm::vec3(0)) {
@@ -62,6 +62,9 @@ public:
 	bool usesIndeces();
 	GLuint getNumIndeces();
 
+	Skeleton* getSkeleton() const;
+	void setSkeleton(Skeleton* skeleton);
+
 	pType type;
 
 	std::string directory;
@@ -80,7 +83,12 @@ private:
 	bool useBiTangents;
 	bool useIndeces;
 
+	bool useBones;
+
 	pMaterial* material;
+	
+	//This model's skeleton (can be nullptr)
+	Skeleton* skeleton;
 
 	GLuint vertCount;
 

@@ -45,8 +45,8 @@ public:
 	pSceneManager* sceneManager;
 	pInputManager* inputManager;
 
-	float windowWidth;
-	float windowHeight;
+	unsigned int windowWidth;
+	unsigned int windowHeight;
 	GLFWwindow* window;
 private:
 	static PhageEngine* instance;

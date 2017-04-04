@@ -37,15 +37,17 @@ struct Joint {
 
 //Defines a single pose of a joint
 struct JointPose {
-	JointPose(glm::vec3 translation, glm::vec3 rotation, float scale) {
+	JointPose(std::string jointName, glm::vec3 translation, glm::quat rotation, float scale) {
 		_translation = translation;
 		_rotation = rotation;
 		_scale = scale;
+		_jointName = jointName;
 	}
 
 	glm::quat _rotation;
 	glm::vec3 _translation;
 	float _scale; //Uniform scale only
+	std::string _jointName;
 };
 
 //Defines a single skeleton, composed of joints
@@ -81,8 +83,6 @@ private:
 //Defines a single pose of a skeleton
 struct SkeletonPose {
 	Skeleton* _skeleton; //Skeleton this pose is meant for
-	unsigned int _skeletonID; //ID of the Skeleton this pose is meant for
-	
 
 	JointPose* _pose; //Array of joint poses
 
