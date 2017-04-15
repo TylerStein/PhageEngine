@@ -115,12 +115,6 @@
     <ClCompile Include="pCameraManager.cpp">
       <Filter>Management\RenderingManagers</Filter>
     </ClCompile>
-    <ClCompile Include="pInputHandler.cpp">
-      <Filter>Management</Filter>
-    </ClCompile>
-    <ClCompile Include="pInputManager.cpp">
-      <Filter>Management</Filter>
-    </ClCompile>
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="pAnimation.cpp">
       <Filter>Animation</Filter>
@@ -136,6 +130,15 @@
     </ClCompile>
     <ClCompile Include="pSkeletonManager.cpp">
       <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="pInputHandler.cpp">
+      <Filter>Management\InputManagers</Filter>
+    </ClCompile>
+    <ClCompile Include="pInputManager.cpp">
+      <Filter>Management\InputManagers</Filter>
+    </ClCompile>
+    <ClCompile Include="VisualDebugger.cpp">
+      <Filter>Utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -268,12 +271,6 @@
     <ClInclude Include="pCameraManager.h">
       <Filter>Management\RenderingManagers</Filter>
     </ClInclude>
-    <ClInclude Include="pInputHandler.h">
-      <Filter>Management</Filter>
-    </ClInclude>
-    <ClInclude Include="pInputManager.h">
-      <Filter>Management</Filter>
-    </ClInclude>
     <ClInclude Include="Shader.h" />
     <ClInclude Include="pAnimation.h">
       <Filter>Animation</Filter>
@@ -289,6 +286,18 @@
     </ClInclude>
     <ClInclude Include="pSkeletonManager.h">
       <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpolation.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="pInputHandler.h">
+      <Filter>Management\InputManagers</Filter>
+    </ClInclude>
+    <ClInclude Include="pInputManager.h">
+      <Filter>Management\InputManagers</Filter>
+    </ClInclude>
+    <ClInclude Include="VisualDebugger.h">
+      <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -393,6 +402,9 @@
     </Filter>
     <Filter Include="Animation">
       <UniqueIdentifier>{d9fddc21-85e5-4d93-ac62-1ef68eac1e28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Management\InputManagers">
+      <UniqueIdentifier>{86ef8d91-3563-4bba-9389-3085615630ef}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

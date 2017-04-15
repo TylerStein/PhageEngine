@@ -357,14 +357,19 @@ std::vector<glm::vec3> pModel::getVertexPositions()
 void pModel::setupModel() {
 	pShader* shader = material->getShader();
 
-	Shader* shdr = new Shader(
+	/*Shader* shdr = new Shader(
 		std::vector<std::string>() = { "../Resources/Shaders/phong.vert", "../Resources/Shaders/phong.frag" },
 		std::vector<GLenum>() = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER },
 		std::vector<ShaderValue>() = {
 		ShaderValue("vPositions", 0, GL_FLOAT_VEC3, Attributes::VertexPosition),
 		ShaderValue("vCoordinates", 0, GL_FLOAT_VEC2, Attributes::VertexCoordinate),
 		ShaderValue("vNormals", 0, GL_FLOAT_VEC3, Attributes::VertexNormal)
-	});
+	});*/
+	//ShaderValue* positionValue = shdr->getShaderAttributeValue(Attributes::VertexPosition);
+	//shdr->sendShaderAttribute(*positionValue, VBOID, 0U, GL_STATIC_DRAW, GL_VERTEX_ARRAY);
+
+	//ShaderValue* elementValue = shdr->getShaderAttributeValue(Attributes::VertexIndeces);
+	//shdr->sendShaderAttribute(*elementValue, EBOID, 0U, GL_STATIC_DRAW, GL_ELEMENT_ARRAY_BUFFER);
 
 	glGenVertexArrays(1, &VAOID);
 	glGenBuffers(1, &VBOID);
@@ -372,17 +377,7 @@ void pModel::setupModel() {
 
 	glBindVertexArray(VAOID);
 	
-
 	glBindBuffer(GL_ARRAY_BUFFER, VBOID);
-	
-
-	ShaderValue* positionValue = shdr->getShaderAttributeValue(Attributes::VertexPosition);
-	shdr->sendShaderAttribute(*positionValue, VBOID, 0U, GL_STATIC_DRAW, GL_VERTEX_ARRAY);
-
-	ShaderValue* elementValue = shdr->getShaderAttributeValue(Attributes::VertexIndeces);
-	shdr->sendShaderAttribute(*elementValue, EBOID, 0U, GL_STATIC_DRAW, GL_ELEMENT_ARRAY_BUFFER);
-	
-
 	glBufferData(GL_ARRAY_BUFFER, vertCount * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOID);
@@ -437,12 +432,13 @@ void pModel::setupModel() {
 		glVertexAttribPointer(attribID, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, color));
 	}
 
-	//Bones
-	//if (useBones && shader->hasAttribute(Attributes::BoneData)) {
-	//	GLuint attribID = shader->getAttributeID(Attributes::BoneData);
-	//
-	//	glEnableVertexAttribArray(attribID);
-	//	glVertexAttribIPointer(attribID, 4, GL_INT, sizeof(VertexBoneData), (GLvoid*)offsetof(Vertex, boneData));
-	//}
+	//Bones - VertexID
+	if (useBones && shader->hasAttribute(Attributes::BoneIDs)) {
 
+	}
+
+	//Bones - VertexWeight
+	if (useBones && shader->hasAttribute(Attributes::BoneWeights)) {
+
+	}
 }

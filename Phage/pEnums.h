@@ -36,7 +36,8 @@ enum Attributes {
 	VertexTangent = 1 << 5,
 	VertexBiTangent = 1 << 6,
 	VertexIndeces = 1 << 7,
-	BoneData = 1 << 8,
+	BoneIDs = 1 << 8,
+	BoneWeights = 1 << 9,
 
 	NONE = 1 << 16
 };

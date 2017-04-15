@@ -2,7 +2,7 @@
 #include "pResourceManager.h"
 #include "pAnimation.h"
 
-typedef pResourceHandle<pAnimationClip> animationHandle;
+typedef pResourceHandle<Animation> animationHandle;
 class pAnimationManager
 {
 public:
@@ -14,11 +14,11 @@ public:
 		return _instance;
 	}
 
-	pAnimationClip* getAnimation(std::string name);
-	pAnimationClip* getAnimation(unsigned int animationID);
-	pAnimationClip* getAnimation(animationHandle animHandle);
+	Animation* getAnimation(std::string name);
+	Animation* getAnimation(unsigned int animationID);
+	Animation* getAnimation(animationHandle animHandle);
 
-	animationHandle addAnimation(pAnimationClip* animationClip);
+	animationHandle addAnimation(Animation* animation);
 	bool removeAnimation(unsigned int animID);
 
 private:
@@ -27,6 +27,6 @@ private:
 
 	static pAnimationManager* _instance;
 
-	pResourceManager<pAnimationClip>* _animationManager;
+	pResourceManager<Animation>* _animationManager;
 };
 

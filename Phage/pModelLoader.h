@@ -33,9 +33,6 @@ public:
 	pModelLoader();
 	~pModelLoader();
 
-	unsigned int uMatCount;
-	unsigned int uMeshCount;
-
 	/*Function uses provided path to load a model.
 	first it creates an Assimp Importer object,
 	uses it to create a scene containing the model to
@@ -56,9 +53,11 @@ public:
 
 private:
 	//Process node, vertex, and skeletal animation by reading them into resources and associating them with scene nodes
-	std::map<std::string, pAnimation*> processAnimations(const aiScene& importScene);
-	
+	//std::map<std::string, Animation*> processAnimations(const aiScene& importScene);
+	std::vector<SkeletalAnimation*> processSkeletalAnimations(const aiScene& scene);
+
 	Skeleton* processSkeleton(const aiMesh& mesh);
+	std::vector<Joint*> extractJoints(const aiMesh& mesh);
 
 	//Adds material to the resource manager
 	pMaterial* processMaterial(const aiMaterial& material, pShader* shader, const std::string& modelPath, std::string backupName = "");
@@ -69,7 +68,12 @@ private:
 	pModel* processMesh(const aiMesh& mesh, pMaterial* mat, std::string backupName = "");
 
 	//Creates node tree to put in the pScene
-	pSceneNode* processNodes(const aiScene& scene, const std::vector<pModel*> indexedMeshes, const std::map <std::string, pAnimation*> animationMap, aiNode* root = nullptr, glm::mat4& parentTransform = glm::mat4());
+	pSceneNode* processNodes(const aiScene& scene, const std::vector<pModel*> indexedMeshes, const std::vector<SkeletalAnimation*> skeletalAnimations, aiNode* root = nullptr, glm::mat4& parentTransform = glm::mat4());
+
+	aiNode findNode(const aiNode& rootNode, aiString name);
+
+	//Organizes a skeleton's joint hierarchy to match the one described by the given node structure
+	Joint* matchSkeleton(const aiNode* rootNode, Skeleton* skeleton);
 
 	/*contains instance of the pModelLoader object*/
 	static pModelLoader* _instance;

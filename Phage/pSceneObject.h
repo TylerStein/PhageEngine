@@ -6,7 +6,7 @@
 #include "pModel.h"
 #include "pSoundSystem.h"
 #include "pCamera.h"
-
+#include "pAnimator.h"
 
 class pScript;
 class pSceneNode;
@@ -58,6 +58,10 @@ public:
 
 	void detachScript();
 
+	void attachAnimator(pAnimator* animator);
+	pAnimator* getAttachedAnimator();
+	void detachAnimator();
+
 	//detaches a script from this game object
 	void detachSoundSystem();
 
@@ -69,6 +73,8 @@ public:
 
 	bool hasCamera() const;
 
+	bool hasAnimator() const;
+
 	pSceneNode* getSceneNode() const;
 
 	void setSceneNode(pSceneNode* nde);
@@ -78,6 +84,7 @@ private:
 	pScript* attachedScript = nullptr;
 	pSoundSystem* attachedSoundSystem = nullptr;
 	pCamera* attachedCamera;
+	pAnimator* attachedAnimator = nullptr;
 
 	pSceneNode* node;
 };

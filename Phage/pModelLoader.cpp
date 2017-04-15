@@ -4,9 +4,12 @@
 #include "pSkeletonManager.h"
 #include <filesystem>
 
+#define IMPORTFLAGS_DEFAULT aiProcess_Triangulate| aiProcess_JoinIdenticalVertices| aiProcess_SortByPType | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace
+#define IMPORTFLAGS_BASIC aiProcess_Triangulate | aiProcess_CalcTangentSpace
+
 pModelLoader* pModelLoader::_instance = 0;
 
-pModelLoader::pModelLoader() { uMatCount = 0, uMeshCount = 0; }
+pModelLoader::pModelLoader() {/* uMatCount = 0, uMeshCount = 0;*/ }
 
 pModelLoader::~pModelLoader(){}
 
@@ -16,12 +19,8 @@ pModel* pModelLoader::loadModel(std::string path, pMaterial* mat)
 
 	//Get the incoming model's info as an AssetImporter scene
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate
-		| aiProcess_JoinIdenticalVertices
-		| aiProcess_SortByPType
-		| aiProcess_GenSmoothNormals
-		| aiProcess_CalcTangentSpace
-		);
+	importer.SetPropertyInteger(AI_CONFIG_PP_LBW_MAX_WEIGHTS, 4); //Set the maximum number of bone weights supported
+	const aiScene* scene = importer.ReadFile(path, IMPORTFLAGS_DEFAULT);
 	
 	//Catch errors loading model
 	if (!scene) {
@@ -126,8 +125,6 @@ pSceneNode * pModelLoader::loadModelToSceneObjects(std::string path, pMaterial *
 	double startTime = glfwGetTime();
 #endif
 
-
-
 	//Get the incoming model's info as an AssetImporter scene
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate
@@ -154,7 +151,9 @@ pSceneNode * pModelLoader::loadModelToSceneObjects(std::string path, pMaterial *
 	//Load embedded textures
 	if (scene->HasTextures()) {
 		for (unsigned int i = 0U; i < scene->mNumTextures; ++i) {
-			
+#ifdef _DEBUG
+			std::cout << "Unable to import embedded texture [" << std::to_string(i) << "]\n";
+#endif
 		}
 	}
 
@@ -171,8 +170,6 @@ pSceneNode * pModelLoader::loadModelToSceneObjects(std::string path, pMaterial *
 	}
 
 
-	//Node name and animation
-	std::map<std::string, pAnimation*> animationMap = std::map<std::string, pAnimation*>();
 
 	bool first = true;
 
@@ -207,6 +204,8 @@ pSceneNode * pModelLoader::loadModelToSceneObjects(std::string path, pMaterial *
 
 			//Extract skeleton
 			if (mesh->HasBones()) {
+				//auto joints = extractJoints(*mesh);
+
 				//Process the skeleton
 				Skeleton* skelly = processSkeleton(*mesh);
 				//Hand the skeleton over to the model/mesh
@@ -215,14 +214,17 @@ pSceneNode * pModelLoader::loadModelToSceneObjects(std::string path, pMaterial *
 		}
 	}
 
+	//List of animations
+	std::vector<SkeletalAnimation*> skeletalAnimations = std::vector<SkeletalAnimation*>();
+
 	//Load scene animations
 	if(scene->HasAnimations()) {
-		animationMap = processAnimations(*scene);
+		skeletalAnimations = processSkeletalAnimations(*scene);
 	}
 
 
 	//Build node tree
-	pSceneNode* rootNode = processNodes(*scene, indexedMeshes, animationMap);
+	pSceneNode* rootNode = processNodes(*scene, indexedMeshes, skeletalAnimations);
 
 
 #ifdef _DEBUG
@@ -238,9 +240,10 @@ void pModelLoader::loadModelToResources(std::string path, pMaterial * mat)
 
 }
 
-std::map<std::string, pAnimation*> pModelLoader::processAnimations(const aiScene& scene)
+/*
+std::map<std::string, Animation*> pModelLoader::processAnimations(const aiScene& scene)
 {
-	std::map<std::string, pAnimation*> resMap = std::map<std::string, pAnimation*>();
+	std::map<std::string, Animation*> resMap = std::map<std::string, Animation*>();
 
 	//Iterate through each aiAnimation
 	for (unsigned int i = 0U; i < scene.mNumAnimations; ++i) {
@@ -249,11 +252,13 @@ std::map<std::string, pAnimation*> pModelLoader::processAnimations(const aiScene
 		//Initialize the new animation
 		pAnimation* newAnim = new pAnimation(anim.mName.C_Str(), anim.mDuration, anim.mTicksPerSecond);
 
+		
 		pSkeletalAnimationClip* skeletalClip = new pSkeletalAnimationClip(anim.mName.C_Str());
 
 		std::map<double, SkeletalAnimationSample> keyframes = std::map<double, SkeletalAnimationSample>();
 
 		//Iterate through each channel (bone/joint)
+		unsigned int numPoses = 0;
 		for (unsigned int o = 0U; o < anim.mNumChannels; ++o) {
 			const aiNodeAnim* nodeAnim = anim.mChannels[o];
 
@@ -268,6 +273,7 @@ std::map<std::string, pAnimation*> pModelLoader::processAnimations(const aiScene
 				if (&keyframes[nodeAnim->mPositionKeys[p].mTime] == NULL) {
 					JointPose * newPose = new JointPose(jointName, pos, glm::quat(), 1.0f);
 					keyframes.emplace(nodeAnim->mPositionKeys[p].mTime, SkeletalAnimationSample(newPose, 1));
+					numPoses++;
 				}
 				else {
 					JointPose* oldPose = keyframes[nodeAnim->mPositionKeys[p].mTime].getPose(jointName);
@@ -285,6 +291,7 @@ std::map<std::string, pAnimation*> pModelLoader::processAnimations(const aiScene
 				if (&keyframes[nodeAnim->mRotationKeys[p].mTime] == NULL) {
 					JointPose * newPose = new JointPose(jointName, glm::vec3(0), rot, 1.0f);
 					keyframes.emplace(nodeAnim->mRotationKeys[p].mTime, SkeletalAnimationSample(newPose, 1));
+					numPoses++;
 				}
 				else {
 					JointPose* oldPose = keyframes[nodeAnim->mRotationKeys[p].mTime].getPose(jointName);
@@ -297,12 +304,15 @@ std::map<std::string, pAnimation*> pModelLoader::processAnimations(const aiScene
 			//Iterate through each scaling keyframe
 			for (unsigned int p = 0U; p < nodeAnim->mNumScalingKeys; ++p) {
 				glm::vec3 vScale = glm::vec3(nodeAnim->mScalingKeys[p].mValue.x, nodeAnim->mScalingKeys[p].mValue.y, nodeAnim->mScalingKeys[p].mValue.z);
+
+				//Use the scalar average of the original vec3 scale
 				float sScale = (vScale.x + vScale.y + vScale.z) * 0.333f;
 
 				//Check if a keyframe already exists at this time
 				if (&keyframes[nodeAnim->mScalingKeys[p].mTime] == NULL) {
 					JointPose * newPose = new JointPose(jointName, glm::vec3(0), glm::quat(), sScale);
 					keyframes.emplace(nodeAnim->mScalingKeys[p].mTime, SkeletalAnimationSample(newPose, 1));
+					numPoses++;
 				}
 				else {
 					JointPose* oldPose = keyframes[nodeAnim->mScalingKeys[p].mTime].getPose(jointName);
@@ -324,7 +334,7 @@ std::map<std::string, pAnimation*> pModelLoader::processAnimations(const aiScene
 		}
 
 		//Add the skeletal animation clip to the final animation
-		newAnim->addAnimationClip(skeletalClip);
+		newAnim->setAnimationClip(skeletalClip);
 
 		//Add to the complete animations list
 		resMap.emplace(newAnim->getName(), newAnim);
@@ -332,50 +342,127 @@ std::map<std::string, pAnimation*> pModelLoader::processAnimations(const aiScene
 
 	return resMap;
 }
+*/
 
-Skeleton* pModelLoader::processSkeleton(const aiMesh& mesh) {
-	Skeleton* res = nullptr;
+std::vector<SkeletalAnimation*> pModelLoader::processSkeletalAnimations(const aiScene & scene)
+{
+	std::vector<SkeletalAnimation*> res = std::vector<SkeletalAnimation*>();
 
-	std::string name = std::string(mesh.mName .C_Str()) + std::string("_skeleton");
-	unsigned int numJoints = 0;
-	std::map<std::string, unsigned int> jointMap = std::map<std::string, unsigned int>();
-	std::vector<Joint*> joints = std::vector<Joint*>();
+	//Iterate through each aiAnimation
+	for (unsigned int i = 0U; i < scene.mNumAnimations; ++i) {
+		const aiAnimation* anim = scene.mAnimations[i];
 
-	//Iterate through each joint/bone
-	for (unsigned int i = 0U; i < mesh.mNumBones; i++) {
-		unsigned int jointIndex = 0;
-		std::string jointName = std::string(mesh.mBones[i]->mName.data);
+		if (anim->mNumChannels <= 0) { continue; }
 
-		//Search for a joint with this name
-		if (jointMap.find(jointName) == jointMap.end()) {
-			//No joint found, create and add one
-			jointIndex = jointMap.size();
-			numJoints++;
-			Joint* joint;
-			joints.push_back(joint);
-		}else{
-			//Joint already exists, grab th
-			numJoints = jointMap[jointName];
+		//Initialize the new animation
+		SkeletalAnimation* newAnim = new SkeletalAnimation(anim->mName.C_Str(), anim->mDuration, anim->mTicksPerSecond);
+
+#ifdef _DEBUG
+		std::printf("Importing a new Animation:\nName - %s\nDuration - %f\nTicksPerSecond - %f\n", std::string(newAnim->getName()).c_str(), newAnim->GetDuration(), newAnim->GetFrameRate());
+#endif
+
+		//Iterate through each joint channel
+		for (unsigned int j = 0; j < anim->mNumChannels; ++j) {
+			const aiNodeAnim* nodeAnim = anim->mChannels[j];
+
+			//Get the name of the joint node this channel is for
+			std::string name = nodeAnim->mNodeName.C_Str();
+
+			AnimationChannel* newChannel = new AnimationChannel(name);
+
+			//Iterate through position keys
+			for (int k = 0; k < nodeAnim->mNumPositionKeys; k++) {
+				//Get this keyframe's position value
+				glm::vec3 pos = glm::vec3(nodeAnim->mPositionKeys[k].mValue.x, nodeAnim->mPositionKeys[k].mValue.y, nodeAnim->mPositionKeys[k].mValue.z);
+
+				//Create a keyframe
+				NodeKey<glm::vec3> keyframe = NodeKey<glm::vec3>(nodeAnim->mPositionKeys[k].mTime, name, pos);
+				
+				//Give the animation the new keyframe
+				newChannel->AddTranslationKey(keyframe);
+			}
+
+
+			//Iterate through rotation keys
+			for (int k = 0; k < nodeAnim->mNumRotationKeys; k++) {
+				//Get this frame's rotation value
+				glm::quat rot = glm::quat(nodeAnim->mRotationKeys[k].mValue.x, nodeAnim->mRotationKeys[k].mValue.y, nodeAnim->mRotationKeys[k].mValue.z, nodeAnim->mRotationKeys[k].mValue.w);
+			
+				//Create a keyframe
+				NodeKey<glm::quat> keyframe = NodeKey<glm::quat>(nodeAnim->mRotationKeys[k].mTime, name, rot);
+
+				//Give the animation the new keyframe
+				newChannel->AddRotationKey(keyframe);
+			
+			}
+
+			//Iterate through scaling keys
+			for (int k = 0; k < nodeAnim->mNumScalingKeys; k++) {
+				//Get this frame's scaling value
+				glm::vec3 scl = glm::vec3(nodeAnim->mPositionKeys[k].mValue.x, nodeAnim->mPositionKeys[k].mValue.y, nodeAnim->mPositionKeys[k].mValue.z);
+
+				//Create a keyframe
+				NodeKey<glm::vec3> keyframe = NodeKey<glm::vec3>(nodeAnim->mRotationKeys[k].mTime, name, scl);
+
+				//Give the animation the new keyframe
+				newChannel->AddScalingKey(keyframe);
+			}
+
+			newAnim->addChannel(newChannel);
+
 		}
 
-		//Set this joint's index
-		jointMap[jointName] = jointIndex;
-
-		//Set the joint transform
-		joints[numJoints]->_inverseTransform = aiMat4_to_glmMat4(mesh.mBones[i]->mOffsetMatrix);
-
-		//Get bone-vertex weight data from this joint
-		for (unsigned int j = 0; j < mesh.mBones[i]->mNumWeights; i++) {
-			unsigned int vertexID = mesh.mBones[i]->mWeights[j].mVertexId;
-			float weight = mesh.mBones[i]->mWeights[j].mWeight;
-
-		    joints[i]->addBoneData(jointIndex, weight);
-		}
-
-		res->_joints.emplace(jointIndex, joints[jointIndex]);
+		res.push_back(newAnim);
 	}
 
-	pSkeletonManager::instance()->addSkeleton(res);
+
+	return res;
+}
+
+Skeleton* pModelLoader::processSkeleton(const aiMesh& mesh) {
+	std::string name = std::string(mesh.mName.C_Str()) + std::string("_skeleton");
+
+	Skeleton* res = new Skeleton(name.c_str());
+	
+	for (unsigned int i = 0U; i < mesh.mNumBones; i++) {
+		std::string jointName = mesh.mBones[i]->mName.C_Str();
+		glm::mat4 jointOffset = aiMat4_to_glmMat4(mesh.mBones[i]->mOffsetMatrix);
+		unsigned int jointWeightCount = mesh.mBones[i]->mNumWeights;
+
+		Joint* newJoint = new Joint(jointName, i, jointOffset);
+
+		for (unsigned int o = 0U; o < jointWeightCount; o++) {
+			unsigned int vertexID = mesh.mBones[i]->mWeights[o].mVertexId;
+			float vertexWeight = mesh.mBones[i]->mWeights[o].mWeight;
+			
+			newJoint->addJointData(vertexID, vertexWeight);
+		}
+
+		res->addJoint(newJoint);
+	}
+
+	return res;
+}
+
+std::vector<Joint*> pModelLoader::extractJoints(const aiMesh& mesh) {
+	std::vector<Joint*> res = std::vector<Joint*>();
+
+	for (unsigned int i = 0U; i < mesh.mNumBones; i++) {
+		std::string jointName = mesh.mBones[i]->mName.C_Str();
+		glm::mat4 jointOffset = aiMat4_to_glmMat4(mesh.mBones[i]->mOffsetMatrix);
+		unsigned int jointWeightCount = mesh.mBones[i]->mNumWeights;
+
+		Joint* newJoint = new Joint(jointName, i, jointOffset);
+
+		for (unsigned int o = 0U; o < jointWeightCount; o++) {
+			unsigned int vertexID = mesh.mBones[i]->mWeights[o].mVertexId;
+			float vertexWeight = mesh.mBones[i]->mWeights[o].mWeight;
+
+			newJoint->addJointData(vertexID, vertexWeight);
+		}
+
+		res.push_back(newJoint);
+	}
 
 	return res;
 }
@@ -389,8 +476,7 @@ pMaterial * pModelLoader::processMaterial(const aiMaterial & material, pShader* 
 	material.Get(AI_MATKEY_NAME, matName);
 	if (matName.length <= 0) {
 		if (backupName.empty()) {
-			matName = "unknown_material" + std::to_string(uMatCount);
-			uMatCount++;
+			matName = "unknown_material";
 		}
 		else {
 			matName = backupName + "_material";
@@ -461,8 +547,15 @@ pMaterial * pModelLoader::processMaterial(const aiMaterial & material, pShader* 
 		matInfo.specularTexture = pResourceFactory::instance()->createDebugImage();
 	}
 	
+	unsigned int uMatCount = 0;
+	std::string sMatName = matName.C_Str();
+	std::string origName = sMatName;
+	while (pResourceFactory::instance()->hasModel(sMatName)) {
+		sMatName = origName + std::to_string(uMatCount);
+		uMatCount++;
+	}
 
-	pMaterial* newMat = pResourceFactory::instance()->createMaterial(matName.C_Str(), shader, matInfo);
+	pMaterial* newMat = pResourceFactory::instance()->createMaterial(sMatName, shader, matInfo);
 
 	return newMat;
 }
@@ -520,14 +613,18 @@ pImage * pModelLoader::processTextureImage(const aiString & texPath, const std::
 		//So it's <model dir>/<image parent dir>/<image>
 
 		//First get the parent folder string
-		path::iterator itr = tPath.end(); //Itr points to "image.type"
+		path::iterator itr = tPath.end(); //Itr points to end ""
 		if (itr != tPath.begin()) {
-			//Itr becomes the parent folder name
-			itr++;
+			//Itr becomes file name (last element)
+			itr--;
+			std::string fileDir = itr->generic_string();
+
+			//Itr becomes the parent folder name (second-last element)
+			itr--;
 			std::string parentDir = itr->generic_string();
 
 			//Construct test directory
-			testImagePath = (modelDir.generic_string() + "/" + parentDir + "/" + imageName);
+			testImagePath = (modelDir.generic_string() + "/" + parentDir + "/" + fileDir);
 
 			if (exists(testImagePath)) {
 				if (is_regular_file(testImagePath)) {
@@ -569,8 +666,7 @@ pModel * pModelLoader::processMesh(const aiMesh & mesh, pMaterial* mat, std::str
 
 	if (meshName.empty()) {
 		if (backupName.empty()) {
-			meshName = "unnamed_mesh" + std::to_string(uMeshCount);
-			uMeshCount++;
+			meshName = "unnamed_mesh";
 		}
 		else {
 			meshName = backupName + "_mesh";
@@ -584,7 +680,7 @@ pModel * pModelLoader::processMesh(const aiMesh & mesh, pMaterial* mat, std::str
 	std::vector<GLfloat> vTangents = std::vector<GLfloat>();
 	std::vector<GLfloat> vBiTangents = std::vector<GLfloat>();
 	std::vector<GLuint> vIndeces = std::vector<GLuint>();
-	std::vector<VertexBoneData> vBoneData = std::vector<VertexBoneData>();
+	//std::vector<VertexBoneData> vBoneData = std::vector<VertexBoneData>();
 
 	hasPositions = mesh.HasPositions();
 	hasCoordinates = mesh.HasTextureCoords(0);
@@ -634,34 +730,17 @@ pModel * pModelLoader::processMesh(const aiMesh & mesh, pMaterial* mat, std::str
 		}
 	}
 
-	if (hasBones) {
-		//For each bone contained in this mesh
-		for (unsigned int i = 0U; i < mesh.mNumBones; ++i) {
-			//Store a reference to this bone
-			const aiBone thisBone = *mesh.mBones[i];
-
-			//Store this bone's name
-			const std::string thisBoneName = std::string(thisBone.mName.C_Str());
-
-			//Store this bone's offset (from mesh space to this bone pos)
-			const glm::mat4 thisBoneOffset = aiMat4_to_glmMat4(thisBone.mOffsetMatrix);
-
-			//For each vertex weight data in this bone
-			for (unsigned int o = 0U; o < thisBone.mNumWeights; ++o) {
-				//Store this bone's vertex ID and weight
-				const unsigned int thisVertID = thisBone.mWeights[o].mVertexId;
-				const float thisVertWeight = thisBone.mWeights[o].mWeight;
-
-
-				 
-			}
-		}
-	}
-
 	pMaterial* matRef = mat;
 
 	if (matRef == nullptr) {
 		mat = pResourceFactory::instance()->createDebugMaterial();
+	}
+
+	unsigned int uMeshCount = 0;
+	std::string origName = meshName;
+	while (pResourceFactory::instance()->hasModel(meshName)) {
+		meshName = origName + std::to_string(uMeshCount);
+		uMeshCount++;
 	}
 
 	pModel* resModel = pResourceFactory::instance()->createModel(meshName, matRef, GL_TRIANGLES, vPositions, vIndeces, vCoordinates, vNormals, vTangents, vBiTangents, vColors);
@@ -669,55 +748,170 @@ pModel * pModelLoader::processMesh(const aiMesh & mesh, pMaterial* mat, std::str
 	return resModel;
 }
 
-pSceneNode * pModelLoader::processNodes(const aiScene& scene, const std::vector<pModel*> indexedMeshes, const std::map <std::string, pAnimation*> animationMap, aiNode* root, glm::mat4& parentTransform)
+pSceneNode * pModelLoader::processNodes(const aiScene& scene, const std::vector<pModel*> indexedMeshes, const std::vector<SkeletalAnimation*> skeletalAnimations, aiNode* root, glm::mat4& parentTransform)
 {
 	if (root == nullptr) { root = scene.mRootNode; }
-	pSceneNode* thisNode = new pSceneNode();
-	if (thisNode->getAttachedSceneObject() == nullptr) { thisNode->setAttachedSceneObject(new pSceneObject()); }
 
-	//Extract node name
-	thisNode->setName(root->mName.C_Str());
+	std::string rootName = root->mName.C_Str();
 
-	//Extract node transformations
-	aiVector3D scl = aiVector3D(1.0);
-	aiVector3D pos = aiVector3D(0.0);
-	aiQuaternion rot = aiQuaternion();
-	root->mTransformation.Decompose(scl, rot, pos);
-	
-	//Apply node transformations
-	thisNode->setPosition(glm::vec3(pos.x, pos.y, pos.z));
-	thisNode->setScale(glm::vec3(scl.x, scl.y, scl.z));
-	thisNode->setRotation(aiQuat_to_glmQuat(rot));
+	bool isBone = false;
 
-	//Extract node mesh index
-	int numMeshes = root->mNumMeshes;
-	if (numMeshes > 0) {
-		unsigned int meshIndex = root->mMeshes[0];
-		//Get the pModel from indexed meshes
-		pModel* nodeMesh = indexedMeshes[meshIndex];
-		//Give the node's sceneObject the mesh
-		pSceneObject* sceneObj = thisNode->getAttachedSceneObject();
-		sceneObj->attachModel(nodeMesh);
-	}
+	//Iterate through each mesh
+	for (auto meshIter : indexedMeshes) {
+		//Check for a skeleton in this mesh
+		Skeleton* skelly = meshIter->getSkeleton();
+		if (skelly != nullptr) {
+			//Check if the skeleton has already gone through this process
+			if (skelly->isOrganized() == false) {
+				Joint* thisNodeJoint = skelly->getJoint(rootName);
+				//Check if this node represents a skeleton joint
+				if (thisNodeJoint != nullptr) {
+					//This node represents this bone in the hierarchy!
+					matchSkeleton(root, skelly);
+					skelly->setOrganized(true);
+					isBone = true;
+				}
+			}
 
-
-	if (animationMap.size() > 0) {
-		const pAnimation* anim = animationMap.at(thisNode->getName());
-		if (anim != nullptr) {
-			pSceneObject* obj = thisNode->getAttachedSceneObject();
-			//TODO: Add animator with animation to scene object here
+			//Find an animation meant for this skeleton
+			for (auto animIter : skeletalAnimations) {
+				//Check for a channel that exists matching the skeleton root
+				AnimationChannel* chnl = animIter->getChannel(skelly->getJoint(0)->Name());
+				if (chnl != nullptr) {
+					//This animation is (probably) meant for this skeleton
+					animIter->SetSkeleton(skelly);
+				}
+			}
 		}
 	}
 
-	//Process this node's children
-	for (unsigned int i = 0U; i < root->mNumChildren; ++i) {
-		aiNode* child = root->mChildren[i];
-		if (child != NULL) {
-			thisNode->appendChild(processNodes(scene, indexedMeshes, animationMap, child, parentTransform));
+	if (!isBone) {
+		pSceneNode* thisNode = new pSceneNode();
+		if (thisNode->getAttachedSceneObject() == nullptr) { thisNode->setAttachedSceneObject(new pSceneObject()); }
+
+		//Extract node name
+		thisNode->setName(rootName);
+
+
+
+		//Extract node transformations
+		aiVector3D scl = aiVector3D(1.0);
+		aiVector3D pos = aiVector3D(0.0);
+		aiQuaternion rot = aiQuaternion();
+		root->mTransformation.Decompose(scl, rot, pos);
+
+		//Apply node transformations
+		thisNode->setPosition(glm::vec3(pos.x, pos.y, pos.z));
+		thisNode->setScale(glm::vec3(scl.x, scl.y, scl.z));
+		thisNode->setRotation(aiQuat_to_glmQuat(rot));
+
+		//Extract node mesh index
+		int numMeshes = root->mNumMeshes;
+		if (numMeshes > 0) {
+			if (numMeshes > 1) {
+				for (unsigned int i = 0U; i < numMeshes; ++i) {
+					pModel* nodeMesh = indexedMeshes[root->mMeshes[i]];
+
+					pSceneObject* newChildObject = new pSceneObject(nodeMesh, nullptr, nullptr, nullptr);
+					pSceneNode* newChild = new pSceneNode(glm::vec3(0), glm::vec3(0), glm::vec3(1), std::string("unknown_child"), newChildObject, thisNode);
+
+					//Handle tacking on an animator if appropriate
+					if (skeletalAnimations.size() > 0) {
+						for (auto animIter : skeletalAnimations) {
+							//Check for matching animation and mesh skeletons
+							if (animIter->GetSkeleton()->getName() == nodeMesh->getSkeleton()->getName()) {
+								pAnimator* newAnimator = new pAnimator(animIter, newChildObject);
+								newChildObject->attachAnimator(newAnimator);
+								break;
+							}
+						}
+					}
+
+
+				}
+			}
+			else {
+				unsigned int meshIndex = root->mMeshes[0];
+				//Get the pModel from indexed meshes
+				pModel* nodeMesh = indexedMeshes[meshIndex];
+				//Give the node's sceneObject the mesh
+				pSceneObject* sceneObj = thisNode->getAttachedSceneObject();
+				sceneObj->attachModel(nodeMesh);
+
+				//Handle tacking on an animator if appropriate
+				if (skeletalAnimations.size() > 0) {
+					for (auto animIter : skeletalAnimations) {
+						//Check for matching animation and mesh skeletons
+						if (animIter->GetSkeleton()->getName() == nodeMesh->getSkeleton()->getName()) {
+							pAnimator* newAnimator = new pAnimator(animIter, sceneObj);
+							sceneObj->attachAnimator(newAnimator);
+							break;
+						}
+					}
+				}
+			}
+		}
+
+
+
+
+		//Process this node's children
+		for (unsigned int i = 0U; i < root->mNumChildren; ++i) {
+			aiNode* child = root->mChildren[i];
+			if (child != NULL) {
+				pSceneNode* potentialChild = (processNodes(scene, indexedMeshes, skeletalAnimations, child, parentTransform));
+				if (potentialChild != nullptr) {
+					thisNode->appendChild(potentialChild);
+				}
+			}
+		}
+		return thisNode;
+	}
+	else {
+		for (unsigned int i = 0U; i < root->mNumChildren; ++i) {
+			aiNode* child = root->mChildren[i];
+			if (child != NULL) {
+				processNodes(scene, indexedMeshes, skeletalAnimations, child, parentTransform);
+			}
+		}
+
+		return nullptr;
+	}
+
+
+}
+
+aiNode pModelLoader::findNode(const aiNode& rootNode, aiString name)
+{
+	if (rootNode.mName == name) { return rootNode; }
+
+	for (int i = 0; i < rootNode.mNumChildren; i++) {
+		aiNode child = *rootNode.mChildren[i];
+		if (findNode(child, name).mName.C_Str() != "EMPTY") {
+			return child;
 		}
 	}
 
-	return thisNode;
+	return aiNode("EMPTY");
+}
+
+Joint * pModelLoader::matchSkeleton(const aiNode* rootNode, Skeleton * skeleton)
+{
+	//Look for a joint in the skeleton that uses this node
+	Joint* joint = skeleton->getJoint(rootNode->mName.C_Str());
+
+	if (joint != nullptr) {
+		//Check this node for children
+		for (int i = 0; i < rootNode->mNumChildren; i++) {
+			//Add node children as child joints if they exist
+			Joint* child = matchSkeleton(rootNode->mChildren[i], skeleton);
+			if (child != nullptr) {
+				joint->AddChild(child);
+			}
+		}
+	}
+
+	return joint;
 }
 
 glm::quat pModelLoader::aiQuat_to_glmQuat(aiQuaternion aiQuat)

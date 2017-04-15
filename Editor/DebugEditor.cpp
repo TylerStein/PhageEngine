@@ -1,7 +1,5 @@
 #include "DebugEditor.h"
-#include "GUIHelper.h"
 #include "glm/gtc/matrix_transform.hpp"
-
 #include "ExampleScript.h"
 
 DebugEditor::DebugEditor()
@@ -21,14 +19,6 @@ void DebugEditor::giveEngineReference(PhageEngine * engine)
 void DebugEditor::onStart()
 {
 	std::cout << "Editor Start()" << std::endl;
-
-	//For frame draw time display
-	lastTime = glfwGetTime();
-	numFrames = 0;
-	lastFrameTime = 0.0;
-
-	//Set up ImGui
-	ImGui_ImplGlfwGL3_Init(engine->window, true);
 
 	//Create the shader attributes and uniforms to link with the shader being used
 	uniformNameMap uniMap = uniformNameMap();
@@ -95,14 +85,14 @@ void DebugEditor::onStart()
 	engine->sceneManager->addScene();
 	pScene* scene = engine->sceneManager->getCurrentScene();
 
-	//==Creating the Oildrum object and add it to the scene graph==//
-	pSceneObject* drumObject = new pSceneObject(); //Create empty scene object
-
 	pModel* tmpModelRef = engine->resourceFactory->loadModel("Model_Oildrum", "../Resources/Models/Oildrum/oildrum.obj", tmpMatRef); //Create temporary model ref
+
+	//==Creating the Oildrum object and add it to the scene graph==//
+	pSceneObject* drumObject = scene->createNewObject(tmpModelRef, nullptr, nullptr, nullptr, glm::vec3(0), glm::vec3(0), glm::vec3(1), "OilDrum");
+
 	pScript* tmpScript = engine->resourceFactory->addScript("Script_Oildrum", new ExampleScript(drumObject)); //Create temporary script reff
 
-	//add the model and script to the Oildrum scene object
-	drumObject->attachModel(tmpModelRef);
+	//add the script to the Oildrum scene object
 	drumObject->attachScript(tmpScript);
 
 	//Add the bunny object to the scene graph
@@ -129,6 +119,7 @@ void DebugEditor::onStart()
 	//Manually make a view matrix
 	viewMat = glm::lookAt(glm::vec3(0, 0, -12), glm::vec3(0), glm::vec3(0, 1, 0));
 	engine->renderer->setViewMatrix(viewMat);
+
 }
 
 void DebugEditor::onUpdate(GLdouble deltaTime)
@@ -161,47 +152,20 @@ void DebugEditor::onPreRender()
 {
 	//Clear the drawing surface
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	//Create new ImGui frame
-	ImGui_ImplGlfwGL3_NewFrame();
 }
 
 void DebugEditor::onRender()
 {
-	ImGui::Begin("Debug");
-	{
-		ImGui::Text("Render Time (ms): %f", lastFrameTime);
-	}
-	ImGui::End();
-
 	//skybox
 	engine->renderer->renderSkybox();
 }
 
 void DebugEditor::onPostRender()
 {
-	//Render the ImGui GUI
-	ImGui::Render();
-
 	glfwSwapBuffers(engine->window);
-
-	//End of loop time count
-	double currentTime = glfwGetTime();
-	numFrames++;
-
-	double diff = (currentTime - lastTime);
-	if (diff >= 1.0) {
-		//printf("%f ms/frame\n", 1000.0 / double(numFrames));
-		lastFrameTime = (float)(1000.0 / double(numFrames));
-		numFrames = 0;
-		lastTime += diff;
-	}
 }
 
 void DebugEditor::onEnd()
 {
 	std::cout << "Editor End()" << std::endl;
-
-	//Shut down and clean up ImGui
-	ImGui_ImplGlfwGL3_Shutdown();
 }

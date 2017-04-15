@@ -1,2 +1,1 @@
-Failed to import model from ../Resources/Models/Luxury/luxury house interior.ob
-
+Image loaded is not a power of 2!

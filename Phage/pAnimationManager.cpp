@@ -2,9 +2,9 @@
 
 pAnimationManager* pAnimationManager::_instance = 0;
 
-pAnimationClip * pAnimationManager::getAnimation(std::string name)
+Animation * pAnimationManager::getAnimation(std::string name)
 {
-	pAnimationClip* res = nullptr;
+	Animation* res = nullptr;
 
 	animationHandle resHandler = _animationManager->get(name);
 	res = _animationManager->get(resHandler);
@@ -12,9 +12,9 @@ pAnimationClip * pAnimationManager::getAnimation(std::string name)
 	return res;
 }
 
-pAnimationClip * pAnimationManager::getAnimation(unsigned int animationID)
+Animation * pAnimationManager::getAnimation(unsigned int animationID)
 {
-	pAnimationClip* res = nullptr;
+	Animation* res = nullptr;
 
 	animationHandle resHandler = animationHandle(animationID);
 	res = _animationManager->get(resHandler);
@@ -22,18 +22,18 @@ pAnimationClip * pAnimationManager::getAnimation(unsigned int animationID)
 	return res;
 }
 
-pAnimationClip * pAnimationManager::getAnimation(animationHandle animHandle)
+Animation * pAnimationManager::getAnimation(animationHandle animHandle)
 {
-	pAnimationClip* res = nullptr;
+	Animation* res = nullptr;
 
 	res = _animationManager->get(animHandle);
 
 	return res;
 }
 
-animationHandle pAnimationManager::addAnimation(pAnimationClip * animationClip)
+animationHandle pAnimationManager::addAnimation(Animation * animation)
 {
-	return _animationManager->put(animationClip->getName(), animationClip);
+	return _animationManager->put(animation->getName(), animation);
 }
 
 bool pAnimationManager::removeAnimation(unsigned int animID)
@@ -54,7 +54,7 @@ bool pAnimationManager::removeAnimation(unsigned int animID)
 
 pAnimationManager::pAnimationManager()
 {
-	_animationManager = new pResourceManager<pAnimationClip>();
+	_animationManager = new pResourceManager<Animation>();
 }
 
 

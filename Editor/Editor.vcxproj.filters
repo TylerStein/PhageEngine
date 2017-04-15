@@ -5,9 +5,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="imgui">
-      <UniqueIdentifier>{7fb2fa8b-ad66-4fec-999c-467b5646412d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ObjectScripts">
       <UniqueIdentifier>{05fc9494-462d-44c4-a3e2-92569358ca50}</UniqueIdentifier>
     </Filter>
@@ -15,43 +12,12 @@
   <ItemGroup>
     <ClCompile Include="DebugEditor.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="imgui\imgui.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\imgui_draw.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\imgui_impl_glfw_gl3.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
     <ClCompile Include="ExampleScript.cpp">
       <Filter>ObjectScripts</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugEditor.h" />
-    <ClInclude Include="imgui\imconfig.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imgui.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imgui_impl_glfw_gl3.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imgui_internal.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\stb_rect_pack.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\stb_textedit.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\stb_truetype.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="GUIHelper.h" />
     <ClInclude Include="ExampleScript.h">
       <Filter>ObjectScripts</Filter>
     </ClInclude>

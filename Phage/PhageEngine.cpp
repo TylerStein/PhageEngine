@@ -1,4 +1,5 @@
 #include "PhageEngine.h"
+#include "VisualDebugger.h"
 #include <iostream>
 
 PhageEngine* PhageEngine::instance = NULL;
@@ -147,6 +148,9 @@ void PhageEngine::doLoop() {
 	game->onStart();
 	sceneManager->startScene();
 	scriptManager->StartScripts();
+
+	//VisualDebugger::instance()->Initialize(window);
+
 	//Create the last time
 	double lastTick = glfwGetTime();
 	do {
@@ -154,18 +158,30 @@ void PhageEngine::doLoop() {
 		double currentTick = glfwGetTime();
 		//Calculate delta time from the time differences (in ms) * 10 (for seconds)
 		double deltaTime = (currentTick - lastTick) * 10;
+		//Calculate frame time in ms
+
 		//Store the current tick as the last one, then run loop
 		lastTick = currentTick;
 		glfwPollEvents();
+
 		inputManager->inputUpdate(deltaTime);
+
 		game->onUpdate(deltaTime);
 		sceneManager->updateScene(deltaTime);
 		scriptManager->UpdateScripts(deltaTime);
+
 		game->onPostUpdate();
 		game->onPreRender();
+
 		sceneManager->renderScene(renderer);
+
 		game->onRender();
 		game->onPostRender();
+
+		//VisualDebugger::instance()->UpdateTicks(currentTick);
+		//VisualDebugger::instance()->PreRender();
+		//VisualDebugger::instance()->Render();
+		//VisualDebugger::instance()->PostRender();
 
 	} while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
 	this->~PhageEngine();

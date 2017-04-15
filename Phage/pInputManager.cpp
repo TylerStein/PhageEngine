@@ -42,7 +42,7 @@
 	void pInputManager::key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
 	{
 		double totalTime = glfwGetTime();
-		std::cout << "key_callback was pressed at = " << totalTime << std::endl;
+		//std::cout << "key_callback was pressed at = " << totalTime << std::endl;
 	}
 
 	//this method is like the one above but less bare
@@ -61,15 +61,15 @@
 			switch (action)
 			{
 			case GLFW_PRESS:
-				std::cout << "the 'R' key has been pressed" << std::endl;
+				//std::cout << "the 'R' key has been pressed" << std::endl;
 				break;
 
 			case GLFW_REPEAT:
-				std::cout << "the 'R' key is being held down" << std::endl;
+				//std::cout << "the 'R' key is being held down" << std::endl;
 				break;
 
 			case GLFW_RELEASE:
-				std::cout << "the 'R' key has been released" << std::endl;
+				//std::cout << "the 'R' key has been released" << std::endl;
 				break;
 			}//end of switch
 		}//end of else if R
@@ -81,16 +81,16 @@
 	//to be used with text input rather than key input
 	void pInputManager::characterMod_callback(GLFWwindow *window, unsigned int key, int mods)
 	{
-		std::cout << key << " : " << mods << std::endl;
+		//std::cout << key << " : " << mods << std::endl;
 	}
 	
 	//this was just a thing made to make sure the GLFW stuff was working
 	void pInputManager::key_logger(int ke, int scancod, int act, int mod)
 	{
-		std::cout << "key pressed = " << ke << std::endl;
-		std::cout << "scan code = " << scancod << std::endl;
-		std::cout << "action = " << act << std::endl; //1 = pressed, 2 = held and 0 = released
-		std::cout << "mods = " << mod << std::endl;
+		//std::cout << "key pressed = " << ke << std::endl;
+		//std::cout << "scan code = " << scancod << std::endl;
+		//std::cout << "action = " << act << std::endl; //1 = pressed, 2 = held and 0 = released
+		//std::cout << "mods = " << mod << std::endl;
 	}
 
 	//here is the method that uses the KeyStructure
@@ -117,7 +117,7 @@
 				//check key state and update the values of the key pressed
 				if (state == GLFW_PRESS)
 				{
-					std::cout << static_cast<keyName>(sName) <<  " IS PRESSED" << std::endl;
+					//std::cout << static_cast<keyName>(sName) <<  " IS PRESSED" << std::endl;
 					keyRegistry.at(x).currentlyDown = true; //if im pressed i must be down
 					keyRegistry.at(x).pThisFrame = true; //if i got pressed i must be delt with
 				}
@@ -130,7 +130,7 @@
 				//}
 				else if (state == GLFW_RELEASE)
 				{
-					std::cout << static_cast<keyName>(sName) <<  " IS RELEASED" << std::endl;
+					//std::cout << static_cast<keyName>(sName) <<  " IS RELEASED" << std::endl;
 					keyRegistry.at(x).currentlyDown = false;//if im released i must be up
 					keyRegistry.at(x).keyHeld = false;//no way im held if im not touched
 					keyRegistry.at(x).pThisFrame = false;//im not down i dont need to be delt with
@@ -148,13 +148,13 @@
 			if (state == GLFW_PRESS)
 			{
 				fKey = keyStruct(0, true, false, true, static_cast<keyName>(sName));//create real key
-				std::cout << "IM Created as PRESSED" << std::endl;
+				//std::cout << "IM Created as PRESSED" << std::endl;
 				pInstance->keyRegistry.push_back(fKey);//push key to keyRegistry
 			}
 			else if (state == GLFW_RELEASE)
 			{
 				fKey = keyStruct(0, false, false, false, static_cast<keyName>(sName));//create real key
-				std::cout << "IM Created as RELEASED" << std::endl;
+				//std::cout << "IM Created as RELEASED" << std::endl;
 				pInstance->keyRegistry.push_back(fKey);//push key to keyRegistry
 			}
 			
@@ -183,7 +183,7 @@
 				//std::cout << keyRegistry.at(i).name << " Has the 'is held' value set to : " << heldState << std::endl;
 				keyRegistry.at(i).pressTime += deltaTime; //trying to set it from the registry does work
 				//tempKey.pressTime += deltaTime; //trying to set it from the accessor does not work
-				std::cout << keyRegistry.at(i).name << " Has been pressed for : " << keyRegistry.at(i).pressTime << " blips!" << std::endl;
+				//std::cout << keyRegistry.at(i).name << " Has been pressed for : " << keyRegistry.at(i).pressTime << " blips!" << std::endl;
 			}
 		}
 	}
@@ -248,7 +248,7 @@
 	//prints the users mouse position
 	void pInputManager::cursorPositionCallback(GLFWwindow *window, double xPosition, double yPosition)
 	{
-		std::cout << xPosition << " : " << yPosition << std::endl;
+		//std::cout << xPosition << " : " << yPosition << std::endl;
 	}
 
 	//print a tell if the mouse enters or leaves the screen
@@ -256,11 +256,11 @@
 	{
 		if (enteredScreen)
 		{
-			std::cout << "Within Window" << std::endl;
+			//std::cout << "Within Window" << std::endl;
 		}
 		else
 		{
-			std::cout << "Out of Window" << std::endl;
+			//std::cout << "Out of Window" << std::endl;
 		}
 	}
 
@@ -268,20 +268,20 @@
 	void pInputManager::mouseButtonCallback(GLFWwindow *window, int button, int action, int mods)
 	{
 		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-			std::cout << "LMB pressed" << std::endl;
+			//std::cout << "LMB pressed" << std::endl;
 		}
 		else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_REPEAT) {
-			std::cout << "LMB held" << std::endl;
+			//std::cout << "LMB held" << std::endl;
 		}
 		else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
-			std::cout << "LMB released" << std::endl;
+			//std::cout << "LMB released" << std::endl;
 		}
 	}
 	
 	//a callback that alerts the user how much they are scrolling by
 	void pInputManager::scrollCallback(GLFWwindow *window, double xOffset, double yOffset)
 	{
-		std::cout << "Offsets = " << xOffset << " : " <<yOffset << std::endl;
+		//std::cout << "Offsets = " << xOffset << " : " <<yOffset << std::endl;
 	}
 
 	//a custrom cursor function
@@ -294,24 +294,24 @@
 	//a method that prints the position of the mouse only diffrence with this and cursorPositionCallback is that this does not take a window
 	void pInputManager::posLogger(double xPosition, double yPosition)
 	{
-		std::cout << "posLogger = " << xPosition << " : " << yPosition << std::endl;
+		//std::cout << "posLogger = " << xPosition << " : " << yPosition << std::endl;
 	}
 
 	//returns 0 if no controllers plugged in and return a non 0 value if one or more is
 	void pInputManager::presentCheck(int present)
 	{
-		std::cout << "Controller status = " << present << std::endl;
+		//std::cout << "Controller status = " << present << std::endl;
 	}
 
 	//this method shows us what controller axeses are being moved about
 	void pInputManager::axesTest(const float * axes)
 	{
-		std::cout << "Left Stick X Axis" << axes[0] << std::endl;
-		std::cout << "Left Stick Y Axis" << axes[1] << std::endl;
-		std::cout << "Right Stick X Axis" << axes[2] << std::endl;
-		std::cout << "Right Stick Y Axis" << axes[3] << std::endl;
-		std::cout << "Left Trigger L2 Push" << axes[4] << std::endl;
-		std::cout << "Right Trigger R2 Push" << axes[5] << std::endl;
+		//std::cout << "Left Stick X Axis" << axes[0] << std::endl;
+		//std::cout << "Left Stick Y Axis" << axes[1] << std::endl;
+		//std::cout << "Right Stick X Axis" << axes[2] << std::endl;
+		//std::cout << "Right Stick Y Axis" << axes[3] << std::endl;
+		//std::cout << "Left Trigger L2 Push" << axes[4] << std::endl;
+		//std::cout << "Right Trigger R2 Push" << axes[5] << std::endl;
 		pInputManager::axesControlls(axes); //then call the controlls
 	}
 
@@ -320,20 +320,20 @@
 	{
 		if (axes[1] == 0)
 		{
-			std::cout << "Left Stick Y is idle at 0" << std::endl;
+			//std::cout << "Left Stick Y is idle at 0" << std::endl;
 		}
 		else
 		{
-			std::cout << "Left Stick Y Axis is moving about" << std::endl;
+			//std::cout << "Left Stick Y Axis is moving about" << std::endl;
 		}
 
 		if (axes[0] == 0)
 		{
-			std::cout << "Left Stick X is idle at 0" << std::endl;
+			//std::cout << "Left Stick X is idle at 0" << std::endl;
 		}
 		else
 		{
-			std::cout << "Left Stick X Axis is moving about" << std::endl;
+			//std::cout << "Left Stick X Axis is moving about" << std::endl;
 		}
 
 	}
@@ -344,71 +344,71 @@
 
 		if (GLFW_PRESS == buttons[0])
 		{
-			std::cout << "0 button pressed" << std::endl;
+			//std::cout << "0 button pressed" << std::endl;
 		}
 		
 		if (GLFW_PRESS == buttons[1])
 		{
-			std::cout << "1 button pressed" << std::endl;
+			//std::cout << "1 button pressed" << std::endl;
 		}
 		if (GLFW_PRESS == buttons[2])
 		{
-			std::cout << "2 button pressed" << std::endl;
+			//std::cout << "2 button pressed" << std::endl;
 		}
 
 		if (GLFW_PRESS == buttons[3])
 		{
-			std::cout << "3 button pressed" << std::endl;
+			//std::cout << "3 button pressed" << std::endl;
 		}
 
 		if (GLFW_PRESS == buttons[4])
 		{
-			std::cout << "4 button pressed" << std::endl;
+			//std::cout << "4 button pressed" << std::endl;
 		}
 
 		if (GLFW_PRESS == buttons[5])
 		{
-			std::cout << "5 button pressed" << std::endl;
+			//std::cout << "5 button pressed" << std::endl;
 		}
 
 		if (GLFW_PRESS == buttons[6])
 		{
-			std::cout << "6 button pressed" << std::endl;
+			//std::cout << "6 button pressed" << std::endl;
 		}
 
 		if (GLFW_PRESS == buttons[7])
 		{
-			std::cout << "7 button pressed" << std::endl;
+			//std::cout << "7 button pressed" << std::endl;
 		}
 
 		if (GLFW_PRESS == buttons[8])
 		{
-			std::cout << "8 button pressed" << std::endl;
+			//std::cout << "8 button pressed" << std::endl;
 		}
 
 		if (GLFW_PRESS == buttons[9])
 		{
-			std::cout << "9 button pressed" << std::endl;
+			//std::cout << "9 button pressed" << std::endl;
 		}
 
 		if (GLFW_PRESS == buttons[10])
 		{
-			std::cout << "10 button pressed" << std::endl;
+			//std::cout << "10 button pressed" << std::endl;
 		}
 
 		if (GLFW_PRESS == buttons[11])
 		{
-			std::cout << "11 button pressed" << std::endl;
+			//std::cout << "11 button pressed" << std::endl;
 		}
 
 		if (GLFW_PRESS == buttons[12])
 		{
-			std::cout << "12 button pressed" << std::endl;
+			//std::cout << "12 button pressed" << std::endl;
 		}
 
 		if (GLFW_PRESS == buttons[13])
 		{
-			std::cout << "13 button pressed" << std::endl;
+			//std::cout << "13 button pressed" << std::endl;
 		}
 	}
 

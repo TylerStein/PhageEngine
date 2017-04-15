@@ -96,14 +96,14 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)\ThirdParty\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\ThirdParty\include;$(SolutionDir)\IMGUI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)\ThirdParty\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32.lib;glew32s.lib;FreeImage.lib;assimp.lib;opengl32.lib;glfw3.lib;fmod_vc.lib;fmod64_vc.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\ThirdParty\lib;$(SolutionDir)\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32.lib;glew32s.lib;FreeImage.lib;assimp.lib;opengl32.lib;glfw3.lib;fmod_vc.lib;fmod64_vc.lib;IMGUI.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -153,6 +153,7 @@
     <ClInclude Include="DefaultPaths.h" />
     <ClInclude Include="GameImplement.h" />
     <ClInclude Include="GLError.h" />
+    <ClInclude Include="Interpolation.h" />
     <ClInclude Include="LogManager.h" />
     <ClInclude Include="pAnimation.h" />
     <ClInclude Include="pAnimator.h" />
@@ -200,6 +201,7 @@
     <ClInclude Include="pSoundSystem.h" />
     <ClInclude Include="pAnimationManager.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="VisualDebugger.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Clock.cpp" />
@@ -248,6 +250,7 @@
     <ClCompile Include="pSoundSystem.cpp" />
     <ClCompile Include="pAnimationManager.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="VisualDebugger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resources\Shaders\BlinnPhong.frag" />

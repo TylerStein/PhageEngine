@@ -64,6 +64,22 @@ void pSceneObject::detachScript()
 	attachedScript = nullptr;
 }
 
+void pSceneObject::attachAnimator(pAnimator * animator)
+{
+	detachAnimator();
+	attachedAnimator = animator;
+}
+
+pAnimator * pSceneObject::getAttachedAnimator()
+{
+	return attachedAnimator;
+}
+
+void pSceneObject::detachAnimator()
+{
+	attachedAnimator = nullptr;
+}
+
 void pSceneObject::detachSoundSystem()
 {
 	attachedSoundSystem = nullptr;
@@ -86,14 +102,12 @@ bool pSceneObject::hasSoundSystem() const
 
 bool pSceneObject::hasCamera() const
 {
-	if (attachedCamera == nullptr)
-	{
-		return nullptr;
-	}
-	else
-	{
-		return true;
-	}
+	return (attachedCamera != nullptr);
+}
+
+bool pSceneObject::hasAnimator() const
+{
+	return (attachedAnimator != nullptr);
 }
 
 pSceneNode * pSceneObject::getSceneNode() const

@@ -41,6 +41,8 @@ public:
 	pSceneNode* loadModelToScene(std::string name, std::string path, pScene& scene, pSceneNode* parent, pMaterial* mat = nullptr);
 	//Add a model to the resource manager
 	pModel* addModel(std::string name, pModel* model);
+	//Check if a model exists
+	bool hasModel(std::string name);
 
 	//==MATERIALS==//
 

@@ -1,5 +1,6 @@
 #include "TestScene.h"
 #include "GLError.h"
+#include "VisualDebugger.h"
 
 TestScene::TestScene()
 {
@@ -54,12 +55,15 @@ void TestScene::onStart()
 	pModel* floorMesh = floorNode->getAttachedSceneObject()->getAttachedModel();
 	floorMesh->scaleTextureCoordinates(glm::vec2(6.0f, 6.0f));
 	floorNode->setPosition(glm::vec3(0, 0, 0));
-	floorNode->setRotation(glm::vec3(0.5, 0, 0));
+	floorNode->setRotation(glm::vec3(glm::radians(-90.0f), 0, 0));
 	scene->addExistingNodes(floorNode);
 
 	//pSceneNode* butterfly = engine->resourceFactory->loadModelToScene("Butterfly", "../Resources/Models/Butterfly/Butterfly.obj", *scene, scene->sceneGraph->getRootSceneNode());
-	pSceneNode* house = engine->resourceFactory->loadModelToScene("House", "../Resources/Models/House/house interior.obj", *scene, nullptr);
-	house->setScale(glm::vec3(0.1f));
+	//pSceneNode* house = engine->resourceFactory->loadModelToScene("House", "../Resources/Models/House/house interior.obj", *scene, nullptr);
+	//house->setScale(glm::vec3(0.1f));
+
+	pSceneNode* soldier = engine->resourceFactory->loadModelToScene("Soldier", "../Resources/Models/ArmyPilot/ArmyPilot.fbx", *scene, nullptr);
+	soldier->setScale(glm::vec3(0.01f));
 
 	pCubeMap* skyboxCube = new pCubeMap("../Resources/Cubemaps/Citadella/posx.jpg",
 		"../Resources/Cubemaps/Citadella/negx.jpg",
@@ -71,8 +75,8 @@ void TestScene::onStart()
 	engine->renderer->setSkybox(skyboxCube);
 
 	//Add a light to the game (should be via scene)
-	//engine->lightManager->addLight(new pLight(Light::DIRECTIONAL, glm::vec3(0, 0, 1), glm::vec3(1), glm::vec3(1), glm::vec3(0.1f)));
-	engine->lightManager->addLight(new pLight(Light::POINT, glm::vec3(10, 10, 0), 42.0f, glm::vec3(1, 0.0, 0.0), glm::vec3(0.0, 0.0, 1.0), glm::vec3(0.0f)));
+	engine->lightManager->addLight(new pLight(Light::DIRECTIONAL, glm::vec3(0.5, 0, 0.5), glm::vec3(1, 0, 0), glm::vec3(1, 0, 0), glm::vec3(0.0f)));
+	//engine->lightManager->addLight(new pLight(Light::POINT, glm::vec3(10, 10, 0), 26.0f, glm::vec3(1.0, 0.0, 1.0), glm::vec3(1.0, 0.0, 1.0), glm::vec3(0.0f)));
 }
 
 void TestScene::onPreRender()

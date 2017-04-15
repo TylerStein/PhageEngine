@@ -272,6 +272,11 @@ pModel * pResourceFactory::addModel(std::string name, pModel * model)
 	return modelManager->getModel(mdl);
 }
 
+bool pResourceFactory::hasModel(std::string name)
+{
+	return (modelManager->getModel(name) != nullptr);
+}
+
 pModel * pResourceFactory::getModel(std::string name)
 {
 	//Get the model from the manager's hashtable
