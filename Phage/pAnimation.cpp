@@ -236,65 +236,58 @@ void SkeletalAnimation::mapAnimationChannels()
 
 void SkeletalAnimation::UpdateJoints(double time, Joint & joint, glm::mat4 & parentTransform)
 {
-	/*glm::mat4 translationMatrix = glm::mat4();
+	glm::mat4 translationMatrix = glm::mat4();
 	glm::mat4 rotationMatrix = glm::mat4();
 	glm::mat4 scalingMatrix = glm::mat4();
 
-	//Find surrounding scale frames, generate scaling matrix from interpolation
-	for (auto iter = _jointScalings.begin(); iter != _jointScalings.end(); iter++) {
-		if (_skeleton->getJoint(iter->second) == &joint) {
-			auto prevFrame = FindPrevScalingKey(time);
-			auto nextFrame = FindNextScalingKey(time);
+	uIndex jointID = joint.ID();
 
-			//Get the (0 to 1) position-ratio between the surrounding frames at this time
-			double relativeEndTime = prevFrame->GetTime() - prevFrame->GetTime();
-			double ratio = relativeEndTime / (time - prevFrame->GetTime());
+	//Scaling
+	{
+		//Find surrounding scaling frames
+		auto prevFrame = _channels[jointID]->FindPrevScalingKey(time);
+		auto nextFrame = _channels[jointID]->FindNextScalingKey(time);
 
-			//Get the interpolated values
-			glm::vec3 interp = InterpolateVec3(ratio, prevFrame->GetValue(), nextFrame->GetValue());
+		//Get the (0 to 1) position-ratio between the surrounding frames at this time
+		double relativeEndTime = prevFrame->GetTime() - prevFrame->GetTime();
+		double ratio = relativeEndTime / (time - prevFrame->GetTime());
 
-			scalingMatrix = glm::scale(glm::mat4(), interp);
+		//Get the interpolated values
+		glm::vec3 interp = InterpolateVec3(ratio, prevFrame->GetValue(), nextFrame->GetValue());
 
-			break;
-		}
+		//Create the scaling matrix
+		scalingMatrix = glm::scale(glm::mat4(), interp);
 	}
 
-	//Find surrounding rotation frames, generate rotation matrix from interpolation
-	for (auto iter = _jointRotations.begin(); iter != _jointRotations.end(); iter++) {
-		if (_skeleton->getJoint(iter->second) == &joint) {
-			auto prevFrame = FindPrevRotationKey(time);
-			auto nextFrame = FindNextRotationKey(time);
+	//Rotation
+	{
+		auto prevFrame = _channels[jointID]->FindPrevRotationKey(time);
+		auto nextFrame = _channels[jointID]->FindNextRotationKey(time);
 
-			//Get the (0 to 1) position-ratio between the surrounding frames at this time
-			double relativeEndTime = prevFrame->GetTime() - prevFrame->GetTime();
-			double ratio = relativeEndTime / (time - prevFrame->GetTime());
+		//Get the (0 to 1) position-ratio between the surrounding frames at this time
+		double relativeEndTime = prevFrame->GetTime() - prevFrame->GetTime();
+		double ratio = relativeEndTime / (time - prevFrame->GetTime());
 
-			//Get the interpolated values
-			glm::quat interp = InterpolateQuat(ratio, prevFrame->GetValue(), nextFrame->GetValue());
+		//Get the interpolated values
+		glm::quat interp = InterpolateQuat(ratio, prevFrame->GetValue(), nextFrame->GetValue());
 
-			rotationMatrix = glm::toMat4(interp);
-
-			break;
-		}
+		rotationMatrix = glm::toMat4(interp);
 	}
 
-	//Find surrounding translation frames, generate translation matrix from interpolation
-	for (auto iter = _jointTranslations.begin(); iter != _jointTranslations.end(); iter++) {
-		if (_skeleton->getJoint(iter->second) == &joint) {
-			auto prevFrame = FindPrevTranslationKey(time);
-			auto nextFrame = FindNextTranslationKey(time);
 
-			//Get the (0 to 1) position-ratio between the surrounding frames at this time
-			double relativeEndTime = prevFrame->GetTime() - prevFrame->GetTime();
-			double ratio = relativeEndTime / (time - prevFrame->GetTime());
+	//Translation
+	{
+		auto prevFrame = _channels[jointID]->FindPrevTranslationKey(time);
+		auto nextFrame = _channels[jointID]->FindNextTranslationKey(time);
 
-			//Get the interpolated values
-			glm::vec3 interp = InterpolateVec3(ratio, prevFrame->GetValue(), nextFrame->GetValue());
+		//Get the (0 to 1) position-ratio between the surrounding frames at this time
+		double relativeEndTime = prevFrame->GetTime() - prevFrame->GetTime();
+		double ratio = relativeEndTime / (time - prevFrame->GetTime());
 
-			translationMatrix = glm::translate(glm::mat4(), interp);
+		//Get the interpolated values
+		glm::vec3 interp = InterpolateVec3(ratio, prevFrame->GetValue(), nextFrame->GetValue());
 
-			break;
-		}
+		translationMatrix = glm::translate(glm::mat4(), interp);
 	}
 
 	//Combine matrices into final transformation matrix
@@ -302,44 +295,11 @@ void SkeletalAnimation::UpdateJoints(double time, Joint & joint, glm::mat4 & par
 
 	glm::mat4 globalTransform = parentTransform * transformMatrix;
 
-	joint.SetFinalTransform(transformMatrix);*/
+	joint.SetFinalTransform(transformMatrix);
+
+	//Update each of this joint's children
+	for (auto id : joint.ChildrenIDs()) {
+		Joint* child = _skeleton->getJoint(id);
+		UpdateJoints(time, *child, globalTransform);
+	}
 }
-
-/*
-void SkeletalAnimation::GenerateJointAnimationMaps()
-{
-	//Reset joint-animation maps
-	_jointTranslations.clear();
-	_jointRotations.clear();
-	_jointScalings.clear();
-
-	//Map translation keys
-	for (unsigned int i = 0; i <= _translationKeyCount; i++) {
-		std::string targetJoint = _translationKeys[i].GetTarget();
-		unsigned int foundJointIndex = _skeleton->getJoint(targetJoint)->ID();
-
-		if (foundJointIndex != NO_JOINT) {
-			_jointTranslations[i] = foundJointIndex;
-		}
-	}
-
-	//Map rotation keys
-	for (unsigned int i = 0; i <= _rotationKeyCount; i++) {
-		std::string targetJoint = _rotationKeys[i].GetTarget();
-		unsigned int foundJointIndex = _skeleton->getJoint(targetJoint)->ID();
-
-		if (foundJointIndex != NO_JOINT) {
-			_jointRotations[i] = foundJointIndex;
-		}
-	}
-
-	//Map scaling keys
-	for (unsigned int i = 0; i <= _scalingKeyCount; i++) {
-		std::string targetJoint = _scalingKeys[i].GetTarget();
-		unsigned int foundJointIndex = _skeleton->getJoint(targetJoint)->ID();
-
-		if (foundJointIndex != NO_JOINT) {
-			_jointScalings[i] = foundJointIndex;
-		}
-	}
-}*/

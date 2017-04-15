@@ -78,5 +78,8 @@ enum Uniforms {
 	Camera_Position = 1 << 23,
 	Time_Elapsed = 1 << 24,
 	Time_Delta = 1 << 25,
-	Cube_Map_Texture = 1 << 26
+	Cube_Map_Texture = 1 << 26,
+
+	//Animation
+	Bones = 1 << 27
 };

@@ -78,6 +78,10 @@ void pRenderer::renderSceneNode(pSceneNode * node, glm::mat4x4 mat)
 			glUniform3f(shdr->getUniformID(Uniforms::Camera_Position), tmp.x, tmp.y, tmp.z);
 		}
 
+		if (shdr->hasUniform(Uniforms::Bones)) {
+			glUniformMatrix4fv(shdr->getUniformID(Uniforms::Bones), 1, GL_FALSE, &model->getSkeleton()->getJointTransforms()[0][0][0]);
+		}
+
 
 		//Bind the model's vertex array id
 		glBindVertexArray(model->getVertexArrayID());//Bind the model's vertex array id

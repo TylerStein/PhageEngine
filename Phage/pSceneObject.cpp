@@ -1,4 +1,5 @@
 #include "pSceneObject.h"
+#include "pSceneNode.h"
 
 pSceneObject::pSceneObject()
 {
@@ -118,4 +119,20 @@ pSceneNode * pSceneObject::getSceneNode() const
 void pSceneObject::setSceneNode(pSceneNode* nde)
 {
 	node = nde;
+}
+
+pAnimator * pSceneObject::getAnimatorInChildren()
+{
+	if (hasAnimator()) {
+		return attachedAnimator;
+	}
+
+	for (auto childNode : getSceneNode()->attachedSceneNodeList) {
+		pAnimator* anim = childNode->getAttachedSceneObject()->getAnimatorInChildren();
+		if (anim != nullptr) {
+			return anim;
+		}
+	}
+
+	return nullptr;
 }

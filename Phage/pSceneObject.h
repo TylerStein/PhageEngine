@@ -79,6 +79,9 @@ public:
 
 	void setSceneNode(pSceneNode* nde);
 
+	//Finds the first child with an animator
+	pAnimator* getAnimatorInChildren();
+
 private:
 	pModel* attachedModel = nullptr;
 	pScript* attachedScript = nullptr;

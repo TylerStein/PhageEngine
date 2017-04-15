@@ -9,7 +9,9 @@ public:
 	TestScene();
 	~TestScene();
 
-	pSceneObject* chairObject;
+
+	pAnimator* dudeAnimator;
+	pSceneObject* armyDude;
 	pSceneObject* cameraObject;
 
 	void giveEngineReference(PhageEngine* engine);

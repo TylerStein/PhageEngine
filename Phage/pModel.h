@@ -71,6 +71,8 @@ public:
 
 	std::vector<glm::vec3> getVertexPositions();
 
+	void setupBoneData();
+
 private:
 	//Function for initializing the VBO, VAO and ShaderProgram
 	void setupModel();
@@ -98,10 +100,10 @@ private:
 	GLuint EBOID; //Element buffer object ID
 	GLuint VAOID; //Vertex array object ID
 	GLuint VBOID; //Vertex buffer object ID
+	GLuint BBOID; //Bone buffer object ID
 
 	std::vector<Vertex> vertices;
 	std::vector<GLuint> vIndeces;
-	
 
 	GLenum drawMode;
 };

@@ -199,6 +199,9 @@ pShader * pResourceFactory::createPhongShader()
 			atrMap.insert(Attributes::VertexCoordinate, "vTexCoord");
 			atrMap.insert(Attributes::VertexNormal, "vNormal");
 
+			atrMap.insert(Attributes::BoneIDs, "BoneIDs");
+			atrMap.insert(Attributes::BoneWeights, "Weights");
+
 			uniMap.insert(Uniforms::Projection_View, "projView");
 			uniMap.insert(Uniforms::Model_View, "modelView");
 			uniMap.insert(Uniforms::Camera_View, "cameraView");
@@ -222,6 +225,8 @@ pShader * pResourceFactory::createPhongShader()
 			uniMap.insert(Uniforms::Light_Color, "lColor");
 			uniMap.insert(Uniforms::Light_Power, "lPower");
 			uniMap.insert(Uniforms::Light_Ambient, "lAmbient");
+
+			uniMap.insert(Uniforms::Bones, "bones");
 		}
 		pResourceHandle<pShader> shdrH = shaderManager->addShader("DEFAULT_PHONG", new pShader("DEFAULT_PHONG", atrMap, uniMap, shader_phong_vert, shader_phong_frag));
 		return shaderManager->getShader(shdrH);

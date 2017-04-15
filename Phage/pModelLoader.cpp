@@ -2,6 +2,7 @@
 #include "pResourceFactory.h"
 #include "pAnimator.h"
 #include "pSkeletonManager.h"
+#include "pAnimationManager.h"
 #include <filesystem>
 
 #define IMPORTFLAGS_DEFAULT aiProcess_Triangulate| aiProcess_JoinIdenticalVertices| aiProcess_SortByPType | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace
@@ -413,6 +414,8 @@ std::vector<SkeletalAnimation*> pModelLoader::processSkeletalAnimations(const ai
 		}
 
 		res.push_back(newAnim);
+		pAnimationManager::instance()->addAnimation(newAnim);
+
 	}
 
 
@@ -430,20 +433,22 @@ Skeleton* pModelLoader::processSkeleton(const aiMesh& mesh) {
 		unsigned int jointWeightCount = mesh.mBones[i]->mNumWeights;
 
 		Joint* newJoint = new Joint(jointName, i, jointOffset);
+		res->addJoint(newJoint);
 
 		for (unsigned int o = 0U; o < jointWeightCount; o++) {
 			unsigned int vertexID = mesh.mBones[i]->mWeights[o].mVertexId;
 			float vertexWeight = mesh.mBones[i]->mWeights[o].mWeight;
 			
-			newJoint->addJointData(vertexID, vertexWeight);
+			res->addJointData(vertexID, newJoint->ID(), vertexWeight);
 		}
 
-		res->addJoint(newJoint);
+
 	}
 
 	return res;
 }
 
+/*
 std::vector<Joint*> pModelLoader::extractJoints(const aiMesh& mesh) {
 	std::vector<Joint*> res = std::vector<Joint*>();
 
@@ -453,19 +458,20 @@ std::vector<Joint*> pModelLoader::extractJoints(const aiMesh& mesh) {
 		unsigned int jointWeightCount = mesh.mBones[i]->mNumWeights;
 
 		Joint* newJoint = new Joint(jointName, i, jointOffset);
+		res.push_back(newJoint);
 
 		for (unsigned int o = 0U; o < jointWeightCount; o++) {
 			unsigned int vertexID = mesh.mBones[i]->mWeights[o].mVertexId;
 			float vertexWeight = mesh.mBones[i]->mWeights[o].mWeight;
 
-			newJoint->addJointData(vertexID, vertexWeight);
+			res->addJointData(vertexID, newJoint->ID(), vertexWeight);
 		}
 
-		res.push_back(newJoint);
+
 	}
 
 	return res;
-}
+}*/
 
 pMaterial * pModelLoader::processMaterial(const aiMaterial & material, pShader* shader, const std::string& modelPath, std::string backupName)
 {

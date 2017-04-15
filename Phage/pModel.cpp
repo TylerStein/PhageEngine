@@ -8,6 +8,8 @@
 #include "GLFW\glfw3.h"
 #include "Shader.h"
 
+
+
 pModel::pModel(std::string name, pMaterial * material, GLenum drawMode, GLuint numVerts, GLfloat * vPositions, GLuint numIndeces, GLuint* vIndeces, GLfloat * vCoordinates, GLfloat * vNormals, GLfloat * vTangents, GLfloat * vBiTangents, GLfloat * vColors)
 {
 	if (name == "") { name = (material->getName() + "NewModel"); }
@@ -321,6 +323,7 @@ void pModel::deleteBuffers()
 {
 	glDeleteVertexArrays(1, &VAOID);
 	glDeleteBuffers(1, &VBOID);
+	glDeleteBuffers(1, &BBOID);
 	glDeleteBuffers(1, &EBOID);
 }
 
@@ -342,6 +345,7 @@ Skeleton * pModel::getSkeleton() const
 void pModel::setSkeleton(Skeleton * skeleton)
 {
 	this->skeleton = skeleton;
+	setupBoneData();
 }
 
 std::vector<glm::vec3> pModel::getVertexPositions()
@@ -354,22 +358,44 @@ std::vector<glm::vec3> pModel::getVertexPositions()
 	return vPos;
 }
 
+void pModel::setupBoneData()
+{
+	if (skeleton != nullptr) {
+		pShader* shader = material->getShader();
+
+		std::vector<VertexJointData*> joints = skeleton->getOrderedJointData();
+		joints.resize(vertCount);
+
+		//Bind the vertex array
+		glBindVertexArray(VAOID);
+
+		BBOID = 0;
+		glGenBuffers(1, &BBOID);
+
+		//Bind a new bone buffer
+		glBindBuffer(GL_ARRAY_BUFFER, BBOID);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(joints[0]) * joints.size(), &joints[0], GL_STATIC_DRAW);
+
+		//Bones - VertexID
+		if (useBones && shader->hasAttribute(Attributes::BoneIDs)) {
+			GLuint attribID = shader->getAttributeID(Attributes::BoneIDs);
+
+			glEnableVertexAttribArray(attribID);
+			glVertexAttribIPointer(attribID, BONES_PER_VERTEX, GL_UNSIGNED_INT, sizeof(VertexJointData), (const GLvoid*)0);
+		}
+
+		//Bones - VertexWeight
+		if (useBones && shader->hasAttribute(Attributes::BoneWeights)) {
+			GLuint attribID = shader->getAttributeID(Attributes::BoneIDs);
+
+			glEnableVertexAttribArray(attribID);
+			glVertexAttribPointer(attribID, BONES_PER_VERTEX, GL_FLOAT, GL_FALSE, sizeof(VertexJointData), (const GLvoid*)(BONES_PER_VERTEX * 4));
+		}
+	}
+}
+
 void pModel::setupModel() {
 	pShader* shader = material->getShader();
-
-	/*Shader* shdr = new Shader(
-		std::vector<std::string>() = { "../Resources/Shaders/phong.vert", "../Resources/Shaders/phong.frag" },
-		std::vector<GLenum>() = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER },
-		std::vector<ShaderValue>() = {
-		ShaderValue("vPositions", 0, GL_FLOAT_VEC3, Attributes::VertexPosition),
-		ShaderValue("vCoordinates", 0, GL_FLOAT_VEC2, Attributes::VertexCoordinate),
-		ShaderValue("vNormals", 0, GL_FLOAT_VEC3, Attributes::VertexNormal)
-	});*/
-	//ShaderValue* positionValue = shdr->getShaderAttributeValue(Attributes::VertexPosition);
-	//shdr->sendShaderAttribute(*positionValue, VBOID, 0U, GL_STATIC_DRAW, GL_VERTEX_ARRAY);
-
-	//ShaderValue* elementValue = shdr->getShaderAttributeValue(Attributes::VertexIndeces);
-	//shdr->sendShaderAttribute(*elementValue, EBOID, 0U, GL_STATIC_DRAW, GL_ELEMENT_ARRAY_BUFFER);
 
 	glGenVertexArrays(1, &VAOID);
 	glGenBuffers(1, &VBOID);
@@ -430,15 +456,5 @@ void pModel::setupModel() {
 
 		glEnableVertexAttribArray(attribID);
 		glVertexAttribPointer(attribID, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, color));
-	}
-
-	//Bones - VertexID
-	if (useBones && shader->hasAttribute(Attributes::BoneIDs)) {
-
-	}
-
-	//Bones - VertexWeight
-	if (useBones && shader->hasAttribute(Attributes::BoneWeights)) {
-
 	}
 }

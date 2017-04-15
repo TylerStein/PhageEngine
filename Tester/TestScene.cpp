@@ -64,6 +64,15 @@ void TestScene::onStart()
 
 	pSceneNode* soldier = engine->resourceFactory->loadModelToScene("Soldier", "../Resources/Models/ArmyPilot/ArmyPilot.fbx", *scene, nullptr);
 	soldier->setScale(glm::vec3(0.01f));
+	armyDude = soldier->getAttachedSceneObject();
+	dudeAnimator = armyDude->getAnimatorInChildren();
+
+	if (dudeAnimator->isReady()) {
+		std::cout << "Preparing to play animation: " << dudeAnimator->getAnimation()->getName() << std::endl;
+	}
+	else {
+		std::cout << "There was a problem playing the animation" << std::endl;
+	}
 
 	pCubeMap* skyboxCube = new pCubeMap("../Resources/Cubemaps/Citadella/posx.jpg",
 		"../Resources/Cubemaps/Citadella/negx.jpg",
@@ -99,6 +108,10 @@ void TestScene::onUpdate(GLdouble deltaTime)
 {
 	//pSceneNode* chairNode = chairObject->getSceneNode();
 	pSceneNode* camNode = cameraObject->getSceneNode();
+
+	//Update armyDude's animation
+	dudeAnimator->moveScrub(deltaTime);
+	dudeAnimator->updateAnimation();
 
 	//camNode->setForwardVector();
 	//camNode->setRightVector();
